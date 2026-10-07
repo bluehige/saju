@@ -1,16 +1,16 @@
 'use strict';
-importScripts('js/engine.js');
+importScripts('js/engine.js?build=reading-r2');
 let ready=false;
 const report=(message)=>self.postMessage({kind:'progress',message});
 self.onmessage=async ({data})=>{
   if(data.kind==='init'){
     try{
       report('역법 자료와 앱 원고를 내려받고 있어요…');
-      const manifestResponse=await fetch('data/resources.json');
+      const manifestResponse=await fetch('data/resources.json',{cache:'no-store'});
       if(!manifestResponse.ok)throw new Error('RESOURCE_MANIFEST');
       const manifest=await manifestResponse.json();
       await Promise.all(Object.entries(manifest).map(async ([name,meta])=>{
-        const response=await fetch(meta.path);
+        const response=await fetch(meta.path,{cache:'no-store'});
         if(!response.ok)throw new Error('RESOURCE_DOWNLOAD');
         let bytes;
         if(meta.gzip){

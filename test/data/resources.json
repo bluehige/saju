@@ -23,6 +23,12 @@
     "sha256": "a37e4168e5cb08257d6a43d95e28ca2bd05daa94c94622839facc9758f586193",
     "bytes": 70883
   },
+  "calendar/verified_solar_minutes.csv": {
+    "path": "data/calendar/verified_solar_minutes.csv",
+    "gzip": false,
+    "sha256": "78d87d35ec11f19c31e835c81123cac1a3a77a7286afeac331f3129d47959c5f",
+    "bytes": 195
+  },
   "content/preview.json": {
     "path": "data/content/preview.json.gz",
     "gzip": true,
@@ -52,5 +58,11 @@
     "gzip": false,
     "sha256": "3a6002199a228f1aad4e53f134743c54a1d8e9b23fad5f3738625d10c79514ae",
     "bytes": 126896
+  },
+  "review/web_reading_copy.json": {
+    "path": "data/review/web_reading_copy.json.gz",
+    "gzip": true,
+    "sha256": "e8ec0148ccba2147523eb6453216fd5f0a2a018a522233f990194ca95faf4196",
+    "bytes": 8159393
   }
 }

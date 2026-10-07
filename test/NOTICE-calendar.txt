@@ -269,3 +269,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 HKO date comparison: Hong Kong Observatory Gregorian solar-term date tables, https://www.hko.gov.hk/en/gts/time/conversion.htm . Only astronomical date facts used for independent checks. No Chinese lunar data included. Day-only rows preserve the whole HKT civil day plus five minutes as uncertainty; dates are not second-precise timestamps.
+
+Verified minute supplement: National Astronomical Observatory of Japan, 1983 almanac p.2, https://eco.mtk.nao.ac.jp/koyomi/yoko/pdf/yoko1983.pdf#page=2 . Cold Dew is printed as Oct 9 05:51 central standard time (UT+9). The minute label and unspecified rounding rule are retained; neighbouring-minute inclusion is the application display-precision policy, not an observed exact second or a source-certified physical error bound. Other date-only rows remain unchanged.

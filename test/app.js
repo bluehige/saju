@@ -12,9 +12,13 @@
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const text=value=>escape(String(value??'').replace(/\{displayName\}/g,'사용자').replace(/\{typeLabel\}/g,state.profile?.mbti||''));
   const storageKey='saju.browser.test.v1';
-  const fresh=()=>({version:1,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
+  const readingVersion='WEB_READING_2026_10_07_R2';
+  const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
   let state=fresh(),ready=false,pending=null,sequence=0,daySequence=0,dayRequest=null;
-  try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1)state={...fresh(),...saved};}catch{}
+  try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1||saved?.version===2){
+    state={...fresh(),...saved};
+    if(saved.readingVersion!==readingVersion)state={...fresh(),profile:saved.profile,target:saved.target||'',tab:saved.tab||'today',expanded:saved.expanded||{},scroll:saved.scroll||{}};
+  }}catch{}
   function save(){try{if(!state.profile&&!state.result)sessionStorage.removeItem(storageKey);else sessionStorage.setItem(storageKey,JSON.stringify(state));}catch{ /* Current page still works when private-mode storage is disabled. */ }}
   const koreaToday=()=>new Date(Date.now()+9*3600000).toISOString().slice(0,10);
   const cacheKey=(p,date)=>JSON.stringify([p.year,p.month,p.day,p.calendar,p.leap,p.time,p.mbti,p.romanceHidden,date]);
@@ -56,12 +60,13 @@
   options($('#birth-minute'),Array.from({length:60},(_,i)=>String(i).padStart(2,'0')),'분 선택','분');formTypes();
   function fillForm(profile){if(!profile)return;$('#birth-calendar').value=profile.calendar;birthYears();$('#birth-year').value=profile.year;$('#birth-month').value=profile.month;$('#birth-leap').checked=profile.leap;$('#time-unknown').checked=!profile.time;const parts=(profile.time||':').split(':');$('#birth-hour').value=parts[0];$('#birth-minute').value=parts[1];$('#mbti').value=profile.mbti;formTypes();$('#romance-hidden').checked=profile.romanceHidden;syncForm(profile.day);}
   function error(message){$('#form-error').textContent=message;$('#form-error').hidden=false;$('#form-error').scrollIntoView({block:'center',behavior:'smooth'});}
-  const worker=new Worker('worker.js');
+  const worker=new Worker('worker.js?build=reading-r2');
   worker.onmessage=({data})=>{
     if(data.kind==='progress')$('#load-state').textContent=data.message;
     else if(data.kind==='ready'){
       ready=true;$('#load-state').textContent='준비됐어요. 날짜와 MBTI를 넣고 결과를 열어보세요.';$('#load-state').classList.add('ready');$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
       birthDays(state.profile?.day||$('#birth-day').value);
+      if(state.profile&&!state.result&&!pending)calculate(state.profile,state.target||koreaToday(),state.tab,false);
     }else if(data.kind==='month-days'&&data.id===dayRequest?.id){
       const wanted=dayRequest.wanted;dayRequest=null;
       options($('#birth-day'),Array.from({length:data.days},(_,i)=>i+1),'일 선택','일',wanted?Math.min(Number(wanted),data.days):'');
@@ -108,32 +113,49 @@
   function showInput(){rememberView();fillForm(state.profile);$('#input-screen').hidden=false;$('#result-screen').hidden=true;$('#cancel-edit').hidden=!state.result;window.scrollTo(0,0);}
   $('#cancel-edit').addEventListener('click',()=>showResult(state.tab,false));
   function statusNotice(r){
-    if(r.quality==='NO_HOUR')return '<div class="notice">시간을 모르는 상태로 계산했어요. 시주는 비워두고, 확인되는 세 기둥으로 해석했어요.</div>';
-    if(r.quality==='BOUNDARY_PARTIAL')return '<div class="notice">출생 날짜·시각이 경계에 있거나 과거 자료에 불확실한 부분이 있어요. 확정되지 않은 사주 글자는 비워두었어요.'+(r.pillars.DAY===null?' 일간이 확정되지 않아 별점과 관련 맞춤 조언은 보류해요.':' 확인되는 글자로 읽을 수 있는 내용은 보여드려요.')+'</div>';
-    return '';
+    if(r.quality!=='NO_HOUR'&&r.quality!=='BOUNDARY_PARTIAL')return '';
+    const flags=new Set(r.warnings),messages=[];
+    const names={YEAR:'연주',MONTH:'월주',DAY:'일주',HOUR:'시주'};
+    if(flags.has('UNKNOWN_BIRTH_TIME'))messages.push('태어난 시간을 모름으로 선택해 시주는 표시하지 않았어요.');
+    const omitted=Object.keys(names).filter(key=>r.pillars[key]===null&&!(key==='HOUR'&&flags.has('UNKNOWN_BIRTH_TIME'))).map(key=>names[key]);
+    if(flags.has('SOLAR_TERM_MINUTE_BOUNDARY'))messages.push(flags.has('UNKNOWN_BIRTH_TIME')?'출생일에 절기가 바뀌어, 정확한 출생 시각 없이 월주를 하나로 정할 수 없어요.':'출생 시각이 공식 자료에 적힌 절기 시각의 분 단위 확인 범위에 있어요. 초 단위 경계는 확정하지 않았어요.');
+    else if(flags.has('SOLAR_TERM_PRECISION')||flags.has('UNVERIFIED_SOLAR_TERMS')||flags.has('SOURCE_WINDOW_OVERLAP')||flags.has('SOLAR_SOURCE_CONFLICT'))messages.push(flags.has('UNKNOWN_BIRTH_TIME')?'해당 연도의 절기 시각 자료도 충분히 정밀하지 않아 일부 사주 글자를 보류했어요.':'출생 시간은 확인했지만, 해당 연도의 절기 시각 자료가 충분히 정밀하지 않아 일부 사주 글자를 보류했어요. 시간을 다시 입력할 필요는 없어요.');
+    else if(flags.has('EARLY_SOLAR_MODEL_LIMITED'))messages.push('이 시기의 절기 계산에는 자료의 한계가 있어요. 확인할 수 있는 글자로만 풀이해요.');
+    if(flags.has('AMBIGUOUS_LOCAL_TIME'))messages.push('과거 한국의 시각 변경으로 기록된 시각을 두 가지로 해석할 수 있어요. 두 경우가 다른 사주 글자만 보류했어요.');
+    if(omitted.length)messages.push(omitted.join('·')+'는 확인 전까지 비워두었어요.');
+    if(r.pillars.DAY===null)messages.push('일간이 확정되지 않아 별점과 관련 맞춤 조언은 보류해요.');
+    return messages.length?`<div class="notice" data-calculation-notice>${messages.map(message=>`<p>${escape(message)}</p>`).join('')}</div>`:'';
   }
   function details(key,label,body,technical=false){return `<details data-detail="${escape(key)}" ${state.expanded[key]?'open':''} class="${technical?'technical':''}"><summary>${escape(label)}</summary><div class="expanded">${body}</div></details>`;}
   function manuscript(value,missing='현재 조건에 맞는 원고는 보류 중이에요.'){
     if(!value?.texts)return `<p class="subtitle">${escape(value?.missingReason==='TYPE_NOT_SELECTED'?'MBTI를 입력하면 맞춤 조언을 볼 수 있어요.':missing)}</p>`;
     const t=value.texts;return `${t.title?`<p class="card-title">${text(t.title)}</p>`:''}<p class="card-body">${text(t.body||t.line||'')}</p>`;
   }
+  function copy(value){return value?.reading||null;}
+  function readingDetail(value){
+    const c=copy(value);if(!c)return manuscript(value);
+    const parts=c.detailParts||[];
+    return parts.length?parts.map(part=>`${part.label?`<h4 class="reading-label">${text(part.label)}</h4>`:''}<p class="card-body">${text(part.text)}</p>`).join(''):`<p class="card-body">${text(c.detail)}</p>`;
+  }
+  function readingSummary(value){const c=copy(value);return c?`<p class="card-body reading-summary">${text(c.summary)}</p>`:manuscript(value);}
   function dailyCards(r){return `<div class="cards">${r.domains.map(domain=>{
-    const t=domain.base?.texts;const key='today-'+domain.id;
-    const body=domain.mbti?.texts?`<span class="label-pill">${escape(r.type)} 행동 조언</span>${manuscript(domain.mbti)}`:manuscript(domain.mbti);
+    const t=domain.base?.texts;const c=copy(domain.base);const key='today-'+domain.id;
+    const body=domain.mbti?.texts?`<span class="label-pill">${escape(r.type)} 행동 조언</span>${readingSummary(domain.mbti)}${details('today-mbti-more-'+domain.id,'이 조언을 실천하는 방법',readingDetail(domain.mbti))}`:manuscript(domain.mbti);
     const mbtiKey='today-mbti-'+domain.id;
     const technical=`<p>해석 주제: ${escape(meanings[domain.meaning]||'계산 보류')}<br>원래 분류: ${escape(domain.meaning||'보류')} · ${escape(domain.gradeLabel||'별점 보류')}</p><p>원고 상태: DRAFT · 의미 승인 및 출시 허용 없음</p>`;
-    return `<article class="card" data-domain="${escape(domain.id)}"><div class="card-top"><span class="domain">${domains[domain.id]}</span><span class="stars" aria-label="${domain.grade===null?'별점 보류':`5점 중 ${domain.grade}점`}">${domain.grade===null?'별점 보류':'★'.repeat(domain.grade)+'☆'.repeat(5-domain.grade)}</span></div>${t?`<h3 class="card-title">${text(t.title)}</h3><p class="card-body">${text(t.widgetLine||t.body)}</p>`:'<p class="subtitle">이 조건의 풀이를 보류했어요.</p>'}${t?details(key,'오늘 운세 자세히 읽기',`<p class="card-body">${text(t.body)}</p>`):''}${details(mbtiKey,r.type?`${r.type}라면 이렇게 해봐요`:'MBTI 맞춤 조언',body)}${details('today-condition-'+domain.id,'해석 분류 보기',technical,true)}</article>`;
+    return `<article class="card" data-domain="${escape(domain.id)}"><div class="card-top"><span class="domain">${domains[domain.id]}</span><span class="stars" aria-label="${domain.grade===null?'별점 보류':`5점 중 ${domain.grade}점`}">${domain.grade===null?'별점 보류':'★'.repeat(domain.grade)+'☆'.repeat(5-domain.grade)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(domain.base)}`:'<p class="subtitle">이 조건의 풀이를 보류했어요.</p>'}${t?details(key,'오늘 운세 자세히 읽기',readingDetail(domain.base)):''}${details(mbtiKey,r.type?`${r.type}라면 이렇게 해봐요`:'MBTI 맞춤 조언',body)}${details('today-condition-'+domain.id,'해석 분류 보기',technical,true)}</article>`;
   }).join('')}</div>`;}
   function natalCards(values,names,prefix){return `<div class="cards">${Object.entries(values).filter(([key])=>!state.profile.romanceHidden||key!=='ROMANCE').map(([key,value])=>{
-    const t=value.texts;return `<article class="card" data-section="${escape(key)}"><div class="card-top"><span class="domain">${escape(names[key]||key)}</span></div>${t?`<h3 class="card-title">${text(t.title)}</h3>`:'<p class="subtitle">이 조건의 원고를 보류했어요.</p>'}${details(prefix+'-'+key,'같은 자리에서 자세히 보기',manuscript(value))}</article>`;
+    const t=value.texts,c=copy(value);return `<article class="card" data-section="${escape(key)}"><div class="card-top"><span class="domain">${escape(names[key]||key)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(value)}`:'<p class="subtitle">이 조건의 원고를 보류했어요.</p>'}${t?details(prefix+'-'+key,'같은 자리에서 자세히 보기',readingDetail(value)):''}</article>`;
   }).join('')}</div>`;}
   function guide(message,mood='neutral'){return `<div class="guide small"><p>${message}</p><img src="images/guide_b_${mood}.webp" width="100" height="125" alt="사주MBTI 안내 캐릭터"></div>`;}
+  function dayStemCard(value){const c=copy(value);return `<article class="card" data-section="DAY_STEM">${c?`<h3 class="card-title">${text(c.title)}</h3>${readingSummary(value)}${details('natal-day-stem','일간 설명 자세히 읽기',readingDetail(value))}`:manuscript(value)}</article>`;}
   function render(){
     const r=state.result;if(!r)return;let html='';
     if(state.tab==='today'){
       const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('오늘의 흐름을 보고,<br>내 성향에 맞는 행동을 골라봐요.','encourage')}${statusNotice(r)}${dailyCards(r)}`;
     }else if(state.tab==='natal'){
-      html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${guide('사주 글자와 기본 성향을<br>쉬운 설명으로 함께 볼게요.','thinking')}${statusNotice(r)}<div class="pillars">${Object.entries(r.pillars).map(([key,p])=>`<div class="pillar"><span>${{YEAR:'연주',MONTH:'월주',DAY:'일주',HOUR:'시주'}[key]}</span><strong>${p?escape(p.korean):'—'}</strong></div>`).join('')}</div><p class="hint">연주·월주·일주·시주는 출생의 해·달·날·시각에 해당하는 사주 글자예요.</p><article class="card">${manuscript(r.dayStemIntro)}</article>${natalCards(r.natalBase,sections,'natal')}${details('natal-technical','해석 분류 보기',`<p>대표 주제 · ${escape(signatures[r.signature]||r.signature)}</p><p>사주 글자 조합 · ${escape(contexts[r.relationContext]||r.relationContext)}</p><p>원래 분류: ${escape(r.signature)} · ${escape(r.relationContext)}</p>`,true)}`;
+      html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${guide('사주 글자와 기본 성향을<br>쉬운 설명으로 함께 볼게요.','thinking')}${statusNotice(r)}<div class="pillars">${Object.entries(r.pillars).map(([key,p])=>`<div class="pillar"><span>${{YEAR:'연주',MONTH:'월주',DAY:'일주',HOUR:'시주'}[key]}</span><strong>${p?escape(p.korean):'—'}</strong></div>`).join('')}</div><p class="hint">연주·월주·일주·시주는 출생의 해·달·날·시각에 해당하는 사주 글자예요.</p>${dayStemCard(r.dayStemIntro)}${natalCards(r.natalBase,sections,'natal')}${details('natal-technical','해석 분류 보기',`<p>대표 주제 · ${escape(signatures[r.signature]||r.signature)}</p><p>사주 글자 조합 · ${escape(contexts[r.relationContext]||r.relationContext)}</p><p>원래 분류: ${escape(r.signature)} · ${escape(r.relationContext)}</p>`,true)}`;
     }else if(state.tab==='mbti'){
       html=`<h1>${r.type?escape(r.type)+'와 내 사주':'MBTI와 내 사주'}</h1><p class="subtitle">같은 사주를 내 성향에 맞춰 행동으로 연결해요.</p>${guide('사주의 기본 결과는 같아요.<br>MBTI별 조언을 비교해볼 수 있어요.','listen')}<div id="quick-mbti" class="type-grid" role="group" aria-label="비교할 MBTI">${typeButtons(r.type)}</div>${r.type?natalCards(r.natalMbti,blocks,'mbti'): '<div class="notice">유형을 고르면 사주와 MBTI를 함께 읽는 원고가 나타나요. 질문지는 이 웹 테스트에 포함하지 않았어요.</div>'}`;
     }else{
