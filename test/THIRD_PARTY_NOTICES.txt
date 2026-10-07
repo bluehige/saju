@@ -1,0 +1,860 @@
+사주MBTI 웹 테스트에 포함된 외부 라이브러리 표기
+TeaVM 0.16.0 — Copyright Alexey Andreev and contributors — Apache License 2.0
+Kotlin standard library 2.4.20 — Copyright JetBrains s.r.o. and contributors — Apache License 2.0
+kotlinx.serialization 1.11.0 — Copyright JetBrains s.r.o. and contributors — Apache License 2.0
+Apache License 전문: LICENSE-APACHE-2.0.txt
+역법 자료 표기: NOTICE-calendar.txt
+브라우저 전용 MessageDigest(SHA-256) 및 Normalizer 연결부를 추가했습니다. JVM/Android 원본은 변경하지 않았습니다.
+아래는 TeaVM class library source archive에 들어 있는 원저작자·라이선스 표기입니다.
+
+Source: org/teavm/classlib/impl/AnnotationVirtualMethods.java, org/teavm/classlib/impl/IntegerUtil.java, org/teavm/classlib/impl/StringConcatFactorySubstitutor.java, org/teavm/classlib/impl/SystemClassTransformer.java, org/teavm/classlib/impl/text/DoubleAnalyzer.java, org/teavm/classlib/impl/text/FloatAnalyzer.java, org/teavm/classlib/impl/tz/DateTimeZoneProviderIntrinsic.java, org/teavm/classlib/java/lang/DoubleGenerator.java, org/teavm/classlib/java/lang/IntegerNativeGenerator.java, org/teavm/classlib/java/lang/ObjectDependencyPlugin.java, org/teavm/classlib/java/net/impl/TDummyStreamHandler.java, org/teavm/classlib/java/nio/charset/TStandardCharsets.java, org/teavm/classlib/java/security/TAccessController.java, org/teavm/classlib/java/security/TPrivilegedAction.java, org/teavm/classlib/java/util/concurrent/atomic/TAtomicInteger.java, org/teavm/classlib/java/util/concurrent/atomic/TAtomicLong.java
+/*
+ *  Copyright 2018 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/Base46.java, org/teavm/classlib/impl/Base64Impl.java, org/teavm/classlib/impl/CharFlow.java, org/teavm/classlib/impl/currency/CountriesGenerator.java, org/teavm/classlib/impl/currency/CurrenciesGenerator.java, org/teavm/classlib/impl/currency/CurrencyHelper.java, org/teavm/classlib/impl/currency/CurrencyResource.java, org/teavm/classlib/impl/tz/AliasDateTimeZone.java, org/teavm/classlib/impl/tz/DateTimeZoneProvider.java, org/teavm/classlib/impl/tz/StorableDateTimeZone.java, org/teavm/classlib/impl/tz/TimeZoneCache.java, org/teavm/classlib/impl/tz/TimeZoneGenerator.java, org/teavm/classlib/impl/unicode/CLDRCurrency.java, org/teavm/classlib/impl/unicode/CLDRDecimalData.java, org/teavm/classlib/impl/unicode/CLDRTimeZone.java, org/teavm/classlib/impl/unicode/CurrencyLocalization.java, org/teavm/classlib/impl/unicode/CurrencyLocalizationMetadataGenerator.java, org/teavm/classlib/impl/unicode/DecimalMetadataGenerator.java, org/teavm/classlib/impl/unicode/NumberFormatMetadataGenerator.java, org/teavm/classlib/impl/unicode/TimeZoneLocalization.java, org/teavm/classlib/impl/unicode/TimeZoneLocalizationGenerator.java, org/teavm/classlib/java/awt/TColor.java, org/teavm/classlib/java/awt/TDimension.java, org/teavm/classlib/java/awt/TPoint.java, org/teavm/classlib/java/io/TBufferedInputStream.java, org/teavm/classlib/java/io/TConsole.java, org/teavm/classlib/java/io/TDataOutput.java, org/teavm/classlib/java/io/TDataOutputStream.java, org/teavm/classlib/java/io/TFilterInputStream.java, org/teavm/classlib/java/io/TOutputStreamWriter.java, org/teavm/classlib/java/io/TWriter.java, org/teavm/classlib/java/lang/CharacterMetadataGenerator.java, org/teavm/classlib/java/lang/TConsoleInputStream.java, org/teavm/classlib/java/lang/TFunctionalInterface.java, org/teavm/classlib/java/lang/TIllegalMonitorStateException.java, org/teavm/classlib/java/lang/TInheritableThreadLocal.java, org/teavm/classlib/java/lang/TNoClassDefFoundError.java, org/teavm/classlib/java/lang/TOutOfMemoryError.java, org/teavm/classlib/java/lang/TStackOverflowError.java, org/teavm/classlib/java/lang/TStackTraceElement.java, org/teavm/classlib/java/lang/TThreadInterruptHandler.java, org/teavm/classlib/java/lang/TVirtualMachineError.java, org/teavm/classlib/java/lang/annotation/TElementType.java, org/teavm/classlib/java/lang/annotation/TRetention.java, org/teavm/classlib/java/lang/annotation/TRetentionPolicy.java, org/teavm/classlib/java/lang/annotation/TTarget.java, org/teavm/classlib/java/lang/ref/TReferenceQueue.java, org/teavm/classlib/java/lang/reflect/TAnnotatedElement.java, org/teavm/classlib/java/math/TBigDecimal.java, org/teavm/classlib/java/math/TBigInteger.java, org/teavm/classlib/java/math/TBitLevel.java, org/teavm/classlib/java/math/TConversion.java, org/teavm/classlib/java/math/TDivision.java, org/teavm/classlib/java/math/TElementary.java, org/teavm/classlib/java/math/TLogical.java, org/teavm/classlib/java/math/TMathContext.java, org/teavm/classlib/java/math/TMultiplication.java, org/teavm/classlib/java/math/TPrimality.java, org/teavm/classlib/java/math/TRoundingMode.java, org/teavm/classlib/java/net/TURI.java, org/teavm/classlib/java/net/TURIEncoderDecoder.java, org/teavm/classlib/java/net/TURISyntaxException.java, org/teavm/classlib/java/nio/TBuffer.java, org/teavm/classlib/java/nio/TBufferOverflowException.java, org/teavm/classlib/java/nio/TBufferUnderflowException.java, org/teavm/classlib/java/nio/TByteBuffer.java, org/teavm/classlib/java/nio/TByteBufferImpl.java, org/teavm/classlib/java/nio/TByteBufferJsImpl.java, org/teavm/classlib/java/nio/TInvalidMarkException.java, org/teavm/classlib/java/nio/TReadOnlyBufferException.java, org/teavm/classlib/java/nio/charset/TBufferOverflowException.java, org/teavm/classlib/java/nio/charset/TBufferUnderflowException.java, org/teavm/classlib/java/nio/charset/TCharacterCodingException.java, org/teavm/classlib/java/nio/charset/TCharset.java, org/teavm/classlib/java/nio/charset/TCharsetDecoder.java, org/teavm/classlib/java/nio/charset/TCharsetEncoder.java, org/teavm/classlib/java/nio/charset/TCoderMalfunctionError.java, org/teavm/classlib/java/nio/charset/TCoderResult.java, org/teavm/classlib/java/nio/charset/TCodingErrorAction.java, org/teavm/classlib/java/nio/charset/TIllegalCharsetNameException.java, org/teavm/classlib/java/nio/charset/TMalformedInputException.java, org/teavm/classlib/java/nio/charset/TUnmappableCharacterException.java, org/teavm/classlib/java/nio/charset/TUnsupportedCharsetException.java, org/teavm/classlib/java/nio/charset/impl/TBufferedDecoder.java, org/teavm/classlib/java/nio/charset/impl/TBufferedEncoder.java, org/teavm/classlib/java/nio/charset/impl/TUTF8Charset.java, org/teavm/classlib/java/nio/charset/impl/TUTF8Decoder.java, org/teavm/classlib/java/nio/charset/impl/TUTF8Encoder.java, org/teavm/classlib/java/security/TAccessControlException.java, org/teavm/classlib/java/security/TGuard.java, org/teavm/classlib/java/security/TPermission.java, org/teavm/classlib/java/text/TAnnotation.java, org/teavm/classlib/java/text/TAttributedCharacterIterator.java, org/teavm/classlib/java/text/TAttributedString.java, org/teavm/classlib/java/text/TCharacterIterator.java, org/teavm/classlib/java/text/TDateFormat.java, org/teavm/classlib/java/text/TDecimalFormatParser.java, org/teavm/classlib/java/text/TFieldPosition.java, org/teavm/classlib/java/text/TFormat.java, org/teavm/classlib/java/text/TParseException.java, org/teavm/classlib/java/text/TParsePosition.java, org/teavm/classlib/java/util/TCurrency.java, org/teavm/classlib/java/util/TGregorianCalendar.java, org/teavm/classlib/java/util/TIANATimeZone.java, org/teavm/classlib/java/util/TProperties.java, org/teavm/classlib/java/util/TStringTokenizer.java, org/teavm/classlib/java/util/TTimeZone.java, org/teavm/classlib/java/util/TUUID.java, org/teavm/classlib/java/util/TVector.java, org/teavm/classlib/java/util/function/TBiConsumer.java, org/teavm/classlib/java/util/function/TBiFunction.java, org/teavm/classlib/java/util/function/TBiPredicate.java, org/teavm/classlib/java/util/function/TBinaryOperator.java, org/teavm/classlib/java/util/function/TBooleanSupplier.java, org/teavm/classlib/java/util/function/TConsumer.java, org/teavm/classlib/java/util/function/TDoubleBinaryOperator.java, org/teavm/classlib/java/util/function/TDoubleConsumer.java, org/teavm/classlib/java/util/function/TDoubleFunction.java, org/teavm/classlib/java/util/function/TDoublePredicate.java, org/teavm/classlib/java/util/function/TDoubleSupplier.java, org/teavm/classlib/java/util/function/TDoubleToIntFunction.java, org/teavm/classlib/java/util/function/TDoubleToLongFunction.java, org/teavm/classlib/java/util/function/TDoubleUnaryOperator.java, org/teavm/classlib/java/util/function/TFunction.java, org/teavm/classlib/java/util/function/TIntBinaryOperator.java, org/teavm/classlib/java/util/function/TIntConsumer.java, org/teavm/classlib/java/util/function/TIntFunction.java, org/teavm/classlib/java/util/function/TIntPredicate.java, org/teavm/classlib/java/util/function/TIntSupplier.java, org/teavm/classlib/java/util/function/TIntToDoubleFunction.java, org/teavm/classlib/java/util/function/TIntToLongFunction.java, org/teavm/classlib/java/util/function/TIntUnaryOperator.java, org/teavm/classlib/java/util/function/TObjDoubleConsumer.java, org/teavm/classlib/java/util/function/TObjIntConsumer.java, org/teavm/classlib/java/util/function/TObjLongConsumer.java, org/teavm/classlib/java/util/function/TPredicate.java, org/teavm/classlib/java/util/function/TSupplier.java, org/teavm/classlib/java/util/function/TToDoubleBiFunction.java, org/teavm/classlib/java/util/function/TToDoubleFunction.java, org/teavm/classlib/java/util/function/TToIntBiFunction.java, org/teavm/classlib/java/util/function/TToIntFunction.java, org/teavm/classlib/java/util/function/TToLongBiFunction.java, org/teavm/classlib/java/util/function/TToLongFunction.java, org/teavm/classlib/java/util/function/TUnaryOperator.java, org/teavm/classlib/java/util/logging/TFormatter.java, org/teavm/classlib/java/util/logging/TLogManager.java, org/teavm/classlib/java/util/regex/TQuantifier.java, org/teavm/classlib/java/util/regex/TQuantifierSet.java, org/teavm/classlib/java/util/regex/TRangeSet.java, org/teavm/classlib/java/util/regex/TRelAltGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TRelCompositeGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantAltQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantCompositeQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantQuantifierSet.java, org/teavm/classlib/java/util/regex/TSOLSet.java, org/teavm/classlib/java/util/regex/TSequenceSet.java, org/teavm/classlib/java/util/regex/TSingleSet.java, org/teavm/classlib/java/util/regex/TSpecialToken.java, org/teavm/classlib/java/util/regex/TSupplCharSet.java, org/teavm/classlib/java/util/regex/TSupplRangeSet.java
+/*
+ *  Copyright 2015 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/BuffersTransformer.java, org/teavm/classlib/impl/currency/CurrencyResourceBuilder.java, org/teavm/classlib/impl/nio/Buffers.java, org/teavm/classlib/impl/unicode/CurrencyLocalizationBuilder.java, org/teavm/classlib/impl/unicode/DateFormatCollectionBuilder.java, org/teavm/classlib/impl/unicode/DecimalDataBuilder.java, org/teavm/classlib/impl/unicode/TimeZoneLocalizationBuilder.java, org/teavm/classlib/java/lang/annotation/TDocumented.java, org/teavm/classlib/java/lang/annotation/TInherited.java, org/teavm/classlib/java/lang/reflect/TExecutable.java, org/teavm/classlib/java/lang/reflect/TGenericArrayType.java, org/teavm/classlib/java/lang/reflect/TGenericArrayTypeImpl.java, org/teavm/classlib/java/lang/reflect/TGenericDeclaration.java, org/teavm/classlib/java/lang/reflect/TParameterizedType.java, org/teavm/classlib/java/lang/reflect/TParameterizedTypeImpl.java, org/teavm/classlib/java/lang/reflect/TTypeVariable.java, org/teavm/classlib/java/lang/reflect/TTypeVariableImpl.java, org/teavm/classlib/java/lang/reflect/TWildcardType.java, org/teavm/classlib/java/lang/reflect/TWildcardTypeImpl.java, org/teavm/classlib/java/nio/TArrayBufferViewProvider.java, org/teavm/classlib/java/nio/TBufferFinalizationRegistry.java, org/teavm/classlib/java/nio/TBufferFinalizationRegistryConsumer.java, org/teavm/classlib/java/nio/TByteBufferNative.java, org/teavm/classlib/java/nio/TByteBufferWasmGC.java, org/teavm/classlib/java/nio/TCharBufferNative.java, org/teavm/classlib/java/nio/TCharBufferOverDataView.java, org/teavm/classlib/java/nio/TCharBufferOverTypedArray.java, org/teavm/classlib/java/nio/TCharBufferWasmGC.java, org/teavm/classlib/java/nio/TDoubleBufferNative.java, org/teavm/classlib/java/nio/TDoubleBufferOverDataView.java, org/teavm/classlib/java/nio/TDoubleBufferOverTypedArray.java, org/teavm/classlib/java/nio/TDoubleBufferWasmGC.java, org/teavm/classlib/java/nio/TFloatBufferNative.java, org/teavm/classlib/java/nio/TFloatBufferOverDataView.java, org/teavm/classlib/java/nio/TFloatBufferOverTypedArray.java, org/teavm/classlib/java/nio/TFloatBufferWasmGC.java, org/teavm/classlib/java/nio/TIntBufferNative.java, org/teavm/classlib/java/nio/TIntBufferOverDataView.java, org/teavm/classlib/java/nio/TIntBufferOverTypedArray.java, org/teavm/classlib/java/nio/TIntBufferWasmGC.java, org/teavm/classlib/java/nio/TJSBufferHelper.java, org/teavm/classlib/java/nio/TLongBufferNative.java, org/teavm/classlib/java/nio/TLongBufferOverDataView.java, org/teavm/classlib/java/nio/TLongBufferOverTypedArray.java, org/teavm/classlib/java/nio/TLongBufferWasmGC.java, org/teavm/classlib/java/nio/TNativeBuffer.java, org/teavm/classlib/java/nio/TNativeBufferObjectMarker.java, org/teavm/classlib/java/nio/TNativeBufferUtil.java, org/teavm/classlib/java/nio/TShortBufferNative.java, org/teavm/classlib/java/nio/TShortBufferOverDataView.java, org/teavm/classlib/java/nio/TShortBufferOverTypedArray.java, org/teavm/classlib/java/nio/TShortBufferWasmGC.java, org/teavm/classlib/java/nio/file/TAccessMode.java, org/teavm/classlib/java/nio/file/TAddressBasedBuffer.java, org/teavm/classlib/java/nio/file/TClosedFileSystemException.java, org/teavm/classlib/java/nio/file/TCopyOption.java, org/teavm/classlib/java/nio/file/TDirectoryIteratorException.java, org/teavm/classlib/java/nio/file/TDirectoryNotEmptyException.java, org/teavm/classlib/java/nio/file/TDirectoryStream.java, org/teavm/classlib/java/nio/file/TFileSystem.java, org/teavm/classlib/java/nio/file/TFileSystemAlreadyExistsException.java, org/teavm/classlib/java/nio/file/TFileSystemNotFoundException.java, org/teavm/classlib/java/nio/file/TFileSystems.java, org/teavm/classlib/java/nio/file/TFileVisitOption.java, org/teavm/classlib/java/nio/file/TFileVisitResult.java, org/teavm/classlib/java/nio/file/TFileVisitor.java, org/teavm/classlib/java/nio/file/TFiles.java, org/teavm/classlib/java/nio/file/TInvalidPathException.java, org/teavm/classlib/java/nio/file/TLinkOption.java, org/teavm/classlib/java/nio/file/TPath.java, org/teavm/classlib/java/nio/file/TPaths.java, org/teavm/classlib/java/nio/file/TProviderNotFoundException.java, org/teavm/classlib/java/nio/file/TReadOnlyFileSystemException.java, org/teavm/classlib/java/nio/file/TSimpleFileVisitor.java, org/teavm/classlib/java/nio/file/TStandardCopyOption.java, org/teavm/classlib/java/nio/file/attribute/TFileAttribute.java, org/teavm/classlib/java/nio/file/impl/TDefaultFileSystem.java, org/teavm/classlib/java/nio/file/impl/TDefaultFileSystemProvider.java, org/teavm/classlib/java/nio/file/impl/TDefaultPath.java, org/teavm/classlib/java/nio/file/spi/TFileSystemProvider.java
+/*
+ *  Copyright 2025 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/ClasslibSubstitutionPolicy.java, org/teavm/classlib/java/lang/ref/TCleaner.java, org/teavm/classlib/java/lang/reflect/TGenericTypeFactory.java, org/teavm/classlib/java/lang/reflect/TProxy.java, org/teavm/classlib/java/lang/reflect/TUndeclaredThrowableException.java
+/*
+ *  Copyright 2026 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/DeclaringClassDependencyListener.java
+/*
+ *  Copyright 2019 konsoletyper.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/ExceptionHelpers.java, org/teavm/classlib/impl/KotlinHacks.java, org/teavm/classlib/impl/console/Console.java, org/teavm/classlib/impl/console/StderrOutputStream.java, org/teavm/classlib/impl/console/StdoutOutputStream.java, org/teavm/classlib/java/lang/StringNativeDependency.java, org/teavm/classlib/java/lang/reflect/TInvocationHandler.java, org/teavm/classlib/java/net/TURLDecoder.java, org/teavm/classlib/java/net/TURLEncoder.java, org/teavm/classlib/java/util/stream/doubleimpl/TAllMatchConsumer.java, org/teavm/classlib/java/util/stream/doubleimpl/TAnyMatchConsumer.java, org/teavm/classlib/java/util/stream/impl/TAllMatchConsumer.java, org/teavm/classlib/java/util/stream/impl/TAnyMatchConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TAllMatchConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TAnyMatchConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TAllMatchConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TAnyMatchConsumer.java
+/*
+ *  Copyright 2019 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/FirstDayOfWeekMetadataGenerator.java, org/teavm/classlib/impl/JCLPlugin.java, org/teavm/classlib/impl/MinimalDaysInFirstWeekMetadataGenerator.java, org/teavm/classlib/impl/ServiceLoaderSupport.java, org/teavm/classlib/impl/WeekMetadataGenerator.java, org/teavm/classlib/impl/unicode/AvailableLocalesMetadataGenerator.java, org/teavm/classlib/impl/unicode/CLDRDateFormats.java, org/teavm/classlib/impl/unicode/CLDRHelper.java, org/teavm/classlib/impl/unicode/CLDRLocale.java, org/teavm/classlib/impl/unicode/CLDRReader.java, org/teavm/classlib/impl/unicode/CountryMetadataGenerator.java, org/teavm/classlib/impl/unicode/DateFormatCollection.java, org/teavm/classlib/impl/unicode/DateFormatMetadataGenerator.java, org/teavm/classlib/impl/unicode/DateSymbolsMetadataGenerator.java, org/teavm/classlib/impl/unicode/DecimalData.java, org/teavm/classlib/impl/unicode/DefaultLocaleMetadataGenerator.java, org/teavm/classlib/impl/unicode/LanguageMetadataGenerator.java, org/teavm/classlib/impl/unicode/LikelySubtagsMetadataGenerator.java, org/teavm/classlib/impl/unicode/LocaleMetadataGenerator.java, org/teavm/classlib/impl/unicode/UnicodeHelper.java, org/teavm/classlib/impl/unicode/UnicodeSupport.java, org/teavm/classlib/java/io/TBufferedReader.java, org/teavm/classlib/java/io/TByteArrayInputStream.java, org/teavm/classlib/java/io/TByteArrayOutputStream.java, org/teavm/classlib/java/io/TDataInput.java, org/teavm/classlib/java/io/TDataInputStream.java, org/teavm/classlib/java/io/TEOFException.java, org/teavm/classlib/java/io/TExternalizable.java, org/teavm/classlib/java/io/TInputStream.java, org/teavm/classlib/java/io/TInputStreamReader.java, org/teavm/classlib/java/io/TPushbackInputStream.java, org/teavm/classlib/java/io/TReader.java, org/teavm/classlib/java/io/TStringReader.java, org/teavm/classlib/java/io/TUTFDataFormatException.java, org/teavm/classlib/java/lang/MathNativeGenerator.java, org/teavm/classlib/java/lang/TAppendable.java, org/teavm/classlib/java/lang/TArithmeticException.java, org/teavm/classlib/java/lang/TArrayIndexOutOfBoundsException.java, org/teavm/classlib/java/lang/TAssertionError.java, org/teavm/classlib/java/lang/TBoolean.java, org/teavm/classlib/java/lang/TByte.java, org/teavm/classlib/java/lang/TCharacter.java, org/teavm/classlib/java/lang/TClassCastException.java, org/teavm/classlib/java/lang/TClassLoader.java, org/teavm/classlib/java/lang/TClassNotFoundException.java, org/teavm/classlib/java/lang/TCloneNotSupportedException.java, org/teavm/classlib/java/lang/TCloneable.java, org/teavm/classlib/java/lang/TEnum.java, org/teavm/classlib/java/lang/TError.java, org/teavm/classlib/java/lang/TIllegalAccessException.java, org/teavm/classlib/java/lang/TIncompatibleClassChangeError.java, org/teavm/classlib/java/lang/TInstantiationException.java, org/teavm/classlib/java/lang/TInteger.java, org/teavm/classlib/java/lang/TIterable.java, org/teavm/classlib/java/lang/TLinkageError.java, org/teavm/classlib/java/lang/TLong.java, org/teavm/classlib/java/lang/TNegativeArraySizeException.java, org/teavm/classlib/java/lang/TNoSuchFieldError.java, org/teavm/classlib/java/lang/TNoSuchFieldException.java, org/teavm/classlib/java/lang/TNoSuchMethodError.java, org/teavm/classlib/java/lang/TNumber.java, org/teavm/classlib/java/lang/TNumberFormatException.java, org/teavm/classlib/java/lang/TReadable.java, org/teavm/classlib/java/lang/TReflectiveOperationException.java, org/teavm/classlib/java/lang/TRunnable.java, org/teavm/classlib/java/lang/TSecurityException.java, org/teavm/classlib/java/lang/TShort.java, org/teavm/classlib/java/lang/TStrictMath.java, org/teavm/classlib/java/lang/TStringBuffer.java, org/teavm/classlib/java/lang/TSystemClassLoader.java, org/teavm/classlib/java/lang/TThread.java, org/teavm/classlib/java/lang/TThreadLocal.java, org/teavm/classlib/java/lang/TVoid.java, org/teavm/classlib/java/lang/ref/TReference.java, org/teavm/classlib/java/lang/ref/TWeakReference.java, org/teavm/classlib/java/nio/TByteOrder.java, org/teavm/classlib/java/nio/TCharBuffer.java, org/teavm/classlib/java/nio/TCharBufferImpl.java, org/teavm/classlib/java/nio/TCharBufferOverArray.java, org/teavm/classlib/java/nio/TCharBufferOverByteBuffer.java, org/teavm/classlib/java/nio/TCharBufferOverByteBufferBigEndian.java, org/teavm/classlib/java/nio/TCharBufferOverByteBufferLittleEndian.java, org/teavm/classlib/java/nio/TDoubleBuffer.java, org/teavm/classlib/java/nio/TDoubleBufferImpl.java, org/teavm/classlib/java/nio/TDoubleBufferOverArray.java, org/teavm/classlib/java/nio/TDoubleBufferOverByteBuffer.java, org/teavm/classlib/java/nio/TDoubleBufferOverByteBufferBigEndian.java, org/teavm/classlib/java/nio/TDoubleBufferOverByteBufferLittleEndian.java, org/teavm/classlib/java/nio/TFloatBuffer.java, org/teavm/classlib/java/nio/TFloatBufferImpl.java, org/teavm/classlib/java/nio/TFloatBufferOverArray.java, org/teavm/classlib/java/nio/TFloatBufferOverByteBuffer.java, org/teavm/classlib/java/nio/TFloatBufferOverByteBufferBigEndian.java, org/teavm/classlib/java/nio/TFloatBufferOverByteBufferLittleEndian.java, org/teavm/classlib/java/nio/TIntBuffer.java, org/teavm/classlib/java/nio/TIntBufferImpl.java, org/teavm/classlib/java/nio/TIntBufferOverArray.java, org/teavm/classlib/java/nio/TIntBufferOverByteBuffer.java, org/teavm/classlib/java/nio/TIntBufferOverByteBufferBigEndian.java, org/teavm/classlib/java/nio/TIntBufferOverByteBufferLittleEndian.java, org/teavm/classlib/java/nio/TLongBuffer.java, org/teavm/classlib/java/nio/TLongBufferImpl.java, org/teavm/classlib/java/nio/TLongBufferOverArray.java, org/teavm/classlib/java/nio/TLongBufferOverByteBuffer.java, org/teavm/classlib/java/nio/TLongBufferOverByteBufferBigEndian.java, org/teavm/classlib/java/nio/TLongBufferOverByteBufferLittleEndian.java, org/teavm/classlib/java/nio/TShortBuffer.java, org/teavm/classlib/java/nio/TShortBufferImpl.java, org/teavm/classlib/java/nio/TShortBufferOverArray.java, org/teavm/classlib/java/nio/TShortBufferOverByteBuffer.java, org/teavm/classlib/java/nio/TShortBufferOverByteBufferBigEndian.java, org/teavm/classlib/java/nio/TShortBufferOverByteBufferLittleEndian.java, org/teavm/classlib/java/text/TDateFormatElement.java, org/teavm/classlib/java/text/TDateFormatSymbols.java, org/teavm/classlib/java/text/TDecimalFormat.java, org/teavm/classlib/java/text/TDecimalFormatSymbols.java, org/teavm/classlib/java/text/TNumberFormat.java, org/teavm/classlib/java/text/TSimpleDateFormat.java, org/teavm/classlib/java/text/TSimpleDatePatternParser.java, org/teavm/classlib/java/util/TAbstractCollection.java, org/teavm/classlib/java/util/TAbstractList.java, org/teavm/classlib/java/util/TAbstractMap.java, org/teavm/classlib/java/util/TAbstractQueue.java, org/teavm/classlib/java/util/TAbstractSequentialList.java, org/teavm/classlib/java/util/TAbstractSet.java, org/teavm/classlib/java/util/TArrayDeque.java, org/teavm/classlib/java/util/TArrayList.java, org/teavm/classlib/java/util/TBitSet.java, org/teavm/classlib/java/util/TCalendar.java, org/teavm/classlib/java/util/TCheckedCollection.java, org/teavm/classlib/java/util/TCheckedList.java, org/teavm/classlib/java/util/TCheckedListIterator.java, org/teavm/classlib/java/util/TCheckedMap.java, org/teavm/classlib/java/util/TCheckedSet.java, org/teavm/classlib/java/util/TCollection.java, org/teavm/classlib/java/util/TCollections.java, org/teavm/classlib/java/util/TComparator.java, org/teavm/classlib/java/util/TConcurrentModificationException.java, org/teavm/classlib/java/util/TDate.java, org/teavm/classlib/java/util/TDeque.java, org/teavm/classlib/java/util/TDictionary.java, org/teavm/classlib/java/util/TEnumeration.java, org/teavm/classlib/java/util/TEventListener.java, org/teavm/classlib/java/util/TEventObject.java, org/teavm/classlib/java/util/THashMap.java, org/teavm/classlib/java/util/THashSet.java, org/teavm/classlib/java/util/THashtable.java, org/teavm/classlib/java/util/TIdentityHashMap.java, org/teavm/classlib/java/util/TIterator.java, org/teavm/classlib/java/util/TLinkedHashMap.java, org/teavm/classlib/java/util/TLinkedHashSet.java, org/teavm/classlib/java/util/TLinkedList.java, org/teavm/classlib/java/util/TList.java, org/teavm/classlib/java/util/TListIterator.java, org/teavm/classlib/java/util/TLocale.java, org/teavm/classlib/java/util/TMap.java, org/teavm/classlib/java/util/TMapEntry.java, org/teavm/classlib/java/util/TMissingResourceException.java, org/teavm/classlib/java/util/TNavigableMap.java, org/teavm/classlib/java/util/TNavigableSet.java, org/teavm/classlib/java/util/TNoSuchElementException.java, org/teavm/classlib/java/util/TObjects.java, org/teavm/classlib/java/util/TPriorityQueue.java, org/teavm/classlib/java/util/TQueue.java, org/teavm/classlib/java/util/TRandom.java, org/teavm/classlib/java/util/TRandomAccess.java, org/teavm/classlib/java/util/TServiceLoader.java, org/teavm/classlib/java/util/TSet.java, org/teavm/classlib/java/util/TSetFromMap.java, org/teavm/classlib/java/util/TSortedMap.java, org/teavm/classlib/java/util/TSortedSet.java, org/teavm/classlib/java/util/TTimer.java, org/teavm/classlib/java/util/TTimerTask.java, org/teavm/classlib/java/util/TTreeMap.java, org/teavm/classlib/java/util/TTreeSet.java, org/teavm/classlib/java/util/concurrent/TCallable.java, org/teavm/classlib/java/util/concurrent/TExecutor.java, org/teavm/classlib/java/util/logging/TLevel.java, org/teavm/classlib/java/util/logging/TLogRecord.java, org/teavm/classlib/java/util/logging/TLogger.java, org/teavm/classlib/java/util/regex/TAbstractCharClass.java, org/teavm/classlib/java/util/regex/TAbstractLineTerminator.java, org/teavm/classlib/java/util/regex/TAbstractSet.java, org/teavm/classlib/java/util/regex/TAheadFSet.java, org/teavm/classlib/java/util/regex/TAltGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TAltQuantifierSet.java, org/teavm/classlib/java/util/regex/TAtomicFSet.java, org/teavm/classlib/java/util/regex/TAtomicJointSet.java, org/teavm/classlib/java/util/regex/TBackReferenceSet.java, org/teavm/classlib/java/util/regex/TBackReferencedSingleSet.java, org/teavm/classlib/java/util/regex/TBehindFSet.java, org/teavm/classlib/java/util/regex/TCIBackReferenceSet.java, org/teavm/classlib/java/util/regex/TCICharSet.java, org/teavm/classlib/java/util/regex/TCIDecomposedCharSet.java, org/teavm/classlib/java/util/regex/TCISequenceSet.java, org/teavm/classlib/java/util/regex/TCharClass.java, org/teavm/classlib/java/util/regex/TCharSet.java, org/teavm/classlib/java/util/regex/TCompositeGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TCompositeQuantifierSet.java, org/teavm/classlib/java/util/regex/TCompositeRangeSet.java, org/teavm/classlib/java/util/regex/TDecomposedCharSet.java, org/teavm/classlib/java/util/regex/TDotAllQuantifierSet.java, org/teavm/classlib/java/util/regex/TDotAllSet.java, org/teavm/classlib/java/util/regex/TDotQuantifierSet.java, org/teavm/classlib/java/util/regex/TDotSet.java, org/teavm/classlib/java/util/regex/TEOISet.java, org/teavm/classlib/java/util/regex/TEOLSet.java, org/teavm/classlib/java/util/regex/TEmptySet.java, org/teavm/classlib/java/util/regex/TFSet.java, org/teavm/classlib/java/util/regex/TFinalSet.java, org/teavm/classlib/java/util/regex/TGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/THangulDecomposedCharSet.java, org/teavm/classlib/java/util/regex/THighSurrogateCharSet.java, org/teavm/classlib/java/util/regex/TIntArrHash.java, org/teavm/classlib/java/util/regex/TIntHash.java, org/teavm/classlib/java/util/regex/TJointSet.java, org/teavm/classlib/java/util/regex/TLeafQuantifierSet.java, org/teavm/classlib/java/util/regex/TLeafSet.java, org/teavm/classlib/java/util/regex/TLexer.java, org/teavm/classlib/java/util/regex/TLowHighSurrogateRangeSet.java, org/teavm/classlib/java/util/regex/TLowSurrogateCharSet.java, org/teavm/classlib/java/util/regex/TMatchResult.java, org/teavm/classlib/java/util/regex/TMatchResultImpl.java, org/teavm/classlib/java/util/regex/TMatcher.java, org/teavm/classlib/java/util/regex/TMultiLineEOLSet.java, org/teavm/classlib/java/util/regex/TMultiLineSOLSet.java, org/teavm/classlib/java/util/regex/TNegativeLookAhead.java, org/teavm/classlib/java/util/regex/TNegativeLookBehind.java, org/teavm/classlib/java/util/regex/TNonCapFSet.java, org/teavm/classlib/java/util/regex/TNonCapJointSet.java, org/teavm/classlib/java/util/regex/TPattern.java, org/teavm/classlib/java/util/regex/TPatternSyntaxException.java, org/teavm/classlib/java/util/regex/TPosAltGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TPosCompositeGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TPosPlusGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TPositiveLookAhead.java, org/teavm/classlib/java/util/regex/TPositiveLookBehind.java, org/teavm/classlib/java/util/regex/TPossessiveAltQuantifierSet.java, org/teavm/classlib/java/util/regex/TPossessiveCompositeQuantifierSet.java, org/teavm/classlib/java/util/regex/TPossessiveQuantifierSet.java, org/teavm/classlib/java/util/regex/TPreviousMatch.java
+/*
+ *  Copyright 2014 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/NumericClassTransformer.java
+/*
+ *  Copyright 2017 konsoletyper.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/ObfuscationHacks.java, org/teavm/classlib/impl/tz/DateTimeZoneProviderPatch.java, org/teavm/classlib/java/util/TTemplateCollections.java, org/teavm/classlib/java/util/concurrent/TConcurrentHashMap.java, org/teavm/classlib/java/util/concurrent/TConcurrentMap.java, org/teavm/classlib/java/util/concurrent/TMapEntry.java, org/teavm/classlib/java/util/concurrent/atomic/TAtomicReference.java, org/threeten/bp/Clock.java, org/threeten/bp/DateTimeException.java, org/threeten/bp/DayOfWeek.java, org/threeten/bp/Duration.java, org/threeten/bp/Instant.java, org/threeten/bp/LocalDate.java, org/threeten/bp/LocalDateTime.java, org/threeten/bp/LocalTime.java, org/threeten/bp/Month.java, org/threeten/bp/MonthDay.java, org/threeten/bp/OffsetDateTime.java, org/threeten/bp/OffsetTime.java, org/threeten/bp/Period.java, org/threeten/bp/Year.java, org/threeten/bp/YearMonth.java, org/threeten/bp/ZoneId.java, org/threeten/bp/ZoneOffset.java, org/threeten/bp/ZoneRegion.java, org/threeten/bp/ZonedDateTime.java, org/threeten/bp/chrono/AbstractChronology.java, org/threeten/bp/chrono/ChronoDateImpl.java, org/threeten/bp/chrono/ChronoLocalDate.java, org/threeten/bp/chrono/ChronoLocalDateTime.java, org/threeten/bp/chrono/ChronoLocalDateTimeImpl.java, org/threeten/bp/chrono/ChronoPeriod.java, org/threeten/bp/chrono/ChronoPeriodImpl.java, org/threeten/bp/chrono/ChronoZonedDateTime.java, org/threeten/bp/chrono/ChronoZonedDateTimeImpl.java, org/threeten/bp/chrono/Chronology.java, org/threeten/bp/chrono/Era.java, org/threeten/bp/chrono/HijrahChronology.java, org/threeten/bp/chrono/HijrahDate.java, org/threeten/bp/chrono/HijrahEra.java, org/threeten/bp/chrono/IsoChronology.java, org/threeten/bp/chrono/IsoEra.java, org/threeten/bp/chrono/JapaneseChronology.java, org/threeten/bp/chrono/JapaneseDate.java, org/threeten/bp/chrono/JapaneseEra.java, org/threeten/bp/chrono/MinguoChronology.java, org/threeten/bp/chrono/MinguoDate.java, org/threeten/bp/chrono/MinguoEra.java, org/threeten/bp/chrono/ThaiBuddhistChronology.java, org/threeten/bp/chrono/ThaiBuddhistDate.java, org/threeten/bp/chrono/ThaiBuddhistEra.java, org/threeten/bp/format/DateTimeBuilder.java, org/threeten/bp/format/DateTimeFormatStyleProvider.java, org/threeten/bp/format/DateTimeFormatter.java, org/threeten/bp/format/DateTimeFormatterBuilder.java, org/threeten/bp/format/DateTimeParseContext.java, org/threeten/bp/format/DateTimeParseException.java, org/threeten/bp/format/DateTimePrintContext.java, org/threeten/bp/format/DateTimeTextProvider.java, org/threeten/bp/format/DecimalStyle.java, org/threeten/bp/format/FormatStyle.java, org/threeten/bp/format/ResolverStyle.java, org/threeten/bp/format/SignStyle.java, org/threeten/bp/format/SimpleDateTimeFormatStyleProvider.java, org/threeten/bp/format/SimpleDateTimeTextProvider.java, org/threeten/bp/format/TextStyle.java, org/threeten/bp/temporal/ChronoField.java, org/threeten/bp/temporal/ChronoUnit.java, org/threeten/bp/temporal/IsoFields.java, org/threeten/bp/temporal/JulianFields.java, org/threeten/bp/temporal/Temporal.java, org/threeten/bp/temporal/TemporalAccessor.java, org/threeten/bp/temporal/TemporalAdjuster.java, org/threeten/bp/temporal/TemporalAdjusters.java, org/threeten/bp/temporal/TemporalAmount.java, org/threeten/bp/temporal/TemporalField.java, org/threeten/bp/temporal/TemporalQueries.java, org/threeten/bp/temporal/TemporalQuery.java, org/threeten/bp/temporal/TemporalUnit.java, org/threeten/bp/temporal/UnsupportedTemporalTypeException.java, org/threeten/bp/temporal/ValueRange.java, org/threeten/bp/temporal/WeekFields.java, org/threeten/bp/zone/JodaRulesProvider.java, org/threeten/bp/zone/StandardZoneRules.java, org/threeten/bp/zone/ZoneOffsetTransition.java, org/threeten/bp/zone/ZoneOffsetTransitionRule.java, org/threeten/bp/zone/ZoneRules.java, org/threeten/bp/zone/ZoneRulesException.java, org/threeten/bp/zone/ZoneRulesProvider.java
+/*
+ *  Copyright 2020 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/PlatformMarkerSupport.java, org/teavm/classlib/impl/ResourceBundleImpl.java, org/teavm/classlib/java/io/TBufferedOutputStream.java, org/teavm/classlib/java/io/TBufferedWriter.java, org/teavm/classlib/java/io/TCharArrayReader.java, org/teavm/classlib/java/io/TCharArrayWriter.java, org/teavm/classlib/java/io/TFile.java, org/teavm/classlib/java/io/TFileFilter.java, org/teavm/classlib/java/io/TFileInputStream.java, org/teavm/classlib/java/io/TFileNotFoundException.java, org/teavm/classlib/java/io/TFileOutputStream.java, org/teavm/classlib/java/io/TFileReader.java, org/teavm/classlib/java/io/TFileWriter.java, org/teavm/classlib/java/io/TFilenameFilter.java, org/teavm/classlib/java/io/TInterruptedIOException.java, org/teavm/classlib/java/io/TPipedInputStream.java, org/teavm/classlib/java/io/TPipedOutputStream.java, org/teavm/classlib/java/io/TPrintWriter.java, org/teavm/classlib/java/io/TRandomAccessFile.java, org/teavm/classlib/java/io/TStreamTokenizer.java, org/teavm/classlib/java/io/TStringWriter.java, org/teavm/classlib/java/lang/ClassLoaderNativeGenerator.java, org/teavm/classlib/java/lang/LongNativeGenerator.java, org/teavm/classlib/java/lang/TDeprecated.java, org/teavm/classlib/java/lang/TInternalError.java, org/teavm/classlib/java/lang/TOverride.java, org/teavm/classlib/java/lang/TPackage.java, org/teavm/classlib/java/lang/TSafeVarargs.java, org/teavm/classlib/java/lang/TSuppressWarnings.java, org/teavm/classlib/java/lang/invoke/TCallSite.java, org/teavm/classlib/java/lang/invoke/TLambdaConversionException.java, org/teavm/classlib/java/lang/invoke/TLambdaMetafactory.java, org/teavm/classlib/java/lang/invoke/TMethodHandle.java, org/teavm/classlib/java/lang/invoke/TMethodHandles.java, org/teavm/classlib/java/lang/invoke/TMethodType.java, org/teavm/classlib/java/lang/ref/TSoftReference.java, org/teavm/classlib/java/net/THttpURLConnection.java, org/teavm/classlib/java/net/TMalformedURLException.java, org/teavm/classlib/java/net/TProtocolException.java, org/teavm/classlib/java/net/TURL.java, org/teavm/classlib/java/net/TURLConnection.java, org/teavm/classlib/java/net/TURLStreamHandler.java, org/teavm/classlib/java/net/TURLStreamHandlerFactory.java, org/teavm/classlib/java/net/TUnknownServiceException.java, org/teavm/classlib/java/net/impl/TXHRStreamHandler.java, org/teavm/classlib/java/net/impl/TXHRURLConnection.java, org/teavm/classlib/java/text/TChoiceFormat.java, org/teavm/classlib/java/text/TMessageFormat.java, org/teavm/classlib/java/util/TDuplicateFormatFlagsException.java, org/teavm/classlib/java/util/TEmptyStackException.java, org/teavm/classlib/java/util/TEnumMap.java, org/teavm/classlib/java/util/TEnumSet.java, org/teavm/classlib/java/util/TFormatFlagsConversionMismatchException.java, org/teavm/classlib/java/util/TFormattable.java, org/teavm/classlib/java/util/TFormattableFlags.java, org/teavm/classlib/java/util/TFormatter.java, org/teavm/classlib/java/util/TFormatterClosedException.java, org/teavm/classlib/java/util/TGenericEnumSet.java, org/teavm/classlib/java/util/TIllegalFormatCodePointException.java, org/teavm/classlib/java/util/TIllegalFormatConversionException.java, org/teavm/classlib/java/util/TIllegalFormatException.java, org/teavm/classlib/java/util/TIllegalFormatFlagsException.java, org/teavm/classlib/java/util/TIllegalFormatPrecisionException.java, org/teavm/classlib/java/util/TIllegalPrecisionException.java, org/teavm/classlib/java/util/TListResourceBundle.java, org/teavm/classlib/java/util/TMissingFormatWidthException.java, org/teavm/classlib/java/util/TOptional.java, org/teavm/classlib/java/util/TOptionalDouble.java, org/teavm/classlib/java/util/TOptionalInt.java, org/teavm/classlib/java/util/TOptionalLong.java, org/teavm/classlib/java/util/TPrimitiveIterator.java, org/teavm/classlib/java/util/TPropertyResourceBundle.java, org/teavm/classlib/java/util/TResourceBundle.java, org/teavm/classlib/java/util/TServiceConfigurationError.java, org/teavm/classlib/java/util/TSpliterator.java, org/teavm/classlib/java/util/TSpliterators.java, org/teavm/classlib/java/util/TStack.java, org/teavm/classlib/java/util/TUnknownFormatConversionException.java, org/teavm/classlib/java/util/concurrent/TLinkedBlockingDeque.java, org/teavm/classlib/java/util/concurrent/atomic/TAtomicBoolean.java, org/teavm/classlib/java/util/function/TLongBinaryOperator.java, org/teavm/classlib/java/util/function/TLongConsumer.java, org/teavm/classlib/java/util/function/TLongFunction.java, org/teavm/classlib/java/util/function/TLongPredicate.java, org/teavm/classlib/java/util/function/TLongSupplier.java, org/teavm/classlib/java/util/function/TLongToDoubleFunction.java, org/teavm/classlib/java/util/function/TLongToIntFunction.java, org/teavm/classlib/java/util/function/TLongUnaryOperator.java, org/teavm/classlib/java/util/jar/TAttributes.java, org/teavm/classlib/java/util/jar/TInitManifest.java, org/teavm/classlib/java/util/jar/TJarEntry.java, org/teavm/classlib/java/util/jar/TJarException.java, org/teavm/classlib/java/util/jar/TJarFile.java, org/teavm/classlib/java/util/jar/TJarInputStream.java, org/teavm/classlib/java/util/jar/TJarOutputStream.java, org/teavm/classlib/java/util/jar/TJarUtils.java, org/teavm/classlib/java/util/jar/TManifest.java, org/teavm/classlib/java/util/regex/TPossessiveGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TUCIBackReferenceSet.java, org/teavm/classlib/java/util/regex/TUCICharSet.java, org/teavm/classlib/java/util/regex/TUCIDecomposedCharSet.java, org/teavm/classlib/java/util/regex/TUCIRangeSet.java, org/teavm/classlib/java/util/regex/TUCISequenceSet.java, org/teavm/classlib/java/util/regex/TUCISupplCharSet.java, org/teavm/classlib/java/util/regex/TUCISupplRangeSet.java, org/teavm/classlib/java/util/regex/TUEOLSet.java, org/teavm/classlib/java/util/regex/TUMultiLineEOLSet.java, org/teavm/classlib/java/util/regex/TUnicodeCategory.java, org/teavm/classlib/java/util/regex/TUnicodeCategoryScope.java, org/teavm/classlib/java/util/regex/TUnifiedQuantifierSet.java, org/teavm/classlib/java/util/regex/TWordBoundary.java, org/teavm/classlib/java/util/stream/TBaseStream.java, org/teavm/classlib/java/util/stream/TCollector.java, org/teavm/classlib/java/util/stream/TCollectorImpl.java, org/teavm/classlib/java/util/stream/TCollectors.java, org/teavm/classlib/java/util/stream/TDoubleStream.java, org/teavm/classlib/java/util/stream/TIntStream.java, org/teavm/classlib/java/util/stream/TLongStream.java, org/teavm/classlib/java/util/stream/TStream.java, org/teavm/classlib/java/util/stream/TStreamSupport.java, org/teavm/classlib/java/util/stream/doubleimpl/TArrayDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TAverageDoubleConsumer.java, org/teavm/classlib/java/util/stream/doubleimpl/TBoxedDoubleStream.java, org/teavm/classlib/java/util/stream/doubleimpl/TCloseHandlingDoubleStream.java, org/teavm/classlib/java/util/stream/doubleimpl/TCountingDoubleConsumer.java, org/teavm/classlib/java/util/stream/doubleimpl/TDistinctDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TDoubleStreamBuilder.java, org/teavm/classlib/java/util/stream/doubleimpl/TEmptyDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TFilteringDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TFindFirstDoubleConsumer.java, org/teavm/classlib/java/util/stream/doubleimpl/TFlatMappingDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TGenerateDoubleStream.java, org/teavm/classlib/java/util/stream/doubleimpl/TGenericConcatDoubleStream.java, org/teavm/classlib/java/util/stream/doubleimpl/TIterateDoubleStream.java, org/teavm/classlib/java/util/stream/doubleimpl/TLimitingDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TMappingDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TMappingToIntStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TMappingToLongStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TMappingToObjStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TPeekingDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TReducingDoubleConsumer.java, org/teavm/classlib/java/util/stream/doubleimpl/TSimpleDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TSimpleDoubleStreamIterator.java, org/teavm/classlib/java/util/stream/doubleimpl/TSimpleDoubleStreamSpliterator.java, org/teavm/classlib/java/util/stream/doubleimpl/TSingleDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TSkippingDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/doubleimpl/TSpecializedConcatDoubleStream.java, org/teavm/classlib/java/util/stream/doubleimpl/TSumDoubleConsumer.java, org/teavm/classlib/java/util/stream/doubleimpl/TWrappingDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TArrayStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TCloseHandlingStream.java, org/teavm/classlib/java/util/stream/impl/TCountingConsumer.java, org/teavm/classlib/java/util/stream/impl/TDistinctStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TEmptyStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TFilteringStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TFindFirstConsumer.java, org/teavm/classlib/java/util/stream/impl/TFlatMappingStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TFlatMappingToDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TFlatMappingToIntStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TFlatMappingToLongStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TGenerateStream.java, org/teavm/classlib/java/util/stream/impl/TGenericConcatStream.java, org/teavm/classlib/java/util/stream/impl/TIterateStream.java, org/teavm/classlib/java/util/stream/impl/TLimitingStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TMappingStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TMappingToDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TMappingToIntStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TMappingToLongStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TPeekingStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TReducingConsumer.java, org/teavm/classlib/java/util/stream/impl/TReducingConsumer2.java, org/teavm/classlib/java/util/stream/impl/TSimpleStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TSimpleStreamIterator.java, org/teavm/classlib/java/util/stream/impl/TSimpleStreamSpliterator.java, org/teavm/classlib/java/util/stream/impl/TSingleStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TSkippingStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TSortedStreamImpl.java, org/teavm/classlib/java/util/stream/impl/TSpecializedConcatStream.java, org/teavm/classlib/java/util/stream/impl/TSpliteratorOverCollection.java, org/teavm/classlib/java/util/stream/impl/TStreamBuilder.java, org/teavm/classlib/java/util/stream/impl/TStreamOverSpliterator.java, org/teavm/classlib/java/util/stream/impl/TStreamOverSpliteratorSupplier.java, org/teavm/classlib/java/util/stream/impl/TWrappingStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TArrayIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TBoxedIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TCloseHandlingIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TCountingIntConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TDistinctIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TEmptyIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TFilteringIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TFindFirstIntConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TFlatMappingIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TGenerateIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TGenericConcatIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TIntAsDoubleStream.java, org/teavm/classlib/java/util/stream/intimpl/TIntAsLongStream.java, org/teavm/classlib/java/util/stream/intimpl/TIntStreamBuilder.java, org/teavm/classlib/java/util/stream/intimpl/TIterateIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TLimitingIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TMappingIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TMappingToDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TMappingToLongStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TMappingToObjStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TPeekingIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TRangeIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TReducingIntConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TSimpleIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TSimpleIntStreamIterator.java, org/teavm/classlib/java/util/stream/intimpl/TSimpleIntStreamSpliterator.java, org/teavm/classlib/java/util/stream/intimpl/TSingleIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TSkippingIntStreamImpl.java, org/teavm/classlib/java/util/stream/intimpl/TSpecializedConcatIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TSumIntAsDoubleConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TSumIntConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TWrappingIntStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TArrayLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TBoxedLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TCloseHandlingLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TCountingLongConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TDistinctLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TEmptyLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TFilteringLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TFindFirstLongConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TFlatMappingLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TGenerateLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TGenericConcatLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TIterateLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TLimitingLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TLongAsDoubleStream.java, org/teavm/classlib/java/util/stream/longimpl/TLongStreamBuilder.java, org/teavm/classlib/java/util/stream/longimpl/TMappingLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TMappingToDoubleStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TMappingToIntStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TMappingToObjStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TPeekingLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TRangeLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TReducingLongConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TSimpleLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TSimpleLongStreamIterator.java, org/teavm/classlib/java/util/stream/longimpl/TSimpleLongStreamSpliterator.java, org/teavm/classlib/java/util/stream/longimpl/TSingleLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TSkippingLongStreamImpl.java, org/teavm/classlib/java/util/stream/longimpl/TSpecializedConcatLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TSumLongAsDoubleConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TSumLongConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TWrappingLongStreamImpl.java, org/teavm/classlib/java/util/zip/TAdler32.java, org/teavm/classlib/java/util/zip/TCRC32.java, org/teavm/classlib/java/util/zip/TCheckedInputStream.java, org/teavm/classlib/java/util/zip/TCheckedOutputStream.java, org/teavm/classlib/java/util/zip/TChecksum.java, org/teavm/classlib/java/util/zip/TDataFormatException.java, org/teavm/classlib/java/util/zip/TDeflater.java, org/teavm/classlib/java/util/zip/TDeflaterOutputStream.java, org/teavm/classlib/java/util/zip/TGZIPInputStream.java, org/teavm/classlib/java/util/zip/TGZIPOutputStream.java, org/teavm/classlib/java/util/zip/TInflater.java, org/teavm/classlib/java/util/zip/TInflaterInputStream.java, org/teavm/classlib/java/util/zip/TZipConstants.java, org/teavm/classlib/java/util/zip/TZipEntry.java, org/teavm/classlib/java/util/zip/TZipException.java, org/teavm/classlib/java/util/zip/TZipFile.java, org/teavm/classlib/java/util/zip/TZipInputStream.java, org/teavm/classlib/java/util/zip/TZipOutputStream.java
+/*
+ *  Copyright 2017 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/RandomUtils.java, org/teavm/classlib/impl/SwitchBootstrapSubstitutor.java, org/teavm/classlib/java/lang/TMatchException.java, org/teavm/classlib/java/util/TBase64.java, org/teavm/classlib/java/util/TDoubleSummaryStatistics.java, org/teavm/classlib/java/util/TIntSummaryStatistics.java, org/teavm/classlib/java/util/TLinkedHashMapEntrySet.java, org/teavm/classlib/java/util/TLinkedHashMapIterator.java, org/teavm/classlib/java/util/TLinkedHashMapKeySet.java, org/teavm/classlib/java/util/TLinkedHashMapValues.java, org/teavm/classlib/java/util/TLongSummaryStatistics.java, org/teavm/classlib/java/util/TReversedDeque.java, org/teavm/classlib/java/util/TReversedLinkedHashMap.java, org/teavm/classlib/java/util/TReversedList.java, org/teavm/classlib/java/util/TReversedSortedSet.java, org/teavm/classlib/java/util/TSequencedCollection.java, org/teavm/classlib/java/util/TSequencedMap.java, org/teavm/classlib/java/util/TSequencedSet.java, org/teavm/classlib/java/util/random/TRandomGenerator.java, org/teavm/classlib/java/util/stream/doubleimpl/TDropWhileDoubleStream.java, org/teavm/classlib/java/util/stream/doubleimpl/TSummaryDoubleConsumer.java, org/teavm/classlib/java/util/stream/doubleimpl/TTakeWhileDoubleStream.java, org/teavm/classlib/java/util/stream/impl/TDropWhileStream.java, org/teavm/classlib/java/util/stream/intimpl/TDropWhileIntStream.java, org/teavm/classlib/java/util/stream/intimpl/TSummaryIntConsumer.java, org/teavm/classlib/java/util/stream/intimpl/TTakeWhileIntStream.java, org/teavm/classlib/java/util/stream/longimpl/TDropWhileLongStream.java, org/teavm/classlib/java/util/stream/longimpl/TSummaryLongConsumer.java, org/teavm/classlib/java/util/stream/longimpl/TTakeWhileLongStream.java
+/*
+ *  Copyright 2023 ihromant.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/ScalaHacks.java, org/teavm/classlib/impl/lambda/LambdaMetafactorySubstitutor.java, org/teavm/classlib/java/lang/ClassGenerator.java, org/teavm/classlib/java/lang/TNoSuchMethodException.java, org/teavm/classlib/java/lang/reflect/TAccessibleObject.java, org/teavm/classlib/java/lang/reflect/TConstructor.java, org/teavm/classlib/java/lang/reflect/TField.java, org/teavm/classlib/java/lang/reflect/TInvocationTargetException.java, org/teavm/classlib/java/lang/reflect/TMember.java, org/teavm/classlib/java/lang/reflect/TMethod.java, org/teavm/classlib/java/lang/reflect/TModifier.java
+/*
+ *  Copyright 2016 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/ServiceLoaderCSupport.java, org/teavm/classlib/impl/ServiceLoaderInformation.java, org/teavm/classlib/impl/ServiceLoaderJSSupport.java, org/teavm/classlib/impl/ServiceLoaderWasmGCSupport.java, org/teavm/classlib/java/nio/charset/impl/TAsciiCharset.java, org/teavm/classlib/java/nio/charset/impl/TAsciiDecoder.java, org/teavm/classlib/java/nio/charset/impl/TAsciiEncoder.java, org/teavm/classlib/java/nio/charset/impl/TIso8859Charset.java, org/teavm/classlib/java/nio/charset/impl/TIso8859Decoder.java, org/teavm/classlib/java/nio/charset/impl/TIso8859Encoder.java, org/teavm/classlib/java/nio/charset/impl/TUTF16Charset.java, org/teavm/classlib/java/nio/charset/impl/TUTF16Decoder.java, org/teavm/classlib/java/nio/charset/impl/TUTF16Encoder.java
+/*
+ *  Copyright 2021 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/console/ConsoleOutputStream.java, org/teavm/classlib/impl/record/ObjectMethodsSubstitutor.java, org/teavm/classlib/java/lang/TRecord.java
+/*
+ *  Copyright 2022 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/console/JSConsoleStringPrintStream.java
+/*
+ *  Copyright 2024 konsoletyper.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/console/JSStderrPrintStream.java, org/teavm/classlib/impl/console/JSStdoutPrintStream.java, org/teavm/classlib/impl/console/JsConsolePrintStream.java, org/teavm/classlib/impl/reflection/ReflectionTransformer.java, org/teavm/classlib/impl/string/DefaultStringTransformer.java, org/teavm/classlib/impl/string/JSStringConstructorGenerator.java, org/teavm/classlib/impl/string/JSStringInjector.java, org/teavm/classlib/impl/string/JSStringTransformer.java, org/teavm/classlib/impl/text/DoubleAnalyzerGenerator.java, org/teavm/classlib/impl/text/DoubleSynthesizer.java, org/teavm/classlib/impl/text/DoubleSynthesizerGenerator.java, org/teavm/classlib/impl/text/FloatSynthesizer.java, org/teavm/classlib/impl/text/FloatSynthesizerGenerator.java, org/teavm/classlib/impl/unicode/CharMapping.java, org/teavm/classlib/impl/unicode/NumbersJsonParser.java, org/teavm/classlib/java/lang/SystemDependencyPlugin.java, org/teavm/classlib/java/lang/TIllegalAccessError.java, org/teavm/classlib/java/lang/TThreadDeath.java, org/teavm/classlib/java/lang/reflect/ArrayDependencyPlugin.java, org/teavm/classlib/java/util/concurrent/atomic/TAtomicIntegerFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TAtomicLongFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TAtomicReferenceFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TBaseAtomicIntegerFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TBaseAtomicLongFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TBaseAtomicReferenceFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TLongOptimizedAtomicReferenceFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TReflectionBasedAtomicIntegerFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TReflectionBasedAtomicLongFieldUpdater.java, org/teavm/classlib/java/util/concurrent/atomic/TReflectionBasedAtomicReferenceFieldUpdater.java
+/*
+ *  Copyright 2023 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/text/FloatAnalyzerGenerator.java
+/*
+ *  Copyright 2023 konsoletyper.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/tz/CachedDateTimeZone.java
+/*
+ *  Copyright 2001-2012 Stephen Colebourne
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/tz/DateTimeZone.java
+/*
+ *  Copyright 2001-2014 Stephen Colebourne
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/tz/DateTimeZoneBuilder.java, org/teavm/classlib/impl/tz/ZoneInfoCompiler.java
+/*
+ *  Copyright 2001-2013 Stephen Colebourne
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/impl/tz/FixedDateTimeZone.java
+/*
+ *  Copyright 2001-2005 Stephen Colebourne
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/io/TCloseable.java, org/teavm/classlib/java/io/TFilterOutputStream.java, org/teavm/classlib/java/io/TFlushable.java, org/teavm/classlib/java/io/TIOException.java, org/teavm/classlib/java/io/TOutputStream.java, org/teavm/classlib/java/io/TPrintStream.java, org/teavm/classlib/java/io/TSerializable.java, org/teavm/classlib/java/io/TUnsupportedEncodingException.java, org/teavm/classlib/java/lang/SystemNativeGenerator.java, org/teavm/classlib/java/lang/TAbstractStringBuilder.java, org/teavm/classlib/java/lang/TArrayStoreException.java, org/teavm/classlib/java/lang/TAutoCloseable.java, org/teavm/classlib/java/lang/TCharSequence.java, org/teavm/classlib/java/lang/TClass.java, org/teavm/classlib/java/lang/TClassValue.java, org/teavm/classlib/java/lang/TComparable.java, org/teavm/classlib/java/lang/TDouble.java, org/teavm/classlib/java/lang/TException.java, org/teavm/classlib/java/lang/TFloat.java, org/teavm/classlib/java/lang/TIllegalArgumentException.java, org/teavm/classlib/java/lang/TIllegalStateException.java, org/teavm/classlib/java/lang/TIndexOutOfBoundsException.java, org/teavm/classlib/java/lang/TInterruptedException.java, org/teavm/classlib/java/lang/TMath.java, org/teavm/classlib/java/lang/TNullPointerException.java, org/teavm/classlib/java/lang/TObject.java, org/teavm/classlib/java/lang/TRuntimeException.java, org/teavm/classlib/java/lang/TString.java, org/teavm/classlib/java/lang/TStringBuilder.java, org/teavm/classlib/java/lang/TStringIndexOutOfBoundsException.java, org/teavm/classlib/java/lang/TSystem.java, org/teavm/classlib/java/lang/TThrowable.java, org/teavm/classlib/java/lang/TUnsupportedOperationException.java, org/teavm/classlib/java/lang/annotation/TAnnotation.java, org/teavm/classlib/java/lang/reflect/TArray.java, org/teavm/classlib/java/util/TArrays.java
+/*
+ *  Copyright 2013 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/io/TFilterReader.java, org/teavm/classlib/java/io/TPushbackReader.java, org/teavm/classlib/java/lang/TAbstractMethodError.java
+/*
+ *  Copyright 2025 Ashera Cordova.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/io/TFilterReader.java, org/teavm/classlib/java/io/TPrintWriter.java, org/teavm/classlib/java/io/TPushbackReader.java, org/teavm/classlib/java/io/TStringWriter.java, org/teavm/classlib/java/util/TDictionary.java, org/teavm/classlib/java/util/THashtable.java, org/teavm/classlib/java/util/TIdentityHashMap.java, org/teavm/classlib/java/util/TLocale.java, org/teavm/classlib/java/util/TMapEntry.java, org/teavm/classlib/java/util/TWeakHashMap.java, org/teavm/classlib/java/util/regex/TAbstractCharClass.java, org/teavm/classlib/java/util/regex/TAbstractLineTerminator.java, org/teavm/classlib/java/util/regex/TAbstractSet.java, org/teavm/classlib/java/util/regex/TAheadFSet.java, org/teavm/classlib/java/util/regex/TAltGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TAltQuantifierSet.java, org/teavm/classlib/java/util/regex/TAtomicFSet.java, org/teavm/classlib/java/util/regex/TAtomicJointSet.java, org/teavm/classlib/java/util/regex/TBackReferenceSet.java, org/teavm/classlib/java/util/regex/TBackReferencedSingleSet.java, org/teavm/classlib/java/util/regex/TBehindFSet.java, org/teavm/classlib/java/util/regex/TCIBackReferenceSet.java, org/teavm/classlib/java/util/regex/TCICharSet.java, org/teavm/classlib/java/util/regex/TCIDecomposedCharSet.java, org/teavm/classlib/java/util/regex/TCISequenceSet.java, org/teavm/classlib/java/util/regex/TCharClass.java, org/teavm/classlib/java/util/regex/TCharSet.java, org/teavm/classlib/java/util/regex/TCompositeGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TCompositeQuantifierSet.java, org/teavm/classlib/java/util/regex/TCompositeRangeSet.java, org/teavm/classlib/java/util/regex/TDecomposedCharSet.java, org/teavm/classlib/java/util/regex/TDotAllQuantifierSet.java, org/teavm/classlib/java/util/regex/TDotAllSet.java, org/teavm/classlib/java/util/regex/TDotQuantifierSet.java, org/teavm/classlib/java/util/regex/TDotSet.java, org/teavm/classlib/java/util/regex/TEOISet.java, org/teavm/classlib/java/util/regex/TEOLSet.java, org/teavm/classlib/java/util/regex/TEmptySet.java, org/teavm/classlib/java/util/regex/TFSet.java, org/teavm/classlib/java/util/regex/TFinalSet.java, org/teavm/classlib/java/util/regex/TGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/THangulDecomposedCharSet.java, org/teavm/classlib/java/util/regex/THighSurrogateCharSet.java, org/teavm/classlib/java/util/regex/TIntArrHash.java, org/teavm/classlib/java/util/regex/TIntHash.java, org/teavm/classlib/java/util/regex/TJointSet.java, org/teavm/classlib/java/util/regex/TLeafQuantifierSet.java, org/teavm/classlib/java/util/regex/TLeafSet.java, org/teavm/classlib/java/util/regex/TLexer.java, org/teavm/classlib/java/util/regex/TLowHighSurrogateRangeSet.java, org/teavm/classlib/java/util/regex/TLowSurrogateCharSet.java, org/teavm/classlib/java/util/regex/TMatchResult.java, org/teavm/classlib/java/util/regex/TMatchResultImpl.java, org/teavm/classlib/java/util/regex/TMatcher.java, org/teavm/classlib/java/util/regex/TMultiLineEOLSet.java, org/teavm/classlib/java/util/regex/TMultiLineSOLSet.java, org/teavm/classlib/java/util/regex/TNegativeLookAhead.java, org/teavm/classlib/java/util/regex/TNegativeLookBehind.java, org/teavm/classlib/java/util/regex/TNonCapFSet.java, org/teavm/classlib/java/util/regex/TNonCapJointSet.java, org/teavm/classlib/java/util/regex/TPattern.java, org/teavm/classlib/java/util/regex/TPatternSyntaxException.java, org/teavm/classlib/java/util/regex/TPosAltGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TPosCompositeGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TPosPlusGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TPositiveLookAhead.java, org/teavm/classlib/java/util/regex/TPositiveLookBehind.java, org/teavm/classlib/java/util/regex/TPossessiveAltQuantifierSet.java, org/teavm/classlib/java/util/regex/TPossessiveCompositeQuantifierSet.java, org/teavm/classlib/java/util/regex/TPossessiveGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TPossessiveQuantifierSet.java, org/teavm/classlib/java/util/regex/TPreviousMatch.java, org/teavm/classlib/java/util/regex/TQuantifier.java, org/teavm/classlib/java/util/regex/TQuantifierSet.java, org/teavm/classlib/java/util/regex/TRangeSet.java, org/teavm/classlib/java/util/regex/TRelAltGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TRelCompositeGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantAltQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantCompositeQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantGroupQuantifierSet.java, org/teavm/classlib/java/util/regex/TReluctantQuantifierSet.java, org/teavm/classlib/java/util/regex/TSOLSet.java, org/teavm/classlib/java/util/regex/TSequenceSet.java, org/teavm/classlib/java/util/regex/TSingleSet.java, org/teavm/classlib/java/util/regex/TSpecialToken.java, org/teavm/classlib/java/util/regex/TSupplCharSet.java, org/teavm/classlib/java/util/regex/TSupplRangeSet.java, org/teavm/classlib/java/util/regex/TUCIBackReferenceSet.java, org/teavm/classlib/java/util/regex/TUCICharSet.java, org/teavm/classlib/java/util/regex/TUCIDecomposedCharSet.java, org/teavm/classlib/java/util/regex/TUCIRangeSet.java, org/teavm/classlib/java/util/regex/TUCISequenceSet.java, org/teavm/classlib/java/util/regex/TUCISupplCharSet.java, org/teavm/classlib/java/util/regex/TUCISupplRangeSet.java, org/teavm/classlib/java/util/regex/TUEOLSet.java, org/teavm/classlib/java/util/regex/TUMultiLineEOLSet.java, org/teavm/classlib/java/util/regex/TUnicodeCategory.java, org/teavm/classlib/java/util/regex/TUnicodeCategoryScope.java, org/teavm/classlib/java/util/regex/TUnifiedQuantifierSet.java, org/teavm/classlib/java/util/regex/TWordBoundary.java
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/io/TInvalidClassException.java, org/teavm/classlib/java/io/TObjectStreamException.java, org/teavm/classlib/java/util/TWeakHashMap.java, org/teavm/classlib/java/util/concurrent/TCancellationException.java, org/teavm/classlib/java/util/concurrent/TCopyOnWriteArrayList.java, org/teavm/classlib/java/util/stream/impl/TBufferedReaderLinesStream.java, org/teavm/classlib/java/util/stream/intimpl/TCharSequenceCodePointsStream.java, org/teavm/classlib/java/util/stream/intimpl/TStringCodePointsStream.java
+/*
+ *  Copyright 2024 Alexey Andreev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/io/TUncheckedIOException.java, org/teavm/classlib/java/nio/channels/TByteChannel.java, org/teavm/classlib/java/nio/channels/TChannel.java, org/teavm/classlib/java/nio/channels/TClosedChannelException.java, org/teavm/classlib/java/nio/channels/TNonReadableChannelException.java, org/teavm/classlib/java/nio/channels/TNonWritableChannelException.java, org/teavm/classlib/java/nio/channels/TReadableByteChannel.java, org/teavm/classlib/java/nio/channels/TSeekableByteChannel.java, org/teavm/classlib/java/nio/channels/TWritableByteChannel.java, org/teavm/classlib/java/nio/file/TAccessDeniedException.java, org/teavm/classlib/java/nio/file/TFileAlreadyExistsException.java, org/teavm/classlib/java/nio/file/TFileSystemException.java, org/teavm/classlib/java/nio/file/TNoSuchFileException.java, org/teavm/classlib/java/nio/file/TNotDirectoryException.java, org/teavm/classlib/java/nio/file/TOpenOption.java, org/teavm/classlib/java/nio/file/TStandardOpenOption.java
+/*
+ *  Copyright 2023 Jonathan Coates.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/lang/TAbstractMethodError.java
+/*
+ *  
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/lang/TDefaultUncaughtExceptionHandler.java, org/teavm/classlib/java/lang/reflect/TType.java, org/teavm/classlib/java/util/concurrent/TFlow.java
+/*
+ *  Copyright 2020 by Joerg Hohwiller
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/lang/TIO.java
+/*
+ *  Copyright 2025 ihromant.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/lang/TRuntime.java
+/*
+ *  Copyright 2013 Steve Hannah.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/lang/TSecurityManager.java, org/teavm/classlib/java/util/stream/impl/TTakeWhileStream.java
+/*
+ *  Copyright 2022 ulugbek.abdullaev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/lang/TStackOverflowError.java
+/*
+ * Copyright 2016 Sergey Kapralov.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/lang/invoke/TMethodHandleInfo.java, org/teavm/classlib/java/lang/invoke/TMethodHandleNatives.java, org/teavm/classlib/java/lang/invoke/TSerializedLambda.java
+/*
+ *  Copyright 2020 adam.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/nio/file/attribute/TBasicFileAttributes.java, org/teavm/classlib/java/nio/file/attribute/TFileTime.java
+/*
+ *  Copyright 2024 Jonathan Coates.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/security/TAccessControlContext.java, org/teavm/classlib/java/security/TPrivilegedActionException.java, org/teavm/classlib/java/security/TPrivilegedExceptionAction.java
+/*
+ *  Copyright 2022 Ulugbek Abdullaev.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/security/TGeneralSecurityException.java, org/teavm/classlib/java/security/TNoSuchAlgorithmException.java, org/teavm/classlib/java/security/TSecureRandom.java
+/*
+ *  Copyright 2023 Bernd Busse.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/util/TCalendar.java
+/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements. See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+Source: org/teavm/classlib/java/util/TObservable.java, org/teavm/classlib/java/util/TObserver.java
+/*
+ *  Copyright 2015 Steve Hannah.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/util/TProperties.java
+/*
+ *  Copyright 2025 Ashera Cordova
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/util/concurrent/TArrayBlockingQueue.java, org/teavm/classlib/java/util/concurrent/TBlockingQueue.java, org/teavm/classlib/java/util/concurrent/TTimeUnit.java
+/*
+ *  Copyright 2018 konsoletyper.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/util/concurrent/TCopyOnWriteArrayList.java
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+Source: org/teavm/classlib/java/util/concurrent/TExecutionException.java
+/*
+ *  Copyright 2022 Colorize.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/util/concurrent/TThreadLocalRandom.java
+/*
+ *  Copyright 2020 konsoletyper.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/teavm/classlib/java/util/regex/TCompositeRangeSet.java, org/teavm/classlib/java/util/regex/THighSurrogateCharSet.java, org/teavm/classlib/java/util/regex/TLowHighSurrogateRangeSet.java, org/teavm/classlib/java/util/regex/TLowSurrogateCharSet.java, org/teavm/classlib/java/util/regex/TSupplCharSet.java, org/teavm/classlib/java/util/regex/TSupplRangeSet.java, org/teavm/classlib/java/util/regex/TUCISupplCharSet.java, org/teavm/classlib/java/util/regex/TUCISupplRangeSet.java
+/*
+ *
+ *  Portions, Copyright © 1991-2005 Unicode, Inc. The following applies to Unicode.
+ *
+ *  COPYRIGHT AND PERMISSION NOTICE
+ *
+ *  Copyright © 1991-2005 Unicode, Inc. All rights reserved. Distributed under
+ *  the Terms of Use in http://www.unicode.org/copyright.html. Permission is
+ *  hereby granted, free of charge, to any person obtaining a copy of the
+ *  Unicode data files and any associated documentation (the "Data Files")
+ *  or Unicode software and any associated documentation (the "Software")
+ *  to deal in the Data Files or Software without restriction, including without
+ *  limitation the rights to use, copy, modify, merge, publish, distribute,
+ *  and/or sell copies of the Data Files or Software, and to permit persons
+ *  to whom the Data Files or Software are furnished to do so, provided that
+ *  (a) the above copyright notice(s) and this permission notice appear with
+ *  all copies of the Data Files or Software, (b) both the above copyright
+ *  notice(s) and this permission notice appear in associated documentation,
+ *  and (c) there is clear notice in each modified Data File or in the Software
+ *  as well as in the documentation associated with the Data File(s) or Software
+ *  that the data or software has been modified.
+
+ *  THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+ *  KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+ *  OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS
+ *  INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT
+ *  OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ *  OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ *  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ *  PERFORMANCE OF THE DATA FILES OR SOFTWARE.
+ *
+ *  Except as contained in this notice, the name of a copyright holder shall
+ *  not be used in advertising or otherwise to promote the sale, use or other
+ *  dealings in these Data Files or Software without prior written
+ *  authorization of the copyright holder.
+ *
+ *  2. Additional terms from the Database:
+ *
+ *  Copyright © 1995-1999 Unicode, Inc. All Rights reserved.
+ *
+ *  Disclaimer
+ *
+ *  The Unicode Character Database is provided as is by Unicode, Inc.
+ *  No claims are made as to fitness for any particular purpose. No warranties
+ *  of any kind are expressed or implied. The recipient agrees to determine
+ *  applicability of information provided. If this file has been purchased
+ *  on magnetic or optical media from Unicode, Inc., the sole remedy for any claim
+ *  will be exchange of defective media within 90 days of receipt. This disclaimer
+ *  is applicable for all other data files accompanying the Unicode Character Database,
+ *  some of which have been compiled by the Unicode Consortium, and some of which
+ *  have been supplied by other sources.
+ *
+ *  Limitations on Rights to Redistribute This Data
+ *
+ *  Recipient is granted the right to make copies in any form for internal
+ *  distribution and to freely use the information supplied in the creation of
+ *  products supporting the UnicodeTM Standard. The files in
+ *  the Unicode Character Database can be redistributed to third parties or other
+ *  organizations (whether for profit or not) as long as this notice and the disclaimer
+ *  notice are retained. Information can be extracted from these files and used
+ *  in documentation or programs, as long as there is an accompanying notice
+ *  indicating the source.
+ */
+
+Source: org/teavm/classlib/java/util/stream/intimpl/TCharSequenceCharsStream.java, org/teavm/classlib/java/util/stream/intimpl/TStringCharsStream.java
+/*
+ *  Copyright 2023 JFronny.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+Source: org/threeten/bp/Clock.java, org/threeten/bp/DateTimeException.java, org/threeten/bp/DayOfWeek.java, org/threeten/bp/Duration.java, org/threeten/bp/Instant.java, org/threeten/bp/LocalDate.java, org/threeten/bp/LocalDateTime.java, org/threeten/bp/LocalTime.java, org/threeten/bp/Month.java, org/threeten/bp/MonthDay.java, org/threeten/bp/OffsetDateTime.java, org/threeten/bp/OffsetTime.java, org/threeten/bp/Period.java, org/threeten/bp/Year.java, org/threeten/bp/YearMonth.java, org/threeten/bp/ZoneId.java, org/threeten/bp/ZoneOffset.java, org/threeten/bp/ZoneRegion.java, org/threeten/bp/ZonedDateTime.java, org/threeten/bp/chrono/AbstractChronology.java, org/threeten/bp/chrono/ChronoDateImpl.java, org/threeten/bp/chrono/ChronoLocalDate.java, org/threeten/bp/chrono/ChronoLocalDateTime.java, org/threeten/bp/chrono/ChronoLocalDateTimeImpl.java, org/threeten/bp/chrono/ChronoPeriod.java, org/threeten/bp/chrono/ChronoPeriodImpl.java, org/threeten/bp/chrono/ChronoZonedDateTime.java, org/threeten/bp/chrono/ChronoZonedDateTimeImpl.java, org/threeten/bp/chrono/Chronology.java, org/threeten/bp/chrono/Era.java, org/threeten/bp/chrono/HijrahChronology.java, org/threeten/bp/chrono/HijrahDate.java, org/threeten/bp/chrono/HijrahEra.java, org/threeten/bp/chrono/IsoChronology.java, org/threeten/bp/chrono/IsoEra.java, org/threeten/bp/chrono/JapaneseChronology.java, org/threeten/bp/chrono/JapaneseDate.java, org/threeten/bp/chrono/JapaneseEra.java, org/threeten/bp/chrono/MinguoChronology.java, org/threeten/bp/chrono/MinguoDate.java, org/threeten/bp/chrono/MinguoEra.java, org/threeten/bp/chrono/ThaiBuddhistChronology.java, org/threeten/bp/chrono/ThaiBuddhistDate.java, org/threeten/bp/chrono/ThaiBuddhistEra.java, org/threeten/bp/format/DateTimeBuilder.java, org/threeten/bp/format/DateTimeFormatStyleProvider.java, org/threeten/bp/format/DateTimeFormatter.java, org/threeten/bp/format/DateTimeFormatterBuilder.java, org/threeten/bp/format/DateTimeParseContext.java, org/threeten/bp/format/DateTimeParseException.java, org/threeten/bp/format/DateTimePrintContext.java, org/threeten/bp/format/DateTimeTextProvider.java, org/threeten/bp/format/DecimalStyle.java, org/threeten/bp/format/FormatStyle.java, org/threeten/bp/format/ResolverStyle.java, org/threeten/bp/format/SignStyle.java, org/threeten/bp/format/SimpleDateTimeFormatStyleProvider.java, org/threeten/bp/format/SimpleDateTimeTextProvider.java, org/threeten/bp/format/TextStyle.java, org/threeten/bp/temporal/ChronoField.java, org/threeten/bp/temporal/ChronoUnit.java, org/threeten/bp/temporal/IsoFields.java, org/threeten/bp/temporal/JulianFields.java, org/threeten/bp/temporal/Temporal.java, org/threeten/bp/temporal/TemporalAccessor.java, org/threeten/bp/temporal/TemporalAdjuster.java, org/threeten/bp/temporal/TemporalAdjusters.java, org/threeten/bp/temporal/TemporalAmount.java, org/threeten/bp/temporal/TemporalField.java, org/threeten/bp/temporal/TemporalQueries.java, org/threeten/bp/temporal/TemporalQuery.java, org/threeten/bp/temporal/TemporalUnit.java, org/threeten/bp/temporal/UnsupportedTemporalTypeException.java, org/threeten/bp/temporal/ValueRange.java, org/threeten/bp/temporal/WeekFields.java, org/threeten/bp/zone/StandardZoneRules.java, org/threeten/bp/zone/ZoneOffsetTransition.java, org/threeten/bp/zone/ZoneOffsetTransitionRule.java, org/threeten/bp/zone/ZoneRules.java, org/threeten/bp/zone/ZoneRulesException.java, org/threeten/bp/zone/ZoneRulesProvider.java
+/*
+ * Copyright (c) 2007-present, Stephen Colebourne & Michael Nascimento Santos
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ *  * Neither the name of JSR-310 nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */

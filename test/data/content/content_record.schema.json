@@ -1,0 +1,1737 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ContentRecord — MASTER 1.0 + C03",
+  "description": "C03 adds compatibility.supportedQualities without adding semantic keys.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "locale",
+        "selector",
+        "texts",
+        "compatibility",
+        "review",
+        "schemaVersion"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Z0-9_.]+\\.v[0-9]{2}$"
+        },
+        "family": {
+          "const": "DAILY_BASE"
+        },
+        "locale": {
+          "const": "ko"
+        },
+        "selector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "domain",
+            "meaning",
+            "grade",
+            "variant"
+          ],
+          "properties": {
+            "domain": {
+              "type": "string",
+              "enum": [
+                "OVERALL",
+                "RELATIONSHIP",
+                "ROMANCE",
+                "WORK",
+                "MONEY",
+                "CONDITION"
+              ]
+            },
+            "meaning": {
+              "type": "string",
+              "enum": [
+                "CONNECT",
+                "EXPRESS",
+                "MANAGE",
+                "STRUCTURE",
+                "LEARN_RESTORE",
+                "COORDINATE",
+                "RECHECK",
+                "MIXED"
+              ]
+            },
+            "grade": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            "variant": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            }
+          }
+        },
+        "texts": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 7,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1600
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supports",
+            "forbids",
+            "requiresFacts",
+            "forbiddenClaims",
+            "supportedQualities"
+          ],
+          "properties": {
+            "supports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "requiresFacts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DAY_STEM_CONFIRMED",
+                  "HOUR_PILLAR_CONFIRMED",
+                  "NATAL_SIGNATURE_CONFIRMED",
+                  "NATAL_CONTEXT_CONFIRMED",
+                  "HAS_COMBINATION",
+                  "HAS_CLASH",
+                  "STEM_GAP",
+                  "STEM_EUL",
+                  "STEM_BYEONG",
+                  "STEM_JEONG",
+                  "STEM_MU",
+                  "STEM_GI",
+                  "STEM_GYEONG",
+                  "STEM_SIN",
+                  "STEM_IM",
+                  "STEM_GYE"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbiddenClaims": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "GUARANTEED_PROFIT",
+                  "HEALTH_DIAGNOSIS",
+                  "THREAT_OF_ACCIDENT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "supportedQualities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "FULL",
+                  "NO_HOUR",
+                  "BOUNDARY_PARTIAL"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 3
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reviewer",
+            "reviewedAt",
+            "contentHash"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "AUTO_VALIDATED",
+                "EDITOR_REVIEWED",
+                "APPROVED",
+                "REVOKED"
+              ]
+            },
+            "reviewer": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 160
+            },
+            "reviewedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 40
+            },
+            "contentHash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 64
+            }
+          }
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "selector": {
+              "properties": {
+                "domain": {
+                  "const": "OVERALL"
+                }
+              }
+            },
+            "texts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "body",
+                "widgetLine"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1600
+                },
+                "body": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1600
+                },
+                "widgetLine": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1600
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "selector": {
+              "properties": {
+                "domain": {
+                  "type": "string",
+                  "enum": [
+                    "RELATIONSHIP",
+                    "ROMANCE",
+                    "WORK",
+                    "MONEY",
+                    "CONDITION"
+                  ]
+                }
+              }
+            },
+            "texts": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "title",
+                "body"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1600
+                },
+                "body": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1600
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "locale",
+        "selector",
+        "texts",
+        "compatibility",
+        "review",
+        "schemaVersion"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Z0-9_.]+\\.v[0-9]{2}$"
+        },
+        "family": {
+          "const": "DAILY_MBTI_MAIN"
+        },
+        "locale": {
+          "const": "ko"
+        },
+        "selector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "meaning",
+            "grade",
+            "type",
+            "domain",
+            "variant"
+          ],
+          "properties": {
+            "meaning": {
+              "type": "string",
+              "enum": [
+                "CONNECT",
+                "EXPRESS",
+                "MANAGE",
+                "STRUCTURE",
+                "LEARN_RESTORE",
+                "COORDINATE",
+                "RECHECK",
+                "MIXED"
+              ]
+            },
+            "grade": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "ESTJ",
+                "ESTP",
+                "ESFJ",
+                "ESFP",
+                "ENTJ",
+                "ENTP",
+                "ENFJ",
+                "ENFP",
+                "ISTJ",
+                "ISTP",
+                "ISFJ",
+                "ISFP",
+                "INTJ",
+                "INTP",
+                "INFJ",
+                "INFP"
+              ]
+            },
+            "domain": {
+              "const": "OVERALL"
+            },
+            "variant": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            }
+          }
+        },
+        "texts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body",
+            "do",
+            "avoid",
+            "closing",
+            "shareLine"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "do": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "avoid": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "closing": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "shareLine": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supports",
+            "forbids",
+            "requiresFacts",
+            "forbiddenClaims",
+            "supportedQualities"
+          ],
+          "properties": {
+            "supports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "requiresFacts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DAY_STEM_CONFIRMED",
+                  "HOUR_PILLAR_CONFIRMED",
+                  "NATAL_SIGNATURE_CONFIRMED",
+                  "NATAL_CONTEXT_CONFIRMED",
+                  "HAS_COMBINATION",
+                  "HAS_CLASH",
+                  "STEM_GAP",
+                  "STEM_EUL",
+                  "STEM_BYEONG",
+                  "STEM_JEONG",
+                  "STEM_MU",
+                  "STEM_GI",
+                  "STEM_GYEONG",
+                  "STEM_SIN",
+                  "STEM_IM",
+                  "STEM_GYE"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbiddenClaims": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "GUARANTEED_PROFIT",
+                  "HEALTH_DIAGNOSIS",
+                  "THREAT_OF_ACCIDENT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "supportedQualities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "FULL",
+                  "NO_HOUR",
+                  "BOUNDARY_PARTIAL"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 3
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reviewer",
+            "reviewedAt",
+            "contentHash"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "AUTO_VALIDATED",
+                "EDITOR_REVIEWED",
+                "APPROVED",
+                "REVOKED"
+              ]
+            },
+            "reviewer": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 160
+            },
+            "reviewedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 40
+            },
+            "contentHash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 64
+            }
+          }
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "locale",
+        "selector",
+        "texts",
+        "compatibility",
+        "review",
+        "schemaVersion"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Z0-9_.]+\\.v[0-9]{2}$"
+        },
+        "family": {
+          "const": "DAILY_MBTI_LINE"
+        },
+        "locale": {
+          "const": "ko"
+        },
+        "selector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "domain",
+            "meaning",
+            "grade",
+            "type",
+            "variant"
+          ],
+          "properties": {
+            "domain": {
+              "type": "string",
+              "enum": [
+                "RELATIONSHIP",
+                "ROMANCE",
+                "WORK",
+                "MONEY",
+                "CONDITION"
+              ]
+            },
+            "meaning": {
+              "type": "string",
+              "enum": [
+                "CONNECT",
+                "EXPRESS",
+                "MANAGE",
+                "STRUCTURE",
+                "LEARN_RESTORE",
+                "COORDINATE",
+                "RECHECK",
+                "MIXED"
+              ]
+            },
+            "grade": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "ESTJ",
+                "ESTP",
+                "ESFJ",
+                "ESFP",
+                "ENTJ",
+                "ENTP",
+                "ENFJ",
+                "ENFP",
+                "ISTJ",
+                "ISTP",
+                "ISFJ",
+                "ISFP",
+                "INTJ",
+                "INTP",
+                "INFJ",
+                "INFP"
+              ]
+            },
+            "variant": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            }
+          }
+        },
+        "texts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "line"
+          ],
+          "properties": {
+            "line": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supports",
+            "forbids",
+            "requiresFacts",
+            "forbiddenClaims",
+            "supportedQualities"
+          ],
+          "properties": {
+            "supports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "requiresFacts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DAY_STEM_CONFIRMED",
+                  "HOUR_PILLAR_CONFIRMED",
+                  "NATAL_SIGNATURE_CONFIRMED",
+                  "NATAL_CONTEXT_CONFIRMED",
+                  "HAS_COMBINATION",
+                  "HAS_CLASH",
+                  "STEM_GAP",
+                  "STEM_EUL",
+                  "STEM_BYEONG",
+                  "STEM_JEONG",
+                  "STEM_MU",
+                  "STEM_GI",
+                  "STEM_GYEONG",
+                  "STEM_SIN",
+                  "STEM_IM",
+                  "STEM_GYE"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbiddenClaims": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "GUARANTEED_PROFIT",
+                  "HEALTH_DIAGNOSIS",
+                  "THREAT_OF_ACCIDENT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "supportedQualities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "FULL",
+                  "NO_HOUR",
+                  "BOUNDARY_PARTIAL"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 3
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reviewer",
+            "reviewedAt",
+            "contentHash"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "AUTO_VALIDATED",
+                "EDITOR_REVIEWED",
+                "APPROVED",
+                "REVOKED"
+              ]
+            },
+            "reviewer": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 160
+            },
+            "reviewedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 40
+            },
+            "contentHash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 64
+            }
+          }
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "locale",
+        "selector",
+        "texts",
+        "compatibility",
+        "review",
+        "schemaVersion"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Z0-9_.]+\\.v[0-9]{2}$"
+        },
+        "family": {
+          "const": "NATAL_BASE"
+        },
+        "locale": {
+          "const": "ko"
+        },
+        "selector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "section",
+            "signature",
+            "context",
+            "variant"
+          ],
+          "properties": {
+            "section": {
+              "type": "string",
+              "enum": [
+                "STRUCTURE",
+                "TEMPERAMENT",
+                "STRENGTH",
+                "RELATION",
+                "WORK",
+                "MONEY",
+                "ROMANCE",
+                "RHYTHM"
+              ]
+            },
+            "signature": {
+              "type": "string",
+              "enum": [
+                "BI_GYEON",
+                "GEOP_JAE",
+                "SIK_SIN",
+                "SANG_GWAN",
+                "PYEON_JAE",
+                "JEONG_JAE",
+                "PYEON_GWAN",
+                "JEONG_GWAN",
+                "PYEON_IN",
+                "JEONG_IN",
+                "MIXED",
+                "PARTIAL"
+              ]
+            },
+            "context": {
+              "type": "string",
+              "enum": [
+                "CALM",
+                "COORDINATE",
+                "FRICTION"
+              ]
+            },
+            "variant": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        "texts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supports",
+            "forbids",
+            "requiresFacts",
+            "forbiddenClaims",
+            "supportedQualities"
+          ],
+          "properties": {
+            "supports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "requiresFacts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DAY_STEM_CONFIRMED",
+                  "HOUR_PILLAR_CONFIRMED",
+                  "NATAL_SIGNATURE_CONFIRMED",
+                  "NATAL_CONTEXT_CONFIRMED",
+                  "HAS_COMBINATION",
+                  "HAS_CLASH",
+                  "STEM_GAP",
+                  "STEM_EUL",
+                  "STEM_BYEONG",
+                  "STEM_JEONG",
+                  "STEM_MU",
+                  "STEM_GI",
+                  "STEM_GYEONG",
+                  "STEM_SIN",
+                  "STEM_IM",
+                  "STEM_GYE"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbiddenClaims": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "GUARANTEED_PROFIT",
+                  "HEALTH_DIAGNOSIS",
+                  "THREAT_OF_ACCIDENT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "supportedQualities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "FULL",
+                  "NO_HOUR",
+                  "BOUNDARY_PARTIAL"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 3
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reviewer",
+            "reviewedAt",
+            "contentHash"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "AUTO_VALIDATED",
+                "EDITOR_REVIEWED",
+                "APPROVED",
+                "REVOKED"
+              ]
+            },
+            "reviewer": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 160
+            },
+            "reviewedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 40
+            },
+            "contentHash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 64
+            }
+          }
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "locale",
+        "selector",
+        "texts",
+        "compatibility",
+        "review",
+        "schemaVersion"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Z0-9_.]+\\.v[0-9]{2}$"
+        },
+        "family": {
+          "const": "NATAL_MBTI"
+        },
+        "locale": {
+          "const": "ko"
+        },
+        "selector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "block",
+            "signature",
+            "context",
+            "type",
+            "variant"
+          ],
+          "properties": {
+            "block": {
+              "type": "string",
+              "enum": [
+                "SUMMARY",
+                "STRENGTH",
+                "RELATION",
+                "WORK",
+                "ROMANCE",
+                "STRESS",
+                "RHYTHM"
+              ]
+            },
+            "signature": {
+              "type": "string",
+              "enum": [
+                "BI_GYEON",
+                "GEOP_JAE",
+                "SIK_SIN",
+                "SANG_GWAN",
+                "PYEON_JAE",
+                "JEONG_JAE",
+                "PYEON_GWAN",
+                "JEONG_GWAN",
+                "PYEON_IN",
+                "JEONG_IN",
+                "MIXED",
+                "PARTIAL"
+              ]
+            },
+            "context": {
+              "type": "string",
+              "enum": [
+                "CALM",
+                "COORDINATE",
+                "FRICTION"
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "ESTJ",
+                "ESTP",
+                "ESFJ",
+                "ESFP",
+                "ENTJ",
+                "ENTP",
+                "ENFJ",
+                "ENFP",
+                "ISTJ",
+                "ISTP",
+                "ISFJ",
+                "ISFP",
+                "INTJ",
+                "INTP",
+                "INFJ",
+                "INFP"
+              ]
+            },
+            "variant": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        "texts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supports",
+            "forbids",
+            "requiresFacts",
+            "forbiddenClaims",
+            "supportedQualities"
+          ],
+          "properties": {
+            "supports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "requiresFacts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DAY_STEM_CONFIRMED",
+                  "HOUR_PILLAR_CONFIRMED",
+                  "NATAL_SIGNATURE_CONFIRMED",
+                  "NATAL_CONTEXT_CONFIRMED",
+                  "HAS_COMBINATION",
+                  "HAS_CLASH",
+                  "STEM_GAP",
+                  "STEM_EUL",
+                  "STEM_BYEONG",
+                  "STEM_JEONG",
+                  "STEM_MU",
+                  "STEM_GI",
+                  "STEM_GYEONG",
+                  "STEM_SIN",
+                  "STEM_IM",
+                  "STEM_GYE"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbiddenClaims": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "GUARANTEED_PROFIT",
+                  "HEALTH_DIAGNOSIS",
+                  "THREAT_OF_ACCIDENT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "supportedQualities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "FULL",
+                  "NO_HOUR",
+                  "BOUNDARY_PARTIAL"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 3
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reviewer",
+            "reviewedAt",
+            "contentHash"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "AUTO_VALIDATED",
+                "EDITOR_REVIEWED",
+                "APPROVED",
+                "REVOKED"
+              ]
+            },
+            "reviewer": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 160
+            },
+            "reviewedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 40
+            },
+            "contentHash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 64
+            }
+          }
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "family",
+        "locale",
+        "selector",
+        "texts",
+        "compatibility",
+        "review",
+        "schemaVersion"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[A-Z0-9_.]+\\.v[0-9]{2}$"
+        },
+        "family": {
+          "const": "DAY_STEM_INTRO"
+        },
+        "locale": {
+          "const": "ko"
+        },
+        "selector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stem"
+          ],
+          "properties": {
+            "stem": {
+              "type": "string",
+              "enum": [
+                "GAP",
+                "EUL",
+                "BYEONG",
+                "JEONG",
+                "MU",
+                "GI",
+                "GYEONG",
+                "SIN",
+                "IM",
+                "GYE"
+              ]
+            }
+          }
+        },
+        "texts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "body"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1600
+            }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "supports",
+            "forbids",
+            "requiresFacts",
+            "forbiddenClaims",
+            "supportedQualities"
+          ],
+          "properties": {
+            "supports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALIGN_EXPECTATIONS",
+                  "CLARIFY_INTENT",
+                  "DEFINE_NEXT_STEP",
+                  "DRAFT_BEFORE_SHARING",
+                  "KEEP_REST_MARGIN",
+                  "LIMIT_SCOPE",
+                  "OBSERVE_BEFORE_CHANGING",
+                  "PLAN_SPENDING",
+                  "VERIFY_BEFORE_COMMIT",
+                  "ASSERT_OTHERS_FEELINGS",
+                  "IGNORE_CONSTRAINTS",
+                  "IMPULSIVE_COMMIT",
+                  "SKIP_REST",
+                  "UNBOUNDED_COMMIT",
+                  "UNCHECKED_PUBLIC_COMMIT",
+                  "UNILATERAL_COMMIT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "requiresFacts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DAY_STEM_CONFIRMED",
+                  "HOUR_PILLAR_CONFIRMED",
+                  "NATAL_SIGNATURE_CONFIRMED",
+                  "NATAL_CONTEXT_CONFIRMED",
+                  "HAS_COMBINATION",
+                  "HAS_CLASH",
+                  "STEM_GAP",
+                  "STEM_EUL",
+                  "STEM_BYEONG",
+                  "STEM_JEONG",
+                  "STEM_MU",
+                  "STEM_GI",
+                  "STEM_GYEONG",
+                  "STEM_SIN",
+                  "STEM_IM",
+                  "STEM_GYE"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 0,
+              "maxItems": 16
+            },
+            "forbiddenClaims": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "GUARANTEED_PROFIT",
+                  "HEALTH_DIAGNOSIS",
+                  "THREAT_OF_ACCIDENT"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "supportedQualities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "FULL",
+                  "NO_HOUR",
+                  "BOUNDARY_PARTIAL"
+                ]
+              },
+              "uniqueItems": true,
+              "minItems": 1,
+              "maxItems": 3
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reviewer",
+            "reviewedAt",
+            "contentHash"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "AUTO_VALIDATED",
+                "EDITOR_REVIEWED",
+                "APPROVED",
+                "REVOKED"
+              ]
+            },
+            "reviewer": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 160
+            },
+            "reviewedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 40
+            },
+            "contentHash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 64
+            }
+          }
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "calendar/v2/lunar_months.csv": {
+    "path": "data/calendar/v2/lunar_months.csv",
+    "gzip": false,
+    "sha256": "570f16b2d04524c8b165a21ca6b9e2ee1724fd35eb044a92358389f13c2a7373",
+    "bytes": 51163
+  },
+  "calendar/v2/seoul_transitions.csv": {
+    "path": "data/calendar/v2/seoul_transitions.csv",
+    "gzip": false,
+    "sha256": "098619f84f004b2bf26cb6d28815905b7937ef581661e65197604ed475cf684d",
+    "bytes": 1031
+  },
+  "calendar/v2/solar_windows.csv": {
+    "path": "data/calendar/v2/solar_windows.csv",
+    "gzip": false,
+    "sha256": "54d516bbfa362313852c55dd0c50ec57746df005bebefa636831ad4633541b5c",
+    "bytes": 14641
+  },
+  "calendar/solar_terms.csv": {
+    "path": "data/calendar/solar_terms.csv",
+    "gzip": false,
+    "sha256": "a37e4168e5cb08257d6a43d95e28ca2bd05daa94c94622839facc9758f586193",
+    "bytes": 70883
+  },
+  "content/preview.json": {
+    "path": "data/content/preview.json.gz",
+    "gzip": true,
+    "sha256": "dabb763e387632797983900616be4ef0a83920b6c5c68ba20f9c39ed33e9564f",
+    "bytes": 10604638
+  },
+  "content/content_record.schema.json": {
+    "path": "data/content/content_record.schema.json",
+    "gzip": false,
+    "sha256": "3281ae262d9470bfda7b40f744975e0d47610becdc7bccaf5a2a41e3b43d0c9d",
+    "bytes": 46101
+  },
+  "content/content_notice.schema.json": {
+    "path": "data/content/content_notice.schema.json",
+    "gzip": false,
+    "sha256": "5d359510b48d8286888c574008b886fea971fd43e634d6ecaf5a835787d28e9a",
+    "bytes": 1453
+  },
+  "review/parent_corrections_r2.json": {
+    "path": "data/review/parent_corrections_r2.json",
+    "gzip": false,
+    "sha256": "680a356edfad05a42fc3705a5875b9449ac76e7a2e6e2c84e71763605a149f69",
+    "bytes": 27987
+  },
+  "review/parent_corrections_source45.json": {
+    "path": "data/review/parent_corrections_source45.json",
+    "gzip": false,
+    "sha256": "3a6002199a228f1aad4e53f134743c54a1d8e9b23fad5f3738625d10c79514ae",
+    "bytes": 126896
+  }
+}

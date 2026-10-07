@@ -1,0 +1,408 @@
+{
+  "status": "DRAFT",
+  "semanticApproval": false,
+  "runtimeEligible": false,
+  "releaseEligible": false,
+  "contentHash": null,
+  "sourceCanonicalSha256": "6f03530cae96889f87c4b6ba2dba70c3ad5b9c992d790555314f6ff283d7c037",
+  "hashConvention": "oldTextHash and draftTextHash are new review fingerprints: SHA-256 of UTF-8 JSON with ensure_ascii=false, sort_keys=true, separators=(comma,colon), no trailing newline; they are not existing source approval hashes. No fingerprint is fabricated for unavailable original text.",
+  "rows": [
+    {
+      "semanticKey": "DAILY_BASE.CONDITION.CONNECT.4",
+      "oldTextHash": "2818c247a9c21f237b7ae74e5597ec0842a607534912fff8b42c27dcd65fb5b7",
+      "draftTextHash": "9c34066409decd76088e961fb81ceb18f0805549bc1e149af5b88a73d9c90403",
+      "draftTexts": {
+        "title": "쉬는 시간도 함께 정해요",
+        "body": "함께하는 일정 사이에 쉬는 시간을 남겨두세요. 내게 편한 활동량을 먼저 알리고, 힘이 남더라도 쉬는 시간을 활동으로 채우지는 말아요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.ENFP",
+      "oldTextHash": "22da78cccfa98095fd20f0efb70fc35527d717de7715bd231971f312c7ad3df1",
+      "draftTextHash": "0d486b6092220eb786e46b02d3cad9f631a856e856644a7129408a31807f2237",
+      "draftTexts": {
+        "line": "하고 싶은 활동은 잠깐 쉬고 난 뒤 골라요. 함께할 사람과 활동량을 정하기 전, 내게 남은 힘부터 살펴요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.ENTJ",
+      "oldTextHash": "0e477e9d32bc05fb77a48c6231c6482e82e75caa58efe4d0a339d8098bcdc95f",
+      "draftTextHash": "32e2d38316bccea349b0118e8ab87b9e329c9867b42b90bc502e1b82ff5d7ea2",
+      "draftTexts": {
+        "line": "함께 움직일 일을 나누기 전, 각자 남은 힘과 쉴 시간을 확인해요. 내 몫은 쉬는 시간을 남길 만큼만 정해요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.ENTP",
+      "oldTextHash": "2100d979a98b14cae57fb74305c2ae18be6008cec31f262d3e4618cd16587402",
+      "draftTextHash": "79ba486a4abf042d740a12fa5ba88287138abf3ca39633cd7881ac50b05669f2",
+      "draftTexts": {
+        "line": "다른 휴식 방법을 고르기 전, 몸이 불편했던 활동부터 줄여요. 함께 쉬는 방법은 무리 없는 것부터 골라요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.ESTJ",
+      "oldTextHash": "8f4d823a624b9d8e4cf2a2ae7eb8f2f19757d4a71bba85b7467a0752fa9a4855",
+      "draftTextHash": "eb11f0443a70fb0a0192953c438a6027016ffef4d0e9c787641116c370858f83",
+      "draftTexts": {
+        "line": "함께 정리할 일이 있다면 쉴 차례부터 정해요. 일을 더 맡기 전, 쉬고 난 뒤에도 할 수 있는 양인지 살펴요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.ESTP",
+      "oldTextHash": "ff71db121fa5db5f5df487cc76bb9e7cf8b4e89d802f7e425df1dc5d020be2a3",
+      "draftTextHash": "5e88dc89e1ddab08b571d05013fccf8e965a6d357fe2c6e9befb69e6d172158f",
+      "draftTexts": {
+        "line": "함께 나가기 전, 지금 걸을 여유가 있는지 서로 확인해요. 힘이 부족하면 이동을 줄이고 먼저 쉬어요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.INTJ",
+      "oldTextHash": "4c909e3e78e2ef2ee4c8934f1da235350e5cd3071b97e831cc7bed5cb3d5a55a",
+      "draftTextHash": "4f04f6f3f8fef653720cde0cd061aa67f631b72731c433373f0e3231e6f776ec",
+      "draftTexts": {
+        "line": "함께하는 일정에서 각자 쉴 시간을 먼저 정해요. 새 일정을 넣기 전, 내 휴식 시간이 남는지 확인해요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.ISTJ",
+      "oldTextHash": "efac1222b7e3abf9e750c01c6aff64271d3a7e1a7f02d6772d5176aae0775545",
+      "draftTextHash": "579b8092bd342114093ca848992c06440bc29f36901403cacf461bfad5b50fe3",
+      "draftTexts": {
+        "line": "함께 걷기 전, 서로 편한 거리와 속도를 확인해요. 멀리 가기로 정하기 전에 잠깐 쉬며 내게 남은 힘을 살펴요."
+      }
+    },
+    {
+      "semanticKey": "DAILY_MBTI_LINE.CONDITION.CONNECT.1.ISTP",
+      "oldTextHash": "8f435495b70e74a240931ad5c78504447fd06755d50978fa809e93914856f87f",
+      "draftTextHash": "e19096a755d004f5d1e192be094ac1f23377148fe2dc785f99aeda4f4ccd2b88",
+      "draftTexts": {
+        "line": "도움을 주기 전, 몸을 얼마나 써야 하는 일인지 확인해요. 쉬는 시간을 남겨두고 내가 할 수 있는 양만 맡아요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.BI_GYEON.CALM",
+      "oldTextHash": "7c0ec512c2d2dd73d52eb41097d979625863b5dca5dbd1602afa6d3cae773a1d",
+      "draftTextHash": "ee86c0ef0097b9183826c92cfcaf4b052bc2afacbc392f31273e07fb82bbd8da",
+      "draftTexts": {
+        "title": "비견, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 비견은 일간과 오행도 음양도 같은 관계를 부르는 이름이에요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.BI_GYEON.COORDINATE",
+      "oldTextHash": "884726d32277085f8870d9ebdffda82367afe229b8b9a9722e7214a3014c2946",
+      "draftTextHash": "deb2023f3f0cffe9757669babfa4dc19ac0740ba6808ae42fa1ed7c07721474e",
+      "draftTexts": {
+        "title": "비견, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 비견은 일간과 오행도 음양도 같은 관계를 부르는 이름이에요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.BI_GYEON.FRICTION",
+      "oldTextHash": "4a2e7b8cc077262d67ff36675e97fd319e85245f31618cb1f5f2851263ab7b8f",
+      "draftTextHash": "c9f4dda77f9a4a85d1c039abec0a594644389378f1f89e28438503dfad3f198f",
+      "draftTexts": {
+        "title": "비견, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 비견은 일간과 오행도 음양도 같은 관계를 부르는 이름이에요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.GEOP_JAE.CALM",
+      "oldTextHash": "18738fd41b213f3c6c84d60ce7706b219b65d244481d3c4b0f1544a521977440",
+      "draftTextHash": "8aa7d607f5614d01084fd1c9a296a8c94cb803d583d3d83748364551925c2926",
+      "draftTexts": {
+        "title": "겁재, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 겁재는 일간과 오행은 같고 음양은 다른 관계를 부르는 이름이에요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.GEOP_JAE.COORDINATE",
+      "oldTextHash": "4eb562ab7213acba56e1924831adff4092b3191a5946ebfa2aa598a753d541f9",
+      "draftTextHash": "5a3ef62220a368061ec17e30f477b20d673c3b992b5a227571b8978d93b7ede3",
+      "draftTexts": {
+        "title": "겁재, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 겁재는 일간과 오행은 같고 음양은 다른 관계를 부르는 이름이에요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.GEOP_JAE.FRICTION",
+      "oldTextHash": "022b1c01b844f2603a6e7231c45eb83f84cbb4bd8fdf57f1fb1f70d05de68ae8",
+      "draftTextHash": "c9eb899ed952d2cf78f139565e8758a3520b61894c343e5fcc0a32e5166f5043",
+      "draftTexts": {
+        "title": "겁재, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 겁재는 일간과 오행은 같고 음양은 다른 관계를 부르는 이름이에요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.SIK_SIN.CALM",
+      "oldTextHash": "83d3769cbdc7fdabc259b17842e2941f21764a26c39b250997b5566a33f87a1f",
+      "draftTextHash": "cd8722c9da405fff17910e14b72f5b9dcb8f9b3bb16a22ab1012c03d5b1d2d4f",
+      "draftTexts": {
+        "title": "식신, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 식신은 일간의 오행이 다른 오행을 낳아 주는 생의 관계 중 음양이 같은 경우를 말해요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.SIK_SIN.COORDINATE",
+      "oldTextHash": "5228354f986eedcfce611f4bd732738302ae8c3c109bc78b91ca491a9abec0ec",
+      "draftTextHash": "4190e383d412a240379b5b42f8b122172d6f7c458d149af8d883d2f2194c9567",
+      "draftTexts": {
+        "title": "식신, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 식신은 일간의 오행이 다른 오행을 낳아 주는 생의 관계 중 음양이 같은 경우를 말해요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.SIK_SIN.FRICTION",
+      "oldTextHash": "9096d8b6636630890640df7eaae25b209e39dd999728476f4179ddfc3051840a",
+      "draftTextHash": "28d34e797a9eb44b9ee57a295d67432f815d730e2c518f1d38b17c3b351cbf44",
+      "draftTexts": {
+        "title": "식신, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 식신은 일간의 오행이 다른 오행을 낳아 주는 생의 관계 중 음양이 같은 경우를 말해요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.SANG_GWAN.CALM",
+      "oldTextHash": "1e82c50edbd678b8e730525fffe199b1c6909646a50da1947e3e5a9714b87c05",
+      "draftTextHash": "38559db53f8bfc106f587d56f4ec08da4a03ec3ea803dca57567708c4ee81e90",
+      "draftTexts": {
+        "title": "상관, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 상관은 일간의 오행이 다른 오행을 낳아 주는 생의 관계 중 음양이 다른 경우를 말해요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.SANG_GWAN.COORDINATE",
+      "oldTextHash": "372f8f623fa8e7835868cc8e5477e4aa4ee810d6136356568686a92daa13a68a",
+      "draftTextHash": "72afa22a235c325ef50a5d336db87e0db6420a9a2f4523c4c23404a3771584a5",
+      "draftTexts": {
+        "title": "상관, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 상관은 일간의 오행이 다른 오행을 낳아 주는 생의 관계 중 음양이 다른 경우를 말해요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.SANG_GWAN.FRICTION",
+      "oldTextHash": "16e6cc3718a986b764dd5512961dfe1f480882f7ec6f72302a83d801268b939e",
+      "draftTextHash": "262af5642158dbbbc15bfed4b8e5e83e2f3ff1b82d3dcb6171ecdca3f07ede85",
+      "draftTexts": {
+        "title": "상관, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 상관은 일간의 오행이 다른 오행을 낳아 주는 생의 관계 중 음양이 다른 경우를 말해요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_JAE.CALM",
+      "oldTextHash": "2e7201c7545b2092f756030894b2357aa3bbdce20044cc20e2de834a1407aa15",
+      "draftTextHash": "e6ec0df1984f9290a6e659018e20a81da1e81aacb7c09f0bf6d108931871a218",
+      "draftTexts": {
+        "title": "편재, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편재는 일간의 오행이 다른 오행을 누르는 극의 관계 중 음양이 같은 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_JAE.COORDINATE",
+      "oldTextHash": "26a0da6d5f94fdb56f82baf61961a066bcfdca15bf8aa5d39680695113b48ffa",
+      "draftTextHash": "a4bea8370a9b83447d7b6893e87bd1934223b0af36f6e170eebee60e7e57e46c",
+      "draftTexts": {
+        "title": "편재, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편재는 일간의 오행이 다른 오행을 누르는 극의 관계 중 음양이 같은 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_JAE.FRICTION",
+      "oldTextHash": "a8c04108b1cdd500b0e06deabe29105bf09cd0b5d6a0a9f92bb46947c5136c6b",
+      "draftTextHash": "c8cb45d567db56d44f35a68bd4e84ca8e816ed704d9c45ff3312fd94a85c27ad",
+      "draftTexts": {
+        "title": "편재, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편재는 일간의 오행이 다른 오행을 누르는 극의 관계 중 음양이 같은 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_JAE.CALM",
+      "oldTextHash": "3e72a0840be53520e01555e6eb49df9405c676a1405d2214964cae4e7ab27b77",
+      "draftTextHash": "991de5927203302e4e030ed235b797f9383a223c6da6587e79e646e19bce21ee",
+      "draftTexts": {
+        "title": "정재, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정재는 일간의 오행이 다른 오행을 누르는 극의 관계 중 음양이 다른 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_JAE.COORDINATE",
+      "oldTextHash": "e9f41d4ff083fd94e105f5b523c88a8b558a5ae54ffc41ee9b29ad414ddd304e",
+      "draftTextHash": "baf7221935535d8346ba69e1451fac648243ef7c5746a448bad2e5e87fdaba70",
+      "draftTexts": {
+        "title": "정재, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정재는 일간의 오행이 다른 오행을 누르는 극의 관계 중 음양이 다른 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_JAE.FRICTION",
+      "oldTextHash": "eb5105bb7c0c4abd988cad1f14da77114cb7f00ca605aae70c00aa4dc8f174be",
+      "draftTextHash": "b69ccee9bc8a1ecc2018cdf1b4848f8e6c1ffa9765f736b8e5daf2f44ed4d1d8",
+      "draftTexts": {
+        "title": "정재, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정재는 일간의 오행이 다른 오행을 누르는 극의 관계 중 음양이 다른 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_GWAN.CALM",
+      "oldTextHash": "60e42bdb52b92169ffc1a7d50a8ac25e76120acda14d3bc07743be2a3e569d33",
+      "draftTextHash": "63545a3b412ec11d7cb709667144ca1949762af5156527cda9a62ec732059bda",
+      "draftTexts": {
+        "title": "편관, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편관은 다른 오행이 일간의 오행을 누르는 극의 관계 중 음양이 같은 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_GWAN.COORDINATE",
+      "oldTextHash": "c5147e90a15be2d58f2c2ce2331ad6821bfdbabe0a87265ca00f0b957703b39b",
+      "draftTextHash": "82c6e313592b135bec18b548681ca86a42d209d611f7babb3bf63109dcc01e80",
+      "draftTexts": {
+        "title": "편관, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편관은 다른 오행이 일간의 오행을 누르는 극의 관계 중 음양이 같은 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_GWAN.FRICTION",
+      "oldTextHash": "7119b50d554c26639c83ae84caeade15d957c671d06de9cbfcae9a4c81fc0041",
+      "draftTextHash": "7d81fff02ef2b6eaa2b1391e4ab70ee0a9de574fe599244cfd0018c3d1e39518",
+      "draftTexts": {
+        "title": "편관, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편관은 다른 오행이 일간의 오행을 누르는 극의 관계 중 음양이 같은 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_GWAN.CALM",
+      "oldTextHash": "94ebd0194672056b2ae4c72f0f22caea6fdbff9fd58b8287cad72f6604e9c51b",
+      "draftTextHash": "e4c473925f6175e879ff4be5e4394bde630c4a214eb409bc966404645061fe2e",
+      "draftTexts": {
+        "title": "정관, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정관은 다른 오행이 일간의 오행을 누르는 극의 관계 중 음양이 다른 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_GWAN.COORDINATE",
+      "oldTextHash": "db4f49c18d83d5ad2eeb8e294bf850f8bd4b422df0a7ffa11fb233f9c1b05686",
+      "draftTextHash": "9f63a738617deb80f913258625839043ff702c6ef0ad763a638cec0405143693",
+      "draftTexts": {
+        "title": "정관, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정관은 다른 오행이 일간의 오행을 누르는 극의 관계 중 음양이 다른 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_GWAN.FRICTION",
+      "oldTextHash": "6fb42bb9a7961bdd301d897d8269a55dc5907c718286cd6f61d7a35165ed531f",
+      "draftTextHash": "17a86aab5e4b4581bd293867e781b50d199c2b2aa09e0a8e18595f45da94b56d",
+      "draftTexts": {
+        "title": "정관, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정관은 다른 오행이 일간의 오행을 누르는 극의 관계 중 음양이 다른 경우를 말해요. 여기서 극은 좋고 나쁨을 정하는 말은 아니에요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_IN.CALM",
+      "oldTextHash": "4ca86894c621ef8c608909ab1e3b6a0fff2dc45ffa8a7c768070a129428530a6",
+      "draftTextHash": "06ff3685cbb826fa9a182c76d5b9a868d618c7141a201ce1a0feff2155db31d4",
+      "draftTexts": {
+        "title": "편인, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편인은 다른 오행이 일간의 오행을 낳아 주는 생의 관계 중 음양이 같은 경우를 말해요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_IN.COORDINATE",
+      "oldTextHash": "4094caa602f5228544681b80ca709370174555842e9c0651c3d13ff30c1dc359",
+      "draftTextHash": "55e1102d498bb723bf335ec9009b1ec8a816d189c9ae9747b720328a53910bdc",
+      "draftTexts": {
+        "title": "편인, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편인은 다른 오행이 일간의 오행을 낳아 주는 생의 관계 중 음양이 같은 경우를 말해요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PYEON_IN.FRICTION",
+      "oldTextHash": "fdf37598ec4f75f76d963a8e61fd925cda2bf70d4cba95228d8620038fd57ede",
+      "draftTextHash": "f6b1597e7013022dc5c351dae44a45bea3af2cae8d12735c38079f3d42ed10a0",
+      "draftTexts": {
+        "title": "편인, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 편인은 다른 오행이 일간의 오행을 낳아 주는 생의 관계 중 음양이 같은 경우를 말해요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_IN.CALM",
+      "oldTextHash": "5577410a9267eb72e2cd629a27e0a08e9bed3a7844dd7bf595847677f982e19a",
+      "draftTextHash": "334a92669fb7fa1bed8f4cebbad77af8fd0e13ad440ded51bc01815b68d3fc86",
+      "draftTexts": {
+        "title": "정인, 기본 관계를 알아봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정인은 다른 오행이 일간의 오행을 낳아 주는 생의 관계 중 음양이 다른 경우를 말해요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_IN.COORDINATE",
+      "oldTextHash": "85f9390a297922c8c3033feb82e96b51e4ebc08ae13421015e2bbe91992ab4a6",
+      "draftTextHash": "b2288fc1257af4f5080320179e8738d424bcfe18838ac4c7462c0299269dbf8c",
+      "draftTexts": {
+        "title": "정인, 합을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정인은 다른 오행이 일간의 오행을 낳아 주는 생의 관계 중 음양이 다른 경우를 말해요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.JEONG_IN.FRICTION",
+      "oldTextHash": "267eaf9b113fbd192d37c20e6fac1172317b2c732cf3059ec833d4cdd180ab0c",
+      "draftTextHash": "4a423b17af79fcd6da8dee9ea6e01fcf5cfa067bd4bb27fb44d278086ba16297",
+      "draftTexts": {
+        "title": "정인, 충을 함께 살펴봐요",
+        "body": "사주에서 나를 나타내는 글자를 일간이라고 해요. 정인은 다른 오행이 일간의 오행을 낳아 주는 생의 관계 중 음양이 다른 경우를 말해요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.MIXED.CALM",
+      "oldTextHash": "db8f0783ed71e911bb460b6e02fcbe6c23c7b480d273b7a76339e1eae3a89bca",
+      "draftTextHash": "a6cde8c7ae51a818fc310f381c4cc9cd01c73f22e104434ded8a1e0b2533cba7",
+      "draftTexts": {
+        "title": "여러 십성, 기본 관계를 알아봐요",
+        "body": "십성은 일간을 기준으로 다른 글자들과의 관계에 붙인 이름이에요. 여러 십성의 비중을 비교했지만, 하나를 대표로 고르는 기준에는 해당하지 않는 경우예요. 합이나 충으로 따로 짚을 관계는 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.MIXED.COORDINATE",
+      "oldTextHash": "ea3cc8027309fbcb28e687ac89945213a2f66eb037a43f2fd9b08f5c24118bb0",
+      "draftTextHash": "96109bffefd6cc5602698e742fc0c557bb7833e09730ad6da861c4cb7c5cef73",
+      "draftTexts": {
+        "title": "여러 십성, 합을 함께 살펴봐요",
+        "body": "십성은 일간을 기준으로 다른 글자들과의 관계에 붙인 이름이에요. 여러 십성의 비중을 비교했지만, 하나를 대표로 고르는 기준에는 해당하지 않는 경우예요. 함께 보는 관계는 합이며, 충은 없는 경우예요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.MIXED.FRICTION",
+      "oldTextHash": "be5fb71b64744d2baa39d6fa283672c672dab5fa879600d2272bf24586190f6f",
+      "draftTextHash": "d3d2cb448e0cb17bcbc570a88d10b99bf93b38ccd118f28211baf6d6bcbd9ff5",
+      "draftTexts": {
+        "title": "여러 십성, 충을 함께 살펴봐요",
+        "body": "십성은 일간을 기준으로 다른 글자들과의 관계에 붙인 이름이에요. 여러 십성의 비중을 비교했지만, 하나를 대표로 고르는 기준에는 해당하지 않는 경우예요. 함께 보는 관계에는 충이 있으며, 합도 있다면 두 관계를 함께 살펴봐요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PARTIAL.CALM",
+      "oldTextHash": "a97a67b950698eb655f6ff793eea2dbda3fe3d38167fc610535eff03775d3040",
+      "draftTextHash": "c41187c211ec803763fe4c909a819071ee929c95ad1dbfd20296764bb5113152",
+      "draftTexts": {
+        "title": "확인 중인 구성, 기본 관계를 알아봐요",
+        "body": "아직 확정되지 않은 자료가 있어 십성의 비중은 비교하기 어려워요. 확인된 범위에서는 따로 짚을 합이나 충이 없어요. 빠진 자료가 확인되면 나머지 구성도 이어서 살펴볼 수 있어요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PARTIAL.COORDINATE",
+      "oldTextHash": "91ace2b9a257d8dd339666638095ac68c7b118241604cc492a5ffe1f9ec49d1e",
+      "draftTextHash": "828c63bcd0d92e587f72c53b118fc9d471648dc9627c3de9cb405769862b7c74",
+      "draftTexts": {
+        "title": "확인 중인 구성, 합을 함께 살펴봐요",
+        "body": "아직 확정되지 않은 자료가 있어 십성의 비중은 비교하기 어려워요. 확인된 범위에서는 합이 있고 충은 없어요. 빠진 자료가 확인되면 나머지 구성도 이어서 살펴볼 수 있어요."
+      }
+    },
+    {
+      "semanticKey": "NATAL_BASE.STRUCTURE.PARTIAL.FRICTION",
+      "oldTextHash": "39ee7910b4a87d4e103547a5dee9cdc983353040943296db84fdf11f8b4b17d0",
+      "draftTextHash": "118f67df95b361064bb5960668b6434c60df66dd281529f7d9fa3da0f22efb94",
+      "draftTexts": {
+        "title": "확인 중인 구성, 충을 함께 살펴봐요",
+        "body": "아직 확정되지 않은 자료가 있어 십성의 비중은 비교하기 어려워요. 확인된 범위에는 충이 있고, 합도 확인됐다면 함께 살펴봐요. 빠진 자료가 확인되면 나머지 구성도 이어서 살펴볼 수 있어요."
+      }
+    }
+  ]
+}

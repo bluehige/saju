@@ -1,0 +1,76 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "text",
+    "review",
+    "schemaVersion"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "enum": [
+        "NO_HOUR",
+        "BOUNDARY_PARTIAL",
+        "UNSUPPORTED",
+        "DAY_STEM_UNCONFIRMED",
+        "CONTENT_UNAVAILABLE",
+        "CONTENT_REVOKED"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 15,
+      "maxLength": 180
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewer",
+        "reviewedAt",
+        "contentHash"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "DRAFT",
+            "AUTO_VALIDATED",
+            "EDITOR_REVIEWED",
+            "APPROVED",
+            "REVOKED"
+          ]
+        },
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 160
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        },
+        "contentHash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 64
+        }
+      }
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
