@@ -5,9 +5,6 @@
   const domains={OVERALL:'총운',RELATIONSHIP:'인간관계',ROMANCE:'연애',WORK:'일·학업',MONEY:'재물',CONDITION:'컨디션'};
   const sections={STRUCTURE:'사주의 기본 구성',TEMPERAMENT:'기본 성향',STRENGTH:'강점',RELATION:'관계',WORK:'일·학업',MONEY:'재물',ROMANCE:'연애',RHYTHM:'생활 리듬'};
   const blocks={SUMMARY:'사주와 MBTI 함께 보기',STRENGTH:'강점 활용',RELATION:'관계',WORK:'일·학업',ROMANCE:'연애',STRESS:'스트레스 돌보기',RHYTHM:'생활 리듬'};
-  const meanings={CONNECT:'관계를 연결하기',EXPRESS:'생각을 표현하기',MANAGE:'할 일을 나누고 관리하기',STRUCTURE:'기준과 순서 정하기',LEARN_RESTORE:'배우고 회복하기',COORDINATE:'서로 맞추기',RECHECK:'다시 확인하기',MIXED:'여러 흐름 함께 보기'};
-  const signatures={BI_GYEON:'내 선택과 동료(비견)',GEOP_JAE:'함께 나누는 몫과 경쟁(겁재)',SIK_SIN:'꾸준히 해내는 일과 즐거움(식신)',SANG_GWAN:'내 생각을 전하고 바꿔보기(상관)',PYEON_JAE:'새로운 기회와 돈의 쓰임(편재)',JEONG_JAE:'꾸준히 챙기는 돈과 생활(정재)',PYEON_GWAN:'부담이 큰 일과 대응(편관)',JEONG_GWAN:'약속과 책임(정관)',PYEON_IN:'다르게 배우고 살펴보기(편인)',JEONG_IN:'배우며 도움 받기(정인)',MIXED:'여러 주제를 함께 봐요(여러 특징)',PARTIAL:'대표 주제를 보류했어요(계산 일부 보류)'};
-  const contexts={CALM:'개별 주제를 살펴봐요(합·충 없음)',COORDINATE:'함께 맞추는 일을 살펴봐요(합 있음·충 없음)',FRICTION:'맞서는 조합 포함(충)'};
   const warnings={INVALID_DATE:'존재하는 날짜인지 확인해주세요. 음력은 해당 달의 실제 날짜 수를 확인해요.',INVALID_LEAP_MONTH:'입력한 연도·월에는 해당 윤달이 없어요. 음력 날짜와 윤달 여부를 확인해주세요.',FUTURE_BIRTH:'태어난 날짜는 한국 기준 오늘까지 입력할 수 있어요.',OUT_OF_RANGE:'태어난 날짜의 지원 범위는 1900년 1월 1일부터 한국 기준 오늘까지예요.',NONEXISTENT_LOCAL_TIME:'과거 한국의 시각 변경으로 존재하지 않는 출생 시각이에요. 기록된 시각을 확인하거나 시간 모름을 선택해주세요.',TABLE_INTEGRITY_FAILURE:'계산 자료를 정확히 읽지 못했어요. 새로고침해서 다시 준비해주세요.',UNSUPPORTED_TIME_RULE:'이 날짜의 시간 기준을 확인하지 못했어요. 계산 자료를 다시 준비해주세요.'};
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const text=value=>escape(String(value??'').replace(/\{displayName\}/g,'사용자').replace(/\{typeLabel\}/g,state.profile?.mbti||''));
@@ -126,7 +123,7 @@
     if(r.pillars.DAY===null)messages.push('일간이 확정되지 않아 별점과 관련 맞춤 조언은 보류해요.');
     return messages.length?`<div class="notice" data-calculation-notice>${messages.map(message=>`<p>${escape(message)}</p>`).join('')}</div>`:'';
   }
-  function details(key,label,body,technical=false){return `<details data-detail="${escape(key)}" ${state.expanded[key]?'open':''} class="${technical?'technical':''}"><summary>${escape(label)}</summary><div class="expanded">${body}</div></details>`;}
+  function details(key,label,body){return `<details data-detail="${escape(key)}" ${state.expanded[key]?'open':''}><summary>${escape(label)}</summary><div class="expanded">${body}</div></details>`;}
   function manuscript(value,missing='현재 조건에 맞는 원고는 보류 중이에요.'){
     if(!value?.texts)return `<p class="subtitle">${escape(value?.missingReason==='TYPE_NOT_SELECTED'?'MBTI를 입력하면 맞춤 조언을 볼 수 있어요.':missing)}</p>`;
     const t=value.texts;return `${t.title?`<p class="card-title">${text(t.title)}</p>`:''}<p class="card-body">${text(t.body||t.line||'')}</p>`;
@@ -142,8 +139,7 @@
     const t=domain.base?.texts;const c=copy(domain.base);const key='today-'+domain.id;
     const body=domain.mbti?.texts?`<span class="label-pill">${escape(r.type)} 행동 조언</span>${readingSummary(domain.mbti)}${details('today-mbti-more-'+domain.id,'이 조언을 실천하는 방법',readingDetail(domain.mbti))}`:manuscript(domain.mbti);
     const mbtiKey='today-mbti-'+domain.id;
-    const technical=`<p>해석 주제: ${escape(meanings[domain.meaning]||'계산 보류')}<br>원래 분류: ${escape(domain.meaning||'보류')} · ${escape(domain.gradeLabel||'별점 보류')}</p><p>원고 상태: DRAFT · 의미 승인 및 출시 허용 없음</p>`;
-    return `<article class="card" data-domain="${escape(domain.id)}"><div class="card-top"><span class="domain">${domains[domain.id]}</span><span class="stars" aria-label="${domain.grade===null?'별점 보류':`5점 중 ${domain.grade}점`}">${domain.grade===null?'별점 보류':'★'.repeat(domain.grade)+'☆'.repeat(5-domain.grade)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(domain.base)}`:'<p class="subtitle">이 조건의 풀이를 보류했어요.</p>'}${t?details(key,'오늘 운세 자세히 읽기',readingDetail(domain.base)):''}${details(mbtiKey,r.type?`${r.type}라면 이렇게 해봐요`:'MBTI 맞춤 조언',body)}${details('today-condition-'+domain.id,'해석 분류 보기',technical,true)}</article>`;
+    return `<article class="card" data-domain="${escape(domain.id)}"><div class="card-top"><span class="domain">${domains[domain.id]}</span><span class="stars" aria-label="${domain.grade===null?'별점 보류':`5점 중 ${domain.grade}점`}">${domain.grade===null?'별점 보류':'★'.repeat(domain.grade)+'☆'.repeat(5-domain.grade)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(domain.base)}`:'<p class="subtitle">이 조건의 풀이를 보류했어요.</p>'}${t?details(key,'오늘 운세 자세히 읽기',readingDetail(domain.base)):''}${details(mbtiKey,r.type?`${r.type}라면 이렇게 해봐요`:'MBTI 맞춤 조언',body)}</article>`;
   }).join('')}</div>`;}
   function natalCards(values,names,prefix){return `<div class="cards">${Object.entries(values).filter(([key])=>!state.profile.romanceHidden||key!=='ROMANCE').map(([key,value])=>{
     const t=value.texts,c=copy(value);return `<article class="card" data-section="${escape(key)}"><div class="card-top"><span class="domain">${escape(names[key]||key)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(value)}`:'<p class="subtitle">이 조건의 원고를 보류했어요.</p>'}${t?details(prefix+'-'+key,'같은 자리에서 자세히 보기',readingDetail(value)):''}</article>`;
@@ -155,7 +151,7 @@
     if(state.tab==='today'){
       const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('오늘의 흐름을 보고,<br>내 성향에 맞는 행동을 골라봐요.','encourage')}${statusNotice(r)}${dailyCards(r)}`;
     }else if(state.tab==='natal'){
-      html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${guide('사주 글자와 기본 성향을<br>쉬운 설명으로 함께 볼게요.','thinking')}${statusNotice(r)}<div class="pillars">${Object.entries(r.pillars).map(([key,p])=>`<div class="pillar"><span>${{YEAR:'연주',MONTH:'월주',DAY:'일주',HOUR:'시주'}[key]}</span><strong>${p?escape(p.korean):'—'}</strong></div>`).join('')}</div><p class="hint">연주·월주·일주·시주는 출생의 해·달·날·시각에 해당하는 사주 글자예요.</p>${dayStemCard(r.dayStemIntro)}${natalCards(r.natalBase,sections,'natal')}${details('natal-technical','해석 분류 보기',`<p>대표 주제 · ${escape(signatures[r.signature]||r.signature)}</p><p>사주 글자 조합 · ${escape(contexts[r.relationContext]||r.relationContext)}</p><p>원래 분류: ${escape(r.signature)} · ${escape(r.relationContext)}</p>`,true)}`;
+      html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${guide('사주 글자와 기본 성향을<br>쉬운 설명으로 함께 볼게요.','thinking')}${statusNotice(r)}<div class="pillars">${Object.entries(r.pillars).map(([key,p])=>`<div class="pillar"><span>${{YEAR:'연주',MONTH:'월주',DAY:'일주',HOUR:'시주'}[key]}</span><strong>${p?escape(p.korean):'—'}</strong></div>`).join('')}</div><p class="hint">연주·월주·일주·시주는 출생의 해·달·날·시각에 해당하는 사주 글자예요.</p>${dayStemCard(r.dayStemIntro)}${natalCards(r.natalBase,sections,'natal')}`;
     }else if(state.tab==='mbti'){
       html=`<h1>${r.type?escape(r.type)+'와 내 사주':'MBTI와 내 사주'}</h1><p class="subtitle">같은 사주를 내 성향에 맞춰 행동으로 연결해요.</p>${guide('사주의 기본 결과는 같아요.<br>MBTI별 조언을 비교해볼 수 있어요.','listen')}<div id="quick-mbti" class="type-grid" role="group" aria-label="비교할 MBTI">${typeButtons(r.type)}</div>${r.type?natalCards(r.natalMbti,blocks,'mbti'): '<div class="notice">유형을 고르면 사주와 MBTI를 함께 읽는 원고가 나타나요. 질문지는 이 웹 테스트에 포함하지 않았어요.</div>'}`;
     }else{
