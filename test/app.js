@@ -144,12 +144,12 @@
   function natalCards(values,names,prefix){return `<div class="cards">${Object.entries(values).filter(([key])=>!state.profile.romanceHidden||key!=='ROMANCE').map(([key,value])=>{
     const t=value.texts,c=copy(value);return `<article class="card" data-section="${escape(key)}"><div class="card-top"><span class="domain">${escape(names[key]||key)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(value)}`:'<p class="subtitle">이 조건의 원고를 보류했어요.</p>'}${t?details(prefix+'-'+key,'같은 자리에서 자세히 보기',readingDetail(value)):''}</article>`;
   }).join('')}</div>`;}
-  function guide(message,mood='neutral'){return `<div class="guide small"><p>${message}</p><img src="images/guide_b_${mood}.webp" width="100" height="125" alt="사주MBTI 안내 캐릭터"></div>`;}
+  function guide(message,mood='neutral'){return `<div class="guide small"><p>${message}</p><img src="images/guide_b_${mood}.webp" width="208" height="260" alt="사주MBTI 안내 캐릭터"></div>`;}
   function dayStemCard(value){const c=copy(value);return `<article class="card" data-section="DAY_STEM">${c?`<h3 class="card-title">${text(c.title)}</h3>${readingSummary(value)}${details('natal-day-stem','일간 설명 자세히 읽기',readingDetail(value))}`:manuscript(value)}</article>`;}
   function render(){
     const r=state.result;if(!r)return;let html='';
     if(state.tab==='today'){
-      const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('오늘의 흐름을 보고,<br>내 성향에 맞는 행동을 골라봐요.','encourage')}${statusNotice(r)}${dailyCards(r)}`;
+      const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('내 성향에 맞는 조언으로,<br>오늘을 준비해 보세요.','encourage')}${statusNotice(r)}${dailyCards(r)}`;
     }else if(state.tab==='natal'){
       html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${guide('사주 글자와 기본 성향을<br>쉬운 설명으로 함께 볼게요.','thinking')}${statusNotice(r)}<div class="pillars">${Object.entries(r.pillars).map(([key,p])=>`<div class="pillar"><span>${{YEAR:'연주',MONTH:'월주',DAY:'일주',HOUR:'시주'}[key]}</span><strong>${p?escape(p.korean):'—'}</strong></div>`).join('')}</div><p class="hint">연주·월주·일주·시주는 출생의 해·달·날·시각에 해당하는 사주 글자예요.</p>${dayStemCard(r.dayStemIntro)}${natalCards(r.natalBase,sections,'natal')}`;
     }else if(state.tab==='mbti'){
