@@ -13,26 +13,61 @@
   const text=value=>escape(String(value??'').replace(/\{displayName\}/g,'사용자').replace(/\{typeLabel\}/g,state.profile?.mbti||''));
   const storageKey='saju.browser.test.v1';
   const fresh=()=>({version:1,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
-  let state=fresh(),ready=false,pending=null,sequence=0;
+  let state=fresh(),ready=false,pending=null,sequence=0,daySequence=0,dayRequest=null;
   try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1)state={...fresh(),...saved};}catch{}
   function save(){try{if(!state.profile&&!state.result)sessionStorage.removeItem(storageKey);else sessionStorage.setItem(storageKey,JSON.stringify(state));}catch{ /* Current page still works when private-mode storage is disabled. */ }}
   const koreaToday=()=>new Date(Date.now()+9*3600000).toISOString().slice(0,10);
   const cacheKey=(p,date)=>JSON.stringify([p.year,p.month,p.day,p.calendar,p.leap,p.time,p.mbti,p.romanceHidden,date]);
   function rememberView(){if($('#result-screen').hidden)return;state.scroll[state.tab]=window.scrollY;save();}
-  function syncForm(){
+  function options(select,values,label,suffix='',wanted=''){
+    select.innerHTML=`<option value="">${label}</option>`+values.map(v=>`<option value="${v}">${v}${suffix}</option>`).join('');
+    select.value=values.map(String).includes(String(wanted))?String(wanted):'';
+  }
+  function birthYears(){
+    const year=Number(koreaToday().slice(0,4)),min=$('#birth-calendar').value==='KOREAN_LUNAR'?1899:1900;
+    options($('#birth-year'),Array.from({length:year-min+1},(_,i)=>year-i),'연도 선택','년',$('#birth-year').value);
+  }
+  function typeButtons(selected){return [...types,''].map(type=>`<button type="button" class="type-button ${type?'':'type-unknown'}" data-type="${type}" aria-pressed="${type===selected}">${type||'아직 몰라요 · 기본 사주만 보기'}</button>`).join('');}
+  function formTypes(){
+    $('#mbti-buttons').innerHTML=typeButtons($('#mbti').value);
+    $$('#mbti-buttons [data-type]').forEach(button=>button.addEventListener('click',()=>{$('#mbti').value=button.dataset.type;formTypes();}));
+  }
+  function birthDays(wanted=$('#birth-day').value){
+    const year=Number($('#birth-year').value),month=Number($('#birth-month').value);
+    $('#birth-day').disabled=true;
+    if(!year||!month){dayRequest=null;options($('#birth-day'),[],'일 선택');$('#birth-day-hint').textContent='연도와 월을 먼저 골라주세요.';$('#submit-profile').disabled=!ready||pending!==null;return;}
+    if(!ready){$('#birth-day-hint').textContent='자료 준비가 끝나면 실제 날짜 수에 맞춰 일을 고를 수 있어요.';return;}
+    dayRequest={id:++daySequence,wanted};$('#birth-day-hint').textContent='이 달의 날짜를 확인하고 있어요…';$('#submit-profile').disabled=true;
+    worker.postMessage({kind:'month-days',id:dayRequest.id,year,month,lunar:$('#birth-calendar').value==='KOREAN_LUNAR',leap:$('#birth-leap').checked});
+  }
+  function syncForm(wanted=$('#birth-day').value){
+    birthYears();
     const lunar=$('#birth-calendar').value==='KOREAN_LUNAR';
     $('#leap-label').hidden=!lunar;if(!lunar)$('#birth-leap').checked=false;
     const unknown=$('#time-unknown').checked;
-    $('#time-label').hidden=unknown;$('#birth-time').disabled=unknown;
+    $('#time-fields').hidden=unknown;$('#birth-hour').disabled=unknown;$('#birth-minute').disabled=unknown;
+    formTypes();
+    birthDays(wanted);
   }
-  $('#birth-calendar').addEventListener('change',syncForm);$('#time-unknown').addEventListener('change',syncForm);
-  function fillForm(profile){if(!profile)return;$('#birth-year').value=profile.year;$('#birth-month').value=profile.month;$('#birth-day').value=profile.day;$('#birth-calendar').value=profile.calendar;$('#birth-leap').checked=profile.leap;$('#time-unknown').checked=!profile.time;$('#birth-time').value=profile.time;$('#mbti').value=profile.mbti;$('#romance-hidden').checked=profile.romanceHidden;syncForm();}
+  for(const id of ['birth-year','birth-month','time-unknown'])$('#'+id).addEventListener('change',()=>syncForm());
+  for(const id of ['birth-calendar','birth-leap'])$('#'+id).addEventListener('change',()=>syncForm(''));
+  options($('#birth-month'),Array.from({length:12},(_,i)=>i+1),'월 선택','월');
+  options($('#birth-hour'),Array.from({length:24},(_,i)=>String(i).padStart(2,'0')),'시 선택','시');
+  options($('#birth-minute'),Array.from({length:60},(_,i)=>String(i).padStart(2,'0')),'분 선택','분');formTypes();
+  function fillForm(profile){if(!profile)return;$('#birth-calendar').value=profile.calendar;birthYears();$('#birth-year').value=profile.year;$('#birth-month').value=profile.month;$('#birth-leap').checked=profile.leap;$('#time-unknown').checked=!profile.time;const parts=(profile.time||':').split(':');$('#birth-hour').value=parts[0];$('#birth-minute').value=parts[1];$('#mbti').value=profile.mbti;formTypes();$('#romance-hidden').checked=profile.romanceHidden;syncForm(profile.day);}
   function error(message){$('#form-error').textContent=message;$('#form-error').hidden=false;$('#form-error').scrollIntoView({block:'center',behavior:'smooth'});}
   const worker=new Worker('worker.js');
   worker.onmessage=({data})=>{
     if(data.kind==='progress')$('#load-state').textContent=data.message;
     else if(data.kind==='ready'){
       ready=true;$('#load-state').textContent='준비됐어요. 날짜와 MBTI를 넣고 결과를 열어보세요.';$('#load-state').classList.add('ready');$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
+      birthDays(state.profile?.day||$('#birth-day').value);
+    }else if(data.kind==='month-days'&&data.id===dayRequest?.id){
+      const wanted=dayRequest.wanted;dayRequest=null;
+      options($('#birth-day'),Array.from({length:data.days},(_,i)=>i+1),'일 선택','일',wanted?Math.min(Number(wanted),data.days):'');
+      $('#birth-day').disabled=data.days===0;
+      $('#submit-profile').disabled=!ready||pending!==null;
+      $('#birth-day-hint').textContent=data.days?`이 달은 ${data.days}일까지 있어요.`:($('#birth-leap').checked?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'이 달의 날짜 자료를 확인할 수 없어요. 연도와 월을 확인해주세요.');
     }else if(data.kind==='init-error'){
       $('#load-state').textContent=data.code==='BROWSER_GZIP_UNSUPPORTED'?'이 브라우저는 자료 압축 풀기를 지원하지 않아요. 최신 Chrome·Safari·Edge에서 열어주세요.':'계산 자료 준비에 실패했어요. 인터넷 연결을 확인한 뒤 새로고침해주세요.';
       $('#submit-profile').textContent='새로고침 후 다시 시도';
@@ -63,9 +98,10 @@
   }
   $('#profile-form').addEventListener('submit',event=>{
     event.preventDefault();const year=Number($('#birth-year').value),month=Number($('#birth-month').value),day=Number($('#birth-day').value);
-    if(![year,month,day].every(Number.isInteger)||year<1900||year>2050||month<1||month>12||day<1||day>31){error('년·월·일을 모두 입력해주세요. 연도는 1900년부터, 월은 1~12, 일은 1~31 범위예요.');return;}
-    const time=$('#time-unknown').checked?'':$('#birth-time').value;
-    if(!$('#time-unknown').checked&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){error('태어난 시각을 입력하거나 시간 모름을 선택해주세요.');return;}
+    if(dayRequest){error('이 달의 날짜 목록을 준비하고 있어요. 잠시 후 다시 열어주세요.');return;}
+    if(![year,month,day].every(Number.isInteger)||year<($('#birth-calendar').value==='KOREAN_LUNAR'?1899:1900)||year>Number(koreaToday().slice(0,4))||month<1||month>12||day<1||day>31){error($('#birth-leap').checked&&$('#birth-day').disabled&&!dayRequest?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'년·월·일을 모두 선택해주세요. 실제로 있는 날짜만 고를 수 있어요.');return;}
+    const time=$('#time-unknown').checked?'':$('#birth-hour').value+':'+$('#birth-minute').value;
+    if(!$('#time-unknown').checked&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){error('태어난 시·분을 모두 고르거나 시간 모름을 선택해주세요.');return;}
     const profile={year,month,day,calendar:$('#birth-calendar').value,leap:$('#birth-leap').checked,time,mbti:$('#mbti').value,romanceHidden:$('#romance-hidden').checked};
     calculate(profile,state.target||koreaToday(),'today',true);
   });
@@ -99,7 +135,7 @@
     }else if(state.tab==='natal'){
       html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${guide('사주 글자와 기본 성향을<br>쉬운 설명으로 함께 볼게요.','thinking')}${statusNotice(r)}<div class="pillars">${Object.entries(r.pillars).map(([key,p])=>`<div class="pillar"><span>${{YEAR:'연주',MONTH:'월주',DAY:'일주',HOUR:'시주'}[key]}</span><strong>${p?escape(p.korean):'—'}</strong></div>`).join('')}</div><p class="hint">연주·월주·일주·시주는 출생의 해·달·날·시각에 해당하는 사주 글자예요.</p><article class="card">${manuscript(r.dayStemIntro)}</article>${natalCards(r.natalBase,sections,'natal')}${details('natal-technical','해석 분류 보기',`<p>대표 주제 · ${escape(signatures[r.signature]||r.signature)}</p><p>사주 글자 조합 · ${escape(contexts[r.relationContext]||r.relationContext)}</p><p>원래 분류: ${escape(r.signature)} · ${escape(r.relationContext)}</p>`,true)}`;
     }else if(state.tab==='mbti'){
-      html=`<h1>${r.type?escape(r.type)+'와 내 사주':'MBTI와 내 사주'}</h1><p class="subtitle">같은 사주를 내 성향에 맞춰 행동으로 연결해요.</p>${guide('사주의 기본 결과는 같아요.<br>MBTI별 조언을 비교해볼 수 있어요.','listen')}<label for="quick-mbti">비교할 MBTI<select id="quick-mbti"><option value="">아직 몰라요</option>${types.map(type=>`<option ${type===r.type?'selected':''}>${type}</option>`).join('')}</select></label>${r.type?natalCards(r.natalMbti,blocks,'mbti'): '<div class="notice">유형을 고르면 사주와 MBTI를 함께 읽는 원고가 나타나요. 질문지는 이 웹 테스트에 포함하지 않았어요.</div>'}`;
+      html=`<h1>${r.type?escape(r.type)+'와 내 사주':'MBTI와 내 사주'}</h1><p class="subtitle">같은 사주를 내 성향에 맞춰 행동으로 연결해요.</p>${guide('사주의 기본 결과는 같아요.<br>MBTI별 조언을 비교해볼 수 있어요.','listen')}<div id="quick-mbti" class="type-grid" role="group" aria-label="비교할 MBTI">${typeButtons(r.type)}</div>${r.type?natalCards(r.natalMbti,blocks,'mbti'): '<div class="notice">유형을 고르면 사주와 MBTI를 함께 읽는 원고가 나타나요. 질문지는 이 웹 테스트에 포함하지 않았어요.</div>'}`;
     }else{
       const p=state.profile;html=`<h1>설정</h1><div class="settings-card"><h2>입력한 프로필</h2><p>${p.year}년 ${p.month}월 ${p.day}일 · ${p.calendar==='SOLAR'?'양력':'한국 음력'}${p.leap?' 윤달':''}<br>${p.time?escape(p.time):'시간 모름'} · ${escape(p.mbti||'MBTI 미선택')}</p><button class="secondary" id="edit-profile">생일·시간·MBTI 변경</button><label class="check"><input id="setting-romance" type="checkbox" ${p.romanceHidden?'checked':''}>연애 항목 숨기기</label></div><div class="settings-card"><h2>날짜를 바꿔서 테스트</h2><p>한국 날짜 기준으로 계산해요. 생일은 그대로 두고 날짜별 결과를 비교할 수 있어요.</p><div class="date-selector"><label class="sr-only" for="target-date">운세 날짜</label><input id="target-date" type="date" min="1908-04-01" max="2050-12-31" value="${escape(state.target)}"><button id="change-date" class="secondary">날짜 적용</button></div><button class="secondary" id="today-date">한국 기준 오늘로</button><p id="date-error" class="error" hidden role="alert"></p></div><div class="settings-card"><h2>테스트와 저장</h2><p>광고·결제 기능은 제외했으며 모든 원고를 볼 수 있어요. 앱의 일반 계산과 초안 원고를 사용해요. 원고의 사람 승인·출시 승인을 뜻하지 않아요.</p><p>입력과 결과는 이 브라우저 탭의 임시 저장소에 있어요. Android의 암호화 저장소와는 다르며, 서버로 보내지 않아요. 자료를 준비한 뒤에는 같은 화면 안에서 계산할 때 인터넷을 사용하지 않아요.</p><p>원고 버전: ${escape(r.packVersion)}<br>계산 버전: ${escape(r.ruleVersion)}</p><button class="secondary" id="clear-data">이 탭의 입력과 결과 지우기</button></div>`;
     }
@@ -107,7 +143,7 @@
     $$('.tabs button').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.tab===state.tab)));
     $$('details[data-detail]').forEach(detail=>detail.addEventListener('toggle',()=>{state.expanded[detail.dataset.detail]=detail.open;save();}));
     $('#edit-profile')?.addEventListener('click',showInput);
-    $('#quick-mbti')?.addEventListener('change',event=>{rememberView();calculate({...state.profile,mbti:event.target.value},state.target,'mbti');});
+    $$('#quick-mbti [data-type]').forEach(button=>button.addEventListener('click',()=>{rememberView();calculate({...state.profile,mbti:button.dataset.type},state.target,'mbti');}));
     $('#setting-romance')?.addEventListener('change',event=>{rememberView();calculate({...state.profile,romanceHidden:event.target.checked},state.target,'settings');});
     const changeDate=date=>{
       if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date<'1908-04-01'||date>'2050-12-31'){$('#date-error').textContent='운세 날짜는 1908년 4월 1일~2050년 12월 31일 범위에서 골라주세요.';$('#date-error').hidden=false;return;}

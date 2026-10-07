@@ -24,6 +24,8 @@ self.onmessage=async ({data})=>{
       report('앱과 같은 조건으로 원고를 읽고 있어요. 첫 준비는 잠시 걸릴 수 있어요…');
       self.init();ready=true;self.postMessage({kind:'ready'});
     }catch(error){self.postMessage({kind:'init-error',code:typeof error?.message==='string'?error.message:'CONTENT_INIT'});}
+  }else if(data.kind==='month-days'){
+    if(ready)self.postMessage({kind:'month-days',id:data.id,days:self.monthDays(data.year,data.month,data.lunar,data.leap)});
   }else if(data.kind==='calculate'){
     try{
       if(!ready)throw new Error('NOT_READY');
