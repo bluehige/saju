@@ -1,5 +1,5 @@
 'use strict';
-importScripts('js/engine.js?build=reading-r2');
+importScripts('js/engine.js?build=startup-approved-r13-4daf9416');
 let ready=false;
 const report=(message)=>self.postMessage({kind:'progress',message});
 async function loadChecked(meta){

@@ -11,7 +11,7 @@
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const text=value=>escape(String(value??'').replace(/\{displayName\}/g,'사용자').replace(/\{typeLabel\}/g,state.profile?.mbti||''));
   const storageKey='saju.browser.test.v1';
-  const readingVersion='WEB_VOICE_2026_10_11_R11';
+  const readingVersion='WEB_STARTUP_VOICE_2026_10_11_R13';
   const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
   let state=fresh(),ready=false,pending=null,queuedCalculation=null,sequence=0,daySequence=0,dayRequest=null;
   try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1||saved?.version===2){
@@ -76,7 +76,7 @@
     clearTimeout(startupTimer);worker?.terminate();ready=false;dayRequest=null;
     $('#retry-load').hidden=true;$('#submit-profile').disabled=true;$('#submit-profile').textContent='자료 준비 중…';
     $('#load-state').classList.remove('ready');$('#load-state').textContent='읽을 자료를 다시 준비하고 있어요…';
-    worker=new Worker('worker.js?build=startup-r12');const currentWorker=worker;
+    worker=new Worker('worker.js?build=startup-approved-r13');const currentWorker=worker;
     startupTimer=setTimeout(()=>{if(worker===currentWorker&&!ready)startupFailed('준비 시간이 길어졌어요. 아래 버튼으로 다시 시작할 수 있어요.');},90000);
     worker.onmessage=({data})=>{
     if(worker!==currentWorker)return;
