@@ -5,7 +5,7 @@ const report=(message)=>self.postMessage({kind:'progress',message});
 self.onmessage=async ({data})=>{
   if(data.kind==='init'){
     try{
-      report('역법 자료와 앱 원고를 내려받고 있어요…');
+      report('생일을 풀어볼 자료를 준비하고 있어요…');
       const manifestResponse=await fetch('data/resources.json',{cache:'no-store'});
       if(!manifestResponse.ok)throw new Error('RESOURCE_MANIFEST');
       const manifest=await manifestResponse.json();
@@ -21,7 +21,7 @@ self.onmessage=async ({data})=>{
         if(digest!==meta.sha256||bytes.byteLength!==meta.bytes)throw new Error('RESOURCE_HASH_MISMATCH');
         self.resource(name,new TextDecoder('utf-8',{fatal:true}).decode(bytes));
       }));
-      report('앱과 같은 조건으로 원고를 읽고 있어요. 첫 준비는 잠시 걸릴 수 있어요…');
+      report('거의 준비됐어요. 처음에는 조금 기다려주세요…');
       self.init();ready=true;self.postMessage({kind:'ready'});
     }catch(error){self.postMessage({kind:'init-error',code:typeof error?.message==='string'?error.message:'CONTENT_INIT'});}
   }else if(data.kind==='month-days'){
