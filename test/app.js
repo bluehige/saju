@@ -64,11 +64,25 @@
     queuedCalculation=null;
     if(!$('#result-screen').hidden&&state.result){render();const notice=document.createElement('div');notice.className='notice';notice.setAttribute('role','alert');notice.textContent=message;$('#result-content').prepend(notice);}
   }
-  const worker=new Worker('worker.js?build=voice-r11');
-  worker.onmessage=({data})=>{
+  let worker=null,startupTimer=null;
+  function startupFailed(message){
+    clearTimeout(startupTimer);ready=false;worker?.terminate();
+    failQueuedCalculation(message);pending=null;dayRequest=null;
+    $('#load-state').textContent=message;$('#load-state').classList.remove('ready');
+    $('#submit-profile').disabled=true;$('#submit-profile').textContent='자료 준비를 다시 시작해주세요';
+    $('#birth-day').disabled=true;$('#retry-load').hidden=false;
+  }
+  function startWorker(){
+    clearTimeout(startupTimer);worker?.terminate();ready=false;dayRequest=null;
+    $('#retry-load').hidden=true;$('#submit-profile').disabled=true;$('#submit-profile').textContent='자료 준비 중…';
+    $('#load-state').classList.remove('ready');$('#load-state').textContent='읽을 자료를 다시 준비하고 있어요…';
+    worker=new Worker('worker.js?build=startup-r12');const currentWorker=worker;
+    startupTimer=setTimeout(()=>{if(worker===currentWorker&&!ready)startupFailed('준비 시간이 길어졌어요. 아래 버튼으로 다시 시작할 수 있어요.');},90000);
+    worker.onmessage=({data})=>{
+    if(worker!==currentWorker)return;
     if(data.kind==='progress')$('#load-state').textContent=data.message;
     else if(data.kind==='ready'){
-      ready=true;$('#load-state').textContent='준비됐어요. 날짜와 MBTI를 넣고 결과를 열어보세요.';$('#load-state').classList.add('ready');$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
+      clearTimeout(startupTimer);$('#retry-load').hidden=true;ready=true;$('#load-state').textContent='준비됐어요. 날짜와 MBTI를 넣고 결과를 열어보세요.';$('#load-state').classList.add('ready');$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
       birthDays(state.profile?.day||$('#birth-day').value);
       const queued=queuedCalculation;queuedCalculation=null;
       if(queued)calculate(queued.profile,queued.target,queued.tab,queued.reset);
@@ -80,9 +94,7 @@
       $('#submit-profile').disabled=!ready||pending!==null;
       $('#birth-day-hint').textContent=data.days?`이 달은 ${data.days}일까지 있어요.`:($('#birth-leap').checked?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'이 달의 날짜 자료를 확인할 수 없어요. 연도와 월을 확인해주세요.');
     }else if(data.kind==='init-error'){
-      failQueuedCalculation('계산 자료를 준비하지 못했어요. 새로고침 후 다시 선택해주세요.');
-      $('#load-state').textContent=data.code==='BROWSER_GZIP_UNSUPPORTED'?'이 브라우저는 자료 압축 풀기를 지원하지 않아요. 최신 Chrome·Safari·Edge에서 열어주세요.':'계산 자료 준비에 실패했어요. 인터넷 연결을 확인한 뒤 새로고침해주세요.';
-      $('#submit-profile').textContent='새로고침 후 다시 시도';
+      startupFailed(data.code==='BROWSER_GZIP_UNSUPPORTED'?'최신 Chrome·Safari·Edge에서 자료를 열 수 있어요. 브라우저를 바꿔 다시 열어주세요.':data.code==='RESOURCE_TIMEOUT'?'자료를 받는 시간이 길어졌어요. 연결을 확인하고 다시 준비해주세요.':'자료 준비 중 문제가 생겼어요. 아래 버튼으로 다시 준비해주세요.');
     }else if(data.kind==='result'&&pending?.id===data.id){
       const request=pending;pending=null;$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
       if(data.result.quality==='UNSUPPORTED'){
@@ -98,8 +110,11 @@
       pending=null;$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';showInput();error('결과를 읽지 못했어요. 입력을 확인하고 다시 시도해주세요.');
     }
   };
-  worker.onerror=()=>{failQueuedCalculation('계산 프로그램을 시작하지 못했어요. 새로고침 후 다시 선택해주세요.');$('#load-state').textContent='계산 프로그램을 시작하지 못했어요. 최신 브라우저에서 새로고침해주세요.';};
-  worker.postMessage({kind:'init'});
+    worker.onerror=()=>{if(worker===currentWorker)startupFailed('읽을 자료를 여는 중 문제가 생겼어요. 아래 버튼으로 다시 준비해주세요.');};
+    worker.postMessage({kind:'init'});
+  }
+  $('#retry-load').addEventListener('click',startWorker);
+  startWorker();
   function calculate(profile,target,tab='today',reset=false){
     $('#form-error').hidden=true;
     const cached=state.cache[cacheKey(profile,target)];

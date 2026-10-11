@@ -9,14 +9,14 @@
   <meta name="theme-color" content="#FFF9F1">
   <title>사주MBTI · 오늘의 이야기</title>
   <link rel="stylesheet" href="app.css?build=guide-r1">
-  <script defer src="app.js?build=WEB_VOICE_2026_10_11_R11"></script>
+  <script defer src="app.js?build=WEB_STARTUP_REPAIR_2026_10_11_R12"></script>
 </head>
 <body>
   <header class="topbar"><a href="../" aria-label="사주MBTI 안내 사이트">사주MBTI</a><span class="test-badge">체험판</span></header>
   <main id="app">
     <section id="input-screen" aria-labelledby="input-title">
       <div class="intro"><p class="eyebrow">운명을 성향에 맞춰 해석하기</p><h1 id="input-title">생일과 MBTI로<br>내 이야기를 만나봐요</h1><p>사주는 태어난 때를 읽는 전통 해석, MBTI는 선택할 때 마음이 가는 방식이에요.<br>둘을 엮어 내 모습과 오늘의 선택을 돌아봐요.</p></div>
-      <div class="guide welcome"><img src="images/guide_b_smile.webp" width="256" height="320" alt="미소 짓는 사주MBTI 안내 캐릭터"><p>생일부터 차근차근 알려주세요.<br>시간을 모르면 아는 글자부터 함께 읽어요.</p></div>
+      <div class="guide welcome"><img src="images/guide_b_smile.webp" width="256" height="320" alt="미소 짓는 사주MBTI 안내 캐릭터"><p>생일부터 차근차근 알려주세요.<br>시간을 몰라도 생일로 읽을 수 있는 이야기부터 함께 볼게요.</p></div>
       <form id="profile-form" novalidate>
         <fieldset><legend>태어난 날짜</legend>
           <div class="date-fields"><label>년<select id="birth-year" name="year"><option value="">연도 선택</option></select></label><label>월<select id="birth-month" name="month"><option value="">월 선택</option></select></label><label>일<select id="birth-day" name="day" disabled><option value="">일 선택</option></select></label></div>
@@ -28,6 +28,7 @@
         <fieldset><legend>연애 운세</legend><label class="check"><input id="romance-hidden" name="romanceHidden" type="checkbox">관심 없어요 · 연애 항목 숨기기</label></fieldset>
         <p id="form-error" class="error" role="alert" hidden></p>
         <div id="load-state" class="load-state" role="status" aria-live="polite">계산 자료를 준비하고 있어요…</div>
+        <button id="retry-load" class="secondary" type="button" hidden>자료 다시 준비하기</button>
         <button id="submit-profile" class="primary" type="submit" disabled>자료 준비 중…</button>
         <button id="cancel-edit" class="secondary" type="button" hidden>입력 취소하고 결과로</button>
         <p class="privacy-note">입력은 이 탭에만 임시로 저장해요. 설정에서 언제든 지울 수 있어요.</p>
