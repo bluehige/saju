@@ -11,9 +11,10 @@
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const text=value=>escape(String(value??'').replace(/\{displayName\}/g,'사용자').replace(/\{typeLabel\}/g,state.profile?.mbti||''));
   const storageKey='saju.browser.test.v1';
-  const readingVersion='WEB_MIXED_GENERAL_2026_10_07_R9_fb2ab77f';
-  const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
-  let state=fresh(),ready=false,pending=null,sequence=0,daySequence=0,dayRequest=null;
+  const readingVersion='WEB_TODAY_READING_2026_10_11_R10';
+  const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{},todayPilot:false});
+  let state=fresh(),ready=false,pending=null,queuedCalculation=null,sequence=0,daySequence=0,dayRequest=null;
+  let todayPilot=null,todayPilotLoad=null;
   try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1||saved?.version===2){
     state={...fresh(),...saved};
     if(saved.readingVersion!==readingVersion)state={...fresh(),profile:saved.profile,target:saved.target||'',tab:saved.tab||'today',expanded:saved.expanded||{},scroll:saved.scroll||{}};
@@ -59,13 +60,20 @@
   options($('#birth-minute'),Array.from({length:60},(_,i)=>String(i).padStart(2,'0')),'분 선택','분');formTypes();
   function fillForm(profile){if(!profile)return;$('#birth-calendar').value=profile.calendar;birthYears();$('#birth-year').value=profile.year;$('#birth-month').value=profile.month;$('#birth-leap').checked=profile.leap;$('#time-unknown').checked=!profile.time;const parts=(profile.time||':').split(':');$('#birth-hour').value=parts[0];$('#birth-minute').value=parts[1];$('#mbti').value=profile.mbti;formTypes();$('#romance-hidden').checked=profile.romanceHidden;syncForm(profile.day);}
   function error(message){$('#form-error').textContent=message;$('#form-error').hidden=false;$('#form-error').scrollIntoView({block:'center',behavior:'smooth'});}
+  function failQueuedCalculation(message){
+    if(!queuedCalculation)return;
+    queuedCalculation=null;
+    if(!$('#result-screen').hidden&&state.result){render();const notice=document.createElement('div');notice.className='notice';notice.setAttribute('role','alert');notice.textContent=message;$('#result-content').prepend(notice);}
+  }
   const worker=new Worker('worker.js?build=reading-r2');
   worker.onmessage=({data})=>{
     if(data.kind==='progress')$('#load-state').textContent=data.message;
     else if(data.kind==='ready'){
       ready=true;$('#load-state').textContent='준비됐어요. 날짜와 MBTI를 넣고 결과를 열어보세요.';$('#load-state').classList.add('ready');$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
       birthDays(state.profile?.day||$('#birth-day').value);
-      if(state.profile&&!state.result&&!pending)calculate(state.profile,state.target||koreaToday(),state.tab,false);
+      const queued=queuedCalculation;queuedCalculation=null;
+      if(queued)calculate(queued.profile,queued.target,queued.tab,queued.reset);
+      else if(state.profile&&!state.result&&!pending)calculate(state.profile,state.target||koreaToday(),state.tab,false);
     }else if(data.kind==='month-days'&&data.id===dayRequest?.id){
       const wanted=dayRequest.wanted;dayRequest=null;
       options($('#birth-day'),Array.from({length:data.days},(_,i)=>i+1),'일 선택','일',wanted?Math.min(Number(wanted),data.days):'');
@@ -73,6 +81,7 @@
       $('#submit-profile').disabled=!ready||pending!==null;
       $('#birth-day-hint').textContent=data.days?`이 달은 ${data.days}일까지 있어요.`:($('#birth-leap').checked?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'이 달의 날짜 자료를 확인할 수 없어요. 연도와 월을 확인해주세요.');
     }else if(data.kind==='init-error'){
+      failQueuedCalculation('계산 자료를 준비하지 못했어요. 새로고침 후 다시 선택해주세요.');
       $('#load-state').textContent=data.code==='BROWSER_GZIP_UNSUPPORTED'?'이 브라우저는 자료 압축 풀기를 지원하지 않아요. 최신 Chrome·Safari·Edge에서 열어주세요.':'계산 자료 준비에 실패했어요. 인터넷 연결을 확인한 뒤 새로고침해주세요.';
       $('#submit-profile').textContent='새로고침 후 다시 시도';
     }else if(data.kind==='result'&&pending?.id===data.id){
@@ -90,13 +99,13 @@
       pending=null;$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';showInput();error('결과를 읽지 못했어요. 입력을 확인하고 다시 시도해주세요.');
     }
   };
-  worker.onerror=()=>{$('#load-state').textContent='계산 프로그램을 시작하지 못했어요. 최신 브라우저에서 새로고침해주세요.';};
+  worker.onerror=()=>{failQueuedCalculation('계산 프로그램을 시작하지 못했어요. 새로고침 후 다시 선택해주세요.');$('#load-state').textContent='계산 프로그램을 시작하지 못했어요. 최신 브라우저에서 새로고침해주세요.';};
   worker.postMessage({kind:'init'});
   function calculate(profile,target,tab='today',reset=false){
     $('#form-error').hidden=true;
     const cached=state.cache[cacheKey(profile,target)];
-    if(cached){state.profile=profile;state.target=target;state.result=cached;if(reset){state.expanded={};state.scroll={};}save();showResult(tab,reset);return;}
-    if(!ready){showInput();error('계산 자료 준비가 끝나면 결과를 볼 수 있어요. 잠시 기다려주세요.');return;}
+    if(cached){pending=null;queuedCalculation=null;state.profile=profile;state.target=target;state.result=cached;if(reset){state.expanded={};state.scroll={};}save();showResult(tab,reset);return;}
+    if(!ready){queuedCalculation={profile,target,tab,reset};if(!$('#result-screen').hidden)render();return;}
     pending={id:++sequence,profile,target,tab,reset};$('#submit-profile').disabled=true;$('#submit-profile').textContent='실제 앱 엔진으로 계산 중…';
     worker.postMessage({kind:'calculate',...pending,today:koreaToday()});
   }
@@ -137,12 +146,42 @@
     return parts.length?parts.map(part=>`${part.label?`<h4 class="reading-label">${text(part.label)}</h4>`:''}<p class="card-body">${text(part.text)}</p>`).join(''):`<p class="card-body">${text(c.detail)}</p>`;
   }
   function readingSummary(value){const c=copy(value);return c?`<p class="card-body reading-summary">${text(c.summary)}</p>`:manuscript(value);}
-  function dailyCards(r){return `<div class="cards">${r.domains.map(domain=>{
-    const t=domain.base?.texts;const c=copy(domain.base);const key='today-'+domain.id;
-    const body=domain.mbti?.texts?`<span class="label-pill">${escape(r.type)} 행동 조언</span>${readingSummary(domain.mbti)}${details('today-mbti-more-'+domain.id,'이 조언을 실천하는 방법',readingDetail(domain.mbti))}`:manuscript(domain.mbti);
-    const mbtiKey='today-mbti-'+domain.id;
-    return `<article class="card" data-domain="${escape(domain.id)}"><div class="card-top"><span class="domain">${domains[domain.id]}</span><span class="stars" aria-label="${domain.grade===null?'별점 보류':`5점 중 ${domain.grade}점`}">${domain.grade===null?'별점 보류':'★'.repeat(domain.grade)+'☆'.repeat(5-domain.grade)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(domain.base)}`:'<p class="subtitle">이 조건의 풀이를 보류했어요.</p>'}${t?details(key,'오늘 운세 자세히 읽기',readingDetail(domain.base)):''}${details(mbtiKey,r.type?`${r.type}라면 이렇게 해봐요`:'MBTI 맞춤 조언',body)}</article>`;
+  const firstSentence=value=>String(value||'').trim().split(/(?<=[.!?])\s+/)[0]||'';
+  function todayTypeIntro(type,reading){
+    const axis={E:'대화로',I:'혼자',S:'사실과 경험',N:'새로운 가능성',T:'논리',F:'사람의 마음',J:'미리 정한 계획',P:'유연한 선택'};
+    const preference=reading?.pilot?reading.typeIntro:type?`${type}는 ${axis[type[0]]} 생각을 정리하고, ${[...type.slice(1)].map(letter=>axis[letter]).join('·')}에 눈길이 가는 유형이에요.`:'';
+    return `<article class="card" data-today-type-intro><h2>${type?escape(type)+'를 읽는 방법':'MBTI란?'}</h2><p class="subtitle">MBTI는 생각하고 선택하는 선호를 16가지 유형으로 설명해요.</p>${type?`<p class="card-body">${escape(preference)}</p>`:'<p class="card-body">유형을 고르면 오늘 해볼 말과 행동을 함께 볼 수 있어요.</p>'}${details('today-type-basis','사주와 함께 읽는 뜻','<p class="card-body">사주는 태어난 해·달·날·시각의 글자를 읽는 전통 해석이에요. 미래를 검증해 예측하는 방식은 아니에요. MBTI도 한 사람의 성격을 모두 정하지는 않아요.</p>')}</article>`;
+  }
+  function pilotRow(r,domain){
+    if(!state.todayPilot||!todayPilot||typeof todayPilot.version!=='string'||!todayPilot.version.trim()||todayPilot.reviewState!=='DRAFT'||todayPilot.semanticApproval!==false||todayPilot.runtimeEligible!==false||todayPilot.releaseEligible!==false)return null;
+    const matches=todayPilot.rows.filter(row=>row.type===r.type&&row.domain===domain.id&&row.meaning===domain.meaning&&row.grade===domain.grade&&row.sourceBaseId===domain.base?.id&&row.sourceAdviceId===domain.mbti?.id);
+    const row=matches.length===1?matches[0]:null;
+    return row&&typeof row.oneLine==='string'&&row.oneLine.trim()&&Array.isArray(row.points)&&row.points.length&&row.points.every(point=>typeof point==='string'&&point.trim())&&typeof row.reason==='string'&&row.reason.trim()&&typeof row.typeIntro==='string'&&row.typeIntro.trim()&&typeof row.todaySituation==='string'&&row.todaySituation.trim()?row:null;
+  }
+  function loadTodayPilot(){
+    if(todayPilotLoad)return todayPilotLoad;
+    todayPilotLoad=fetch('data/review/today_reading_pilot.json',{cache:'no-store'}).then(response=>response.ok?response.json():null).then(value=>{todayPilot=value&&Array.isArray(value.rows)?value:null;}).catch(()=>{todayPilot=null;});
+    return todayPilotLoad;
+  }
+  function todayReading(r,domain){
+    const pilot=pilotRow(r,domain);if(pilot)return {oneLine:pilot.oneLine,points:pilot.points,typeIntro:pilot.typeIntro,todaySituation:pilot.todaySituation,reason:firstSentence(copy(domain.base)?.summary||domain.base?.texts?.body),pilotReason:pilot.reason,pilot:true};
+    const value=domain.mbti,c=copy(value),body=c?.detail||value?.texts?.body||'';
+    const paragraphs=body.split(/\n\s*\n/).map(firstSentence).filter(Boolean);
+    const sentences=paragraphs.length>1?paragraphs:body.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
+    return {oneLine:firstSentence(value?.texts?.body||c?.summary),points:[...new Set(sentences)].slice(0,2),reason:firstSentence(copy(domain.base)?.summary||domain.base?.texts?.body),pilot:false};
+  }
+  function dailyCards(r){return `<div class="cards" data-today-detail-cards>${r.domains.filter(domain=>!state.profile.romanceHidden||domain.id!=='ROMANCE').map(domain=>{
+    const reading=todayReading(r,domain),value=domain.mbti,c=copy(value),available=!!value?.texts;
+    const points=(reading.pilot?`<h3>유형의 기본 설명</h3><p class="card-body">${text(reading.typeIntro)}</p><h3>오늘 상황에 적용하면</h3><p class="card-body">${text(reading.todaySituation)}</p><h3>오늘 해볼 일</h3>`:'')+reading.points.map(point=>`<p class="card-body">${text(point)}</p>`).join('');
+    const reason=available&&reading.reason?details('today-'+domain.id,'오늘 해석의 바탕',`<p class="card-body">${text(reading.reason)}</p>${reading.pilotReason?`<p class="hint">대표 초안의 연결: ${text(reading.pilotReason)}</p>`:''}`):'';
+    if(!available&&domain.base?.texts)return `<article class="card" data-domain="${escape(domain.id)}" data-today-source="existing-base"><div class="card-top"><span class="domain">${domains[domain.id]}</span><span class="stars">${domain.grade===null?'별점 보류':'★'.repeat(domain.grade)+'☆'.repeat(5-domain.grade)}</span></div><h3 class="card-title">${text(copy(domain.base)?.title||domain.base.texts.title||'오늘의 기본 해석')}</h3>${readingSummary(domain.base)}${details('today-base-'+domain.id,'기본 오늘 해석 읽기',readingDetail(domain.base))}</article>`;
+    return `<article class="card" data-domain="${escape(domain.id)}" data-today-source="${reading.pilot?'internal-pilot':'existing-manuscript'}"><div class="card-top"><span class="domain">${domains[domain.id]}</span><span class="stars" aria-label="${domain.grade===null?'별점 보류':`5점 중 ${domain.grade}점`}">${domain.grade===null?'별점 보류':'★'.repeat(domain.grade)+'☆'.repeat(5-domain.grade)}</span></div>${reading.pilot?'<span class="label-pill">내부 대표 문안 · DRAFT</span>':''}${available?`<h3 class="card-title">${text(reading.pilot?reading.oneLine:c?.title||value.texts.title)}</h3>${points||manuscript(value)}${details('today-mbti-'+domain.id,'원래 행동 조언 읽기',readingDetail(value))}`:manuscript(value)}${reason}</article>`;
   }).join('')}</div>`;}
+  function todayOverview(r){
+    const overall=r.domains.find(domain=>domain.id==='OVERALL'),reading=overall?todayReading(r,overall):null;
+    const oneLine=reading?.oneLine||(!r.type?'설정에서 MBTI를 고르면 오늘 한 줄을 볼 수 있어요.':'이 조건의 오늘 한 줄을 준비하고 있어요.');
+    return `${todayTypeIntro(r.type,reading)}${reading?.pilot?`<article class="card" data-today-pilot-situation><h3>오늘 상황에 적용하면</h3><p class="card-body">${text(reading.todaySituation)}</p></article>`:''}<article class="card" data-today-one-line><span class="label-pill">${r.type?escape(r.type)+' · ':''}오늘 한 줄</span>${reading?.pilot?'<span class="label-pill">대표 4개 초안의 해당 문안 · DRAFT</span>':''}<p class="card-body reading-summary">${text(oneLine)}</p><p class="hint">아래 버튼은 웹 테스트 상세만 열어요. 광고 시청·구매·앱 해금 기록을 만들지 않아요.</p>${details('today-detailed-reading','테스트 해금 · 오늘의 운세 자세히 읽기',`<p class="hint">광고 없이 연 테스트 상세예요. 브라우저 뒤로가기를 누르면 한 줄 화면으로 돌아가요.</p>${dailyCards(r)}`)}</article><div class="notice" data-pilot-scope><p>이번 새 말투 초안은 ISTJ·ENTP의 종합·일 4개 조건만 있어요. 설정에서 대표 초안 비교를 켜면조건이 맞을 때 보여요. 다른 유형과 나머지 조건은 기존 원고예요.</p><p class="hint">전체 원고의 의미 승인이나 정식 출시를 뜻하지 않는 화면 테스트예요.</p></div>`;
+  }
   function natalCards(values,names,prefix){return `<div class="cards">${Object.entries(values).filter(([key])=>!state.profile.romanceHidden||key!=='ROMANCE').map(([key,value])=>{
     const t=value.texts,c=copy(value);return `<article class="card" data-section="${escape(key)}"><div class="card-top"><span class="domain">${escape(names[key]||key)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(value)}`:'<p class="subtitle">이 조건의 원고를 보류했어요.</p>'}${t?details(prefix+'-'+key,'같은 자리에서 자세히 보기',readingDetail(value)):''}</article>`;
   }).join('')}</div>`;}
@@ -210,7 +249,7 @@
   function render(){
     const r=state.result;if(!r)return;let html='';
     if(state.tab==='today'){
-      const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('오늘의 분야별 흐름을 읽고,<br>행동 조언은 따로 펼쳐볼 수 있어요.','encourage')}${statusNotice(r)}${dailyCards(r)}`;
+      const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('오늘 한 줄부터 가볍게!<br>내 성향에 맞는 방법을 찾아봐요.','encourage')}${statusNotice(r)}${todayOverview(r)}`;
     }else if(state.tab==='natal'){
       html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${guide('마음이 가는 기준과 부담이 되는 장면을<br>분야별로 자세히 풀어볼게요.','thinking')}${statusNotice(r)}${natalTraits(r)}${natalBasis(r)}`;
     }else if(state.tab==='mbti'){
@@ -218,9 +257,23 @@
     }else{
       const p=state.profile;html=`<h1>설정</h1><div class="settings-card"><h2>입력한 프로필</h2><p>${p.year}년 ${p.month}월 ${p.day}일 · ${p.calendar==='SOLAR'?'양력':'한국 음력'}${p.leap?' 윤달':''}<br>${p.time?escape(p.time):'시간 모름'} · ${escape(p.mbti||'MBTI 미선택')}</p><button class="secondary" id="edit-profile">생일·시간·MBTI 변경</button><label class="check"><input id="setting-romance" type="checkbox" ${p.romanceHidden?'checked':''}>연애 항목 숨기기</label></div><div class="settings-card"><h2>날짜를 바꿔서 테스트</h2><p>한국 날짜 기준으로 계산해요. 생일은 그대로 두고 날짜별 결과를 비교할 수 있어요.</p><div class="date-selector"><label class="sr-only" for="target-date">운세 날짜</label><input id="target-date" type="date" min="1908-04-01" max="2050-12-31" value="${escape(state.target)}"><button id="change-date" class="secondary">날짜 적용</button></div><button class="secondary" id="today-date">한국 기준 오늘로</button><p id="date-error" class="error" hidden role="alert"></p></div><div class="settings-card"><h2>테스트와 저장</h2><p>광고·결제 기능은 제외했으며 모든 원고를 볼 수 있어요. 앱의 일반 계산과 초안 원고를 사용해요. 원고의 사람 승인·출시 승인을 뜻하지 않아요.</p><p>입력과 결과는 이 브라우저 탭의 임시 저장소에 있어요. Android의 암호화 저장소와는 다르며, 서버로 보내지 않아요. 자료를 준비한 뒤에는 같은 화면 안에서 계산할 때 인터넷을 사용하지 않아요.</p><p>원고 버전: ${escape(r.packVersion)}<br>계산 버전: ${escape(r.ruleVersion)}</p><button class="secondary" id="clear-data">이 탭의 입력과 결과 지우기</button></div>`;
     }
-    $('#result-content').innerHTML=html;
+    $('#result-content').innerHTML=(queuedCalculation?'<div class="notice" role="status" data-calculation-pending>계산 자료를 준비한 뒤 방금 선택한 결과를 보여드릴게요.</div>':'')+html;
+    if(state.tab==='settings'){
+      const pilotSettings=document.createElement('div');pilotSettings.className='settings-card';
+      pilotSettings.innerHTML=`<h2>대표 4개 초안 비교</h2><label class="check"><input id="today-pilot" type="checkbox" ${state.todayPilot?'checked':''}>오늘 화면의 대표 초안 비교 켜기</label><p>새 초안은 ISTJ·ENTP 각각 종합 3점·일 4점의 표현 주제, 총 4개 조건에만 적용해요. 같은 원고 조건일 때만 보여주며 나머지는 기존 원고예요.</p><p>예시: 양력 2000년 2월 29일 12시 34분, ISTJ 또는 ENTP를 입력하고 운세 날짜를 2026년 10월 11일로 바꿔보세요.</p><p>켜지 않은 기본 화면은 기존 원고를 사용해요. 사람의 의미 승인·출시 승인은 아니에요.</p>`;
+      $('#result-content').append(pilotSettings);
+      $('#today-pilot').addEventListener('change',async event=>{state.todayPilot=event.target.checked;save();if(state.todayPilot){await loadTodayPilot();if(state.tab==='today')render();}});
+    }
     $$('.tabs button').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.tab===state.tab)));
-    $$('details[data-detail]').forEach(detail=>detail.addEventListener('toggle',()=>{state.expanded[detail.dataset.detail]=detail.open;save();}));
+    $$('details[data-detail]').forEach(detail=>detail.addEventListener('toggle',()=>{
+      if(!detail.isConnected)return;
+      const key=detail.dataset.detail,changed=state.expanded[key]!==detail.open;
+      state.expanded[key]=detail.open;save();
+      if(key==='today-detailed-reading'&&state.tab==='today'&&changed){
+        if(detail.open)pushTodayDetailHistory();
+        else if(location.hash==='#today-details'){if(history.state?.testDetail)history.back();else history.replaceState({tab:'today'},'','#today');}
+      }
+    }));
     $('#edit-profile')?.addEventListener('click',showInput);
     $$('#quick-mbti [data-type]').forEach(button=>button.addEventListener('click',()=>{rememberView();calculate({...state.profile,mbti:button.dataset.type},state.target,'mbti');}));
     $('#setting-romance')?.addEventListener('change',event=>{rememberView();calculate({...state.profile,romanceHidden:event.target.checked},state.target,'settings');});
@@ -229,18 +282,26 @@
       rememberView();state.scroll.today=0;calculate(state.profile,date,'today');
     };
     $('#change-date')?.addEventListener('click',()=>changeDate($('#target-date').value));$('#today-date')?.addEventListener('click',()=>changeDate(koreaToday()));
-    $('#clear-data')?.addEventListener('click',()=>{pending=null;state=fresh();try{sessionStorage.removeItem(storageKey);}catch{}$('#profile-form').reset();syncForm();$('#cancel-edit').hidden=true;$('#form-error').hidden=true;history.replaceState(null,'','#input');showInput();});
+    $('#clear-data')?.addEventListener('click',()=>{pending=null;queuedCalculation=null;state=fresh();try{sessionStorage.removeItem(storageKey);}catch{}$('#profile-form').reset();syncForm();$('#cancel-edit').hidden=true;$('#form-error').hidden=true;history.replaceState(null,'','#input');showInput();});
+  }
+  function pushTodayDetailHistory(){
+    if(location.hash==='#today-details'&&history.state?.testDetail)return;
+    if(location.hash==='#today-details')history.replaceState({tab:'today'},'','#today');
+    else if(location.hash!=='#today')history.pushState({tab:'today'},'','#today');
+    history.pushState({tab:'today',testDetail:true},'','#today-details');
   }
   function showResult(tab='today',reset=false){
+    if(tab==='today-details')state.expanded['today-detailed-reading']=true;
     state.tab=['today','natal','mbti','settings'].includes(tab)?tab:'today';$('#input-screen').hidden=true;$('#result-screen').hidden=false;render();save();
-    const hash='#'+state.tab;if(location.hash!==hash)history.pushState({tab:state.tab},'',hash);
+    const hash=state.tab==='today'&&state.expanded['today-detailed-reading']?'#today-details':'#'+state.tab;if(hash==='#today-details')pushTodayDetailHistory();else if(location.hash!==hash)history.pushState({tab:state.tab},'',hash);
     requestAnimationFrame(()=>window.scrollTo(0,reset?0:(state.scroll[state.tab]||0)));
   }
   $$('.tabs button').forEach(button=>button.addEventListener('click',()=>{if(button.dataset.tab===state.tab)return;rememberView();showResult(button.dataset.tab);}));
-  window.addEventListener('popstate',()=>{rememberView();if(location.hash==='#input')showInput();else if(state.result)showResult(location.hash.slice(1)||'today');});
+  window.addEventListener('popstate',()=>{rememberView();if(location.hash==='#input')showInput();else if(state.result){if(location.hash==='#today')state.expanded['today-detailed-reading']=false;showResult(location.hash.slice(1)||'today');}});
   window.addEventListener('pagehide',rememberView);
   let scrollTimer;window.addEventListener('scroll',()=>{clearTimeout(scrollTimer);scrollTimer=setTimeout(rememberView,150);},{passive:true});
   if(state.profile&&state.result){fillForm(state.profile);showResult(location.hash.slice(1)||state.tab);}else{syncForm();history.replaceState(null,'','#input');}
+  if(state.todayPilot)loadTodayPilot().then(()=>{if(state.result&&state.tab==='today')render();});
   // Read-only observation for parity tests; no inputs are transmitted or put in the URL.
   Object.defineProperty(window,'sajuTest',{value:{get result(){return state.result;},get ready(){return ready;},get tab(){return state.tab;}},writable:false});
 })();
