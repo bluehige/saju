@@ -5,3 +5,6 @@
 .reading-label{font-size:14px;font-weight:650;color:var(--purple);margin:16px 0 6px}.reading-summary{margin-bottom:12px}.notice p{margin:4px 0}.expanded details{margin-top:14px}
 
 #loading-dialog{width:min(420px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;border:1px solid var(--line);border-radius:24px;padding:26px 22px;background:var(--cream);color:var(--ink);text-align:center;box-shadow:0 16px 60px #2e253d33}#loading-dialog::backdrop{background:#2e253d66}#loading-dialog h2{font-size:21px}#loading-dialog p{margin:12px 0 18px}.loading-spinner{width:38px;height:38px;border:4px solid var(--soft);border-top-color:var(--purple);border-radius:50%;margin:0 auto 20px}@media(prefers-reduced-motion:no-preference){.loading-spinner{animation:loading-turn .9s linear infinite}@keyframes loading-turn{to{transform:rotate(360deg)}}}
+
+/* 실제 명식의 겉오행 분포. 사주 근거를 첫 화면에서 읽는다. */
+[data-professional-saju] > .card{margin-bottom:18px}.element-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:14px 0}.element-grid>div{text-align:center;padding:10px 2px;border-radius:12px;background:#f6f3fc}.element-grid span{display:block;font-size:13px}.element-grid strong{display:block;font-size:25px}.element-grid small{font-size:12px;font-weight:400;margin-left:3px}[data-natal-mbti-connection]>h2{margin-top:26px}
