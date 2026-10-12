@@ -11,7 +11,7 @@
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const text=value=>escape(String(value??'').replace(/\{displayName\}/g,'사용자').replace(/\{typeLabel\}/g,state.profile?.mbti||''));
   const storageKey='saju.browser.test.v1';
-  const readingVersion='WEB_VOICE_2026_10_12_R19';
+  const readingVersion='WEB_VOICE_2026_10_12_R21';
   const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
   let state=fresh(),ready=false,pending=null,queuedCalculation=null,sequence=0,failedRequest=null,calculationTimer=null;
   try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1||saved?.version===2){
@@ -247,7 +247,7 @@
     }
     return line;
   }
-  const typeIntroductions={"ISTJ":"ISTJ는 “전에 해봤을 때는 어땠지?” 하며 경험에서 얻은 기준을 차근차근 짚는 편이에요. 맡은 일도 하나씩 끝까지 챙기는 방식이 편하고요.","ISFJ":"ISFJ는 익숙한 경험을 돌아보면서 사람의 마음도 세심하게 살피는 편이에요. 필요한 도움도 조용히 챙겨주려 하죠.","INFJ":"INFJ는 어떤 말이나 행동을 두고 “이건 무슨 뜻이었을까?” 하고 오래 생각해보는 편이에요. 무언가 고를 때도 내가 중요하게 생각하는 것과 맞는지 보려 하죠.","INTJ":"INTJ는 앞으로의 모습을 먼저 그려보는 편이에요. 그 목표까지 어떻게 갈지는 스스로 계획해보고 싶어 하죠.","ISTP":"ISTP는 눈앞의 문제를 직접 살펴보는 편이에요. 방법도 “이렇게 해보면 어떨까?” 하고 직접 시험해보는 쪽이 편하고요.","ISFP":"ISFP는 지금 보고 듣고 몸으로 느끼는 것, 그리고 그때 드는 마음을 중요하게 생각하는 편이에요. 그 느낌을 표현할 때도 나한테 맞다 싶은 방법을 찾으려 하고요.","INFP":"INFP는 “이게 나한테 왜 중요하지?” 하고 내가 소중하게 생각하는 걸 돌아보는 편이에요. 뭘 해볼지 생각할 때도 그 마음에 맞춰 해볼 수 있는 것들을 찾아보려 하고요.","INTP":"INTP는 궁금한 게 생기면 여러 각도에서 따져보는 편이에요. “그래서 왜 그런 거지?” 하고 스스로 납득할 만한 설명을 찾으려 하죠.","ESTP":"ESTP는 눈앞의 상황을 빠르게 살피는 편이에요. 방법도 직접 움직여보면서 알아가는 쪽이 편하고요.","ESFP":"ESFP는 같이 있는 사람들은 어떤지, 그 자리 분위기는 어떤지에 따라 반응하는 편이에요. 즐거움을 같이 나누면서 그 자리에 함께하고 싶어 하죠.","ENFP":"ENFP는 사람들과 생각을 나누다 “이런 것도 해볼 수 있겠네” 하고 새로운 가능성을 떠올리는 편이에요. 마음이 가는 일은 직접 해보고 싶어 하고요.","ENTP":"ENTP는 대화를 나누면서 아이디어를 키워가는 편이에요. 익숙한 방법을 볼 때도 “다르게 해볼 수는 없을까?” 하고 다른 길을 찾아보려 하죠.","ESTJ":"ESTJ는 무엇이 사실인지, 어떤 기준으로 할지 확인하면서 움직이는 편이에요. 함께할 일도 정리해서 실제로 해나가는 쪽이 편하고요.","ESFJ":"ESFJ는 사람들이 어떻게 반응하는지, 필요한 일은 뭔지 살펴보는 편이에요. 함께할 계획도, 예를 들어 뭘 언제 할지까지 자세히 챙겨두려 하고요.","ENFJ":"ENFJ는 사람들과 얘기하면서 어떤 마음인지, 앞으로 어떤 걸 해볼 수 있을지도 알아가려 해요. 그러면서 함께 뭘 해나가면 좋을지에도 관심을 두고요.","ENTJ":"ENTJ는 앞으로 이루고 싶은 목표를 크게 그려보는 편이에요. 그 목표에 맞춰 누가 어떤 일을 할지 정리해서 움직이려 하죠."};
+  const typeIntroductions={"ISTJ":"ISTJ는 “전에 해봤을 때는 어땠지?” 하며 경험에서 얻은 기준을 차근차근 짚는 편이에요. 맡은 일도 하나씩 끝까지 챙기는 방식이 편하고요.","ISFJ":"ISFJ는 익숙한 경험을 돌아보면서 사람의 마음도 세심하게 살피는 편이에요. 필요한 도움도 조용히 챙겨주려 하죠.","INFJ":"INFJ는 어떤 말이나 행동을 두고 “이건 무슨 뜻이었을까?” 하고 오래 생각해보는 편이에요. 무언가 고를 때도 내가 중요하게 생각하는 것과 맞는지 보려 하죠.","INTJ":"INTJ는 앞으로의 모습을 먼저 그려보는 편이에요. 그 목표까지 어떻게 갈지는 스스로 계획해보고 싶어 하죠.","ISTP":"ISTP는 눈앞의 문제를 직접 살펴보는 편이에요. 방법도 “이렇게 해보면 어떨까?” 하고 직접 시험해보는 쪽이 편하고요.","ISFP":"ISFP는 지금 보고 듣고 몸으로 느끼는 것, 그리고 그때 드는 마음을 중요하게 생각하는 편이에요. 그 느낌을 표현할 때도 나한테 맞다 싶은 방법을 찾으려 하고요.","INFP":"INFP는 무엇이 내게 소중하고 왜 중요한지 돌아보는 편이에요. 뭘 해볼지 생각할 때도 내가 중요하게 여기는 것에 맞는 일을 찾아보려 하죠.","INTP":"INTP는 궁금한 게 생기면 여러 각도에서 따져보는 편이에요. “그래서 왜 그런 거지?” 하고 스스로 납득할 만한 설명을 찾으려 하죠.","ESTP":"ESTP는 눈앞의 상황을 빠르게 살피는 편이에요. 방법도 직접 움직여보면서 알아가는 쪽이 편하고요.","ESFP":"ESFP는 같이 있는 사람들은 어떤지, 그 자리 분위기는 어떤지에 따라 반응하는 편이에요. 즐거움을 같이 나누면서 그 자리에 함께하고 싶어 하죠.","ENFP":"ENFP는 사람들과 생각을 나누다 “이런 것도 해볼 수 있겠네” 하고 새로운 가능성을 떠올리는 편이에요. 마음이 가는 일은 직접 해보고 싶어 하고요.","ENTP":"ENTP는 대화를 나누면서 아이디어를 키워가는 편이에요. 익숙한 방법을 볼 때도 “다르게 해볼 수는 없을까?” 하고 다른 길을 찾아보려 하죠.","ESTJ":"ESTJ는 무엇이 사실인지, 어떤 기준으로 할지 확인하면서 움직이는 편이에요. 함께할 일도 정리해서 실제로 해나가는 쪽이 편하고요.","ESFJ":"ESFJ는 사람들이 어떻게 반응하는지, 필요한 일은 뭔지 살펴보는 편이에요. 함께할 계획도, 예를 들어 뭘 언제 할지까지 자세히 챙겨두려 하고요.","ENFJ":"ENFJ는 사람들과 얘기하면서 어떤 마음인지, 앞으로 어떤 걸 해볼 수 있을지도 알아가려 해요. 그러면서 함께 뭘 해나가면 좋을지에도 관심을 두고요.","ENTJ":"ENTJ는 앞으로 이루고 싶은 목표를 크게 그려보는 편이에요. 그 목표에 맞춰 누가 어떤 일을 할지 정리해서 움직이려 하죠."};
   function todayTypeIntro(type){
     return `<article class="card" data-today-type-intro><h2>${type?escape(type)+'의 성향':'MBTI 성향'}</h2><p class="card-body">${type?text(typeIntroductions[type]):'유형을 고르면 오늘의 행동 이야기도 함께 읽을 수 있어요.'}</p></article>`;
   }
@@ -321,7 +321,7 @@
   }
   function natalBasis(r){
     const selection=mixedNatalSelection(r),e=selection.evidence;
-    const dayNotes=copy(r.dayStemIntro)?readingDetail(r.dayStemIntro):'';
+    const dayNotes=(copy(r.dayStemIntro)?readingDetail(r.dayStemIntro):'').replace('구성은 사주 표에서 보고, 생활 이야기는 분야별로 골라보세요.','');
     const structureCopy=copy(r.natalBase.STRUCTURE);
     const structureNote=structureCopy&&r.signature==='PARTIAL'?readingSentences(structureCopy.detail).at(-1):structureCopy&&r.signature!=='BI_GYEON'?firstSentence(structureCopy.detail):'';
     const extraText=dayNotes+(structureNote?`<p class="card-body">${text(structureNote)}</p>`:'');
