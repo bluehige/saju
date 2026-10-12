@@ -62,7 +62,7 @@
   "review/web_reading_copy.json": {
     "path": "data/review/web_reading_copy.json.gz",
     "gzip": true,
-    "sha256": "82910bea988f23892e71f31fa9eb5f91c498216033415a260f968b9b26373987",
-    "bytes": 6061877
+    "sha256": "056450c4e4e1e8ae5161fbd8e22b6ed009ec20690f946bb25b1ff22fcedee768",
+    "bytes": 6062081
   }
 }
