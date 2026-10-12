@@ -11,7 +11,7 @@
   const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const text=value=>escape(String(value??'').replace(/\{displayName\}/g,'사용자').replace(/\{typeLabel\}/g,state.profile?.mbti||''));
   const storageKey='saju.browser.test.v1';
-  const readingVersion='WEB_VOICE_2026_10_12_R22A';
+  const readingVersion='WEB_VOICE_2026_10_12_R22B';
   const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
   let state=fresh(),ready=false,pending=null,queuedCalculation=null,sequence=0,failedRequest=null,calculationTimer=null;
   try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1||saved?.version===2){
