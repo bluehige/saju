@@ -247,9 +247,9 @@
     }
     return line;
   }
-  const typeIntroductions={"ISTJ":"ISTJ는 경험에서 얻은 기준을 차근차근 확인하는 쪽이에요. 맡은 일을 하나씩 끝까지 챙기는 방식을 선호해요.","ISFJ":"ISFJ는 익숙한 경험과 사람의 마음을 세심하게 살피는 편이에요. 필요한 도움도 조용히 챙기려 해요.","INFJ":"INFJ는 말과 행동에 담긴 뜻을 오래 생각해보려 해요. 소중하게 여기는 방향에 맞는 선택을 선호해요.","INTJ":"INTJ는 앞으로의 모습을 먼저 그려보는 편이에요. 그 목표까지 갈 방법은 스스로 짜보고 싶어 해요.","ISTP":"ISTP는 눈앞의 문제를 직접 살펴보는 쪽이에요. 구체적인 방법을 직접 시험하는 방식을 선호해요.","ISFP":"ISFP는 지금 느끼는 감각과 마음을 중요하게 여겨요. 그 느낌을 자신에게 맞는 방식으로 표현하려 해요.","INFP":"INFP는 자신이 소중하게 여기는 뜻을 돌아보는 쪽이에요. 그 마음에 어울리는 가능성을 찾으려 해요.","INTP":"INTP는 궁금한 것을 여러 각도에서 따져보는 편이에요. 스스로 납득할 만한 설명을 찾으려 해요.","ESTP":"ESTP는 눈앞의 상황을 빠르게 살피는 편이에요. 직접 움직이며 방법을 알아가는 방식을 선호해요.","ESFP":"ESFP는 함께 있는 사람과 분위기에 반응하는 쪽이에요. 즐거움을 나누며 그 자리에 참여하려 해요.","ENFP":"ENFP는 사람들과 생각을 나누며 새 가능성을 떠올리는 편이에요. 마음이 가는 일을 직접 펼쳐보고 싶어 해요.","ENTP":"ENTP는 대화를 하며 아이디어를 키우는 쪽이에요. 익숙한 방법에서도 다른 길을 찾아보려 해요.","ESTJ":"ESTJ는 사실과 기준을 확인하며 움직이는 편이에요. 함께 할 일을 정리해 실행하는 방식을 선호해요.","ESFJ":"ESFJ는 사람들의 반응과 필요한 일을 살피는 쪽이에요. 함께할 계획도 구체적으로 챙기려 해요.","ENFJ":"ENFJ는 대화하며 사람들의 마음과 가능성을 알아가려 해요. 함께 나아갈 방향을 찾는 데 관심이 있어요.","ENTJ":"ENTJ는 앞으로 이루고 싶은 목표를 크게 그리는 쪽이에요. 목표에 맞춰 사람과 할 일을 정리해 움직이려 해요."};
+  const typeIntroductions={"ISTJ":"ISTJ는 “전에 해봤을 때는 어땠지?” 하며 경험에서 얻은 기준을 차근차근 짚는 편이에요. 맡은 일도 하나씩 끝까지 챙기는 방식이 편하고요.","ISFJ":"ISFJ는 익숙한 경험을 돌아보면서 사람의 마음도 세심하게 살피는 편이에요. 필요한 도움도 조용히 챙겨주려 하죠.","INFJ":"INFJ는 어떤 말이나 행동을 두고 “이건 무슨 뜻이었을까?” 하고 오래 생각해보는 편이에요. 무언가 고를 때도 내가 중요하게 생각하는 것과 맞는지 보려 하죠.","INTJ":"INTJ는 앞으로의 모습을 먼저 그려보는 편이에요. 그 목표까지 어떻게 갈지는 스스로 계획해보고 싶어 하죠.","ISTP":"ISTP는 눈앞의 문제를 직접 살펴보는 편이에요. 방법도 “이렇게 해보면 어떨까?” 하고 직접 시험해보는 쪽이 편하고요.","ISFP":"ISFP는 지금 보고 듣고 몸으로 느끼는 것, 그리고 그때 드는 마음을 중요하게 생각하는 편이에요. 그 느낌을 표현할 때도 나한테 맞다 싶은 방법을 찾으려 하고요.","INFP":"INFP는 “이게 나한테 왜 중요하지?” 하고 내가 소중하게 생각하는 걸 돌아보는 편이에요. 뭘 해볼지 생각할 때도 그 마음에 맞춰 해볼 수 있는 것들을 찾아보려 하고요.","INTP":"INTP는 궁금한 게 생기면 여러 각도에서 따져보는 편이에요. “그래서 왜 그런 거지?” 하고 스스로 납득할 만한 설명을 찾으려 하죠.","ESTP":"ESTP는 눈앞의 상황을 빠르게 살피는 편이에요. 방법도 직접 움직여보면서 알아가는 쪽이 편하고요.","ESFP":"ESFP는 같이 있는 사람들은 어떤지, 그 자리 분위기는 어떤지에 따라 반응하는 편이에요. 즐거움을 같이 나누면서 그 자리에 함께하고 싶어 하죠.","ENFP":"ENFP는 사람들과 생각을 나누다 “이런 것도 해볼 수 있겠네” 하고 새로운 가능성을 떠올리는 편이에요. 마음이 가는 일은 직접 해보고 싶어 하고요.","ENTP":"ENTP는 대화를 나누면서 아이디어를 키워가는 편이에요. 익숙한 방법을 볼 때도 “다르게 해볼 수는 없을까?” 하고 다른 길을 찾아보려 하죠.","ESTJ":"ESTJ는 무엇이 사실인지, 어떤 기준으로 할지 확인하면서 움직이는 편이에요. 함께할 일도 정리해서 실제로 해나가는 쪽이 편하고요.","ESFJ":"ESFJ는 사람들이 어떻게 반응하는지, 필요한 일은 뭔지 살펴보는 편이에요. 함께할 계획도, 예를 들어 뭘 언제 할지까지 자세히 챙겨두려 하고요.","ENFJ":"ENFJ는 사람들과 얘기하면서 어떤 마음인지, 앞으로 어떤 걸 해볼 수 있을지도 알아가려 해요. 그러면서 함께 뭘 해나가면 좋을지에도 관심을 두고요.","ENTJ":"ENTJ는 앞으로 이루고 싶은 목표를 크게 그려보는 편이에요. 그 목표에 맞춰 누가 어떤 일을 할지 정리해서 움직이려 하죠."};
   function todayTypeIntro(type){
-    return `<article class="card" data-today-type-intro><h2>사주와 MBTI, 이렇게 읽어요</h2><p class="hint">태어난 해·달·날·시간을 네 쌍의 글자로 적은 게 사주예요. 그 관계를 전통적인 뜻으로 풀어봐요. MBTI는 생각하고 선택할 때 마음이 가는 방식을 16유형으로 살펴봐요.</p><p class="card-body">${type?text(typeIntroductions[type]):'유형을 고르면 오늘의 행동 이야기도 함께 읽을 수 있어요.'}</p>${type?'<p class="hint">오늘 이야기에 이 성향을 더해, 해볼 만한 방법을 찾아볼게요.</p>':''}</article>`;
+    return `<article class="card" data-today-type-intro><h2>${type?escape(type)+'의 성향':'MBTI 성향'}</h2><p class="card-body">${type?text(typeIntroductions[type]):'유형을 고르면 오늘의 행동 이야기도 함께 읽을 수 있어요.'}</p></article>`;
   }
   function todayReading(r,domain){
     const value=domain.mbti?.texts?domain.mbti:domain.base,c=copy(value),body=c?.detail||value?.texts?.body||'';
@@ -266,7 +266,7 @@
   function todayOverview(r){
     const overall=r.domains.find(domain=>domain.id==='OVERALL'),reading=overall?todayReading(r,overall):null;
     const oneLine=reading?.oneLine||'확인된 사주 글자부터 읽어볼게요. 자세한 안내는 위에 모아뒀어요.';
-    return `${todayTypeIntro(r.type)}<article class="card" data-today-one-line><span class="label-pill">${r.type?escape(r.type)+' · ':''}오늘 한 줄</span><p class="card-body reading-summary">${text(oneLine)}</p>${details('today-detailed-reading','오늘 이야기 더 읽기 · 무료 체험',`<p class="hint">체험판에서는 상세 이야기를 바로 열어볼 수 있어요.</p>${dailyCards(r)}`)}</article>`;
+    return `${todayTypeIntro(r.type)}<article class="card" data-today-one-line><span class="label-pill">${r.type?escape(r.type)+' · ':''}오늘 한 줄</span><p class="card-body reading-summary">${text(oneLine)}</p>${details('today-detailed-reading','오늘 이야기 더 읽기 · 무료 체험',`${dailyCards(r)}`)}</article>`;
   }
   function natalCards(values,names,prefix){return `<div class="cards">${Object.entries(values).filter(([key])=>!state.profile.romanceHidden||key!=='ROMANCE').map(([key,value])=>{
     const t=value.texts,c=copy(value);return `<article class="card" data-section="${escape(key)}"><div class="card-top"><span class="domain">${escape(names[key]||key)}</span></div>${t?`<h3 class="card-title">${text(c?.title||t.title)}</h3>${readingSummary(value)}`:'<p class="subtitle">확인된 조건에 맞는 이야기를 준비하고 있어요.</p>'}${t?moreReading(prefix+'-'+key,'이야기 더 읽기',value,[c?.summary]):''}</article>`;
@@ -315,27 +315,26 @@
   function natalTraits(r){
     const selected=mixedNatalSelection(r);
     if(selected.rows.length){const values=Object.fromEntries(selected.rows.map(row=>[row.section,{texts:{title:row.title},reading:row}]));return `<div data-mixed-reading="${escape(selected.branch)}">${natalCards(values,sections,'natal')}</div>`;}
-    if(r.signature==='PARTIAL')return '<div class="notice" data-partial-reading>확인된 사주 글자부터 읽어볼게요. 아래에서 기본 구성을 함께 살펴보세요.</div>';
-    if(r.signature==='MIXED')return '<div class="notice" data-mixed-reading-held>여러 역할이 함께 보여요. 이 조합은 아래의 기본 구성부터 살펴볼게요.</div>';
+    if(r.signature==='PARTIAL')return '<div class="notice" data-partial-reading>확인된 사주 글자부터 읽어볼게요. 위의 명식과 오행을 함께 살펴보세요.</div>';
+    if(r.signature==='MIXED')return '<div class="notice" data-mixed-reading-held>여러 역할이 함께 보여요. 이 조합은 위의 명식과 오행부터 살펴볼게요.</div>';
     return natalCards(Object.fromEntries(Object.entries(r.natalBase).filter(([key])=>key!=='STRUCTURE')),sections,'natal');
   }
   function natalBasis(r){
     const selection=mixedNatalSelection(r),e=selection.evidence;
+    const dayNotes=copy(r.dayStemIntro)?readingDetail(r.dayStemIntro):'';
+    const structureCopy=copy(r.natalBase.STRUCTURE);
+    const structureNote=structureCopy&&r.signature==='PARTIAL'?readingSentences(structureCopy.detail).at(-1):structureCopy&&r.signature!=='BI_GYEON'?firstSentence(structureCopy.detail):'';
+    const extraText=dayNotes+(structureNote?`<p class="card-body">${text(structureNote)}</p>`:'');
     const names={SELF:'내 판단을 지키기',OUTPUT:'생각을 표현하기',WEALTH:'결과를 챙기기',RULE:'책임을 맡기',LEARN:'배우고 이해하기'};
-    const pillars=`<div class="pillars">${Object.entries(r.pillars).map(([key,p])=>`<div class="pillar"><span>${{YEAR:'태어난 해',MONTH:'태어난 달',DAY:'태어난 날',HOUR:'태어난 시간'}[key]}</span><strong>${p?escape(p.korean):'?'}</strong></div>`).join('')}</div><p class="hint">태어난 때를 해·달·날·시간의 네 쌍으로 적은 사주 글자예요. 물음표는 현재 확정하지 못한 자리예요.</p>`;
-    const structure=r.natalBase.STRUCTURE?`<article class="card" data-section="STRUCTURE">${readingDetail(r.natalBase.STRUCTURE)}</article>`:'';
     const selected=selection.rows.length?`<p class="card-body">이 글에서는 ${selection.roleSet.roles.map(role=>escape(names[role])).join(', ')}를 함께 살펴봐요.</p>`:'';
     const numericPurpose=selection.rows.length?'여러 역할을 함께 읽을 때, 아래 값을 비교해 글을 골라요.':'확인된 글자가 가진 역할을 아래 값으로 모아 보여줘요.';
     const projection=e.available?`<p class="card-body">${numericPurpose}</p><p class="hint">각 글자에 정해둔 값을 더한 표시 수치예요. 성격의 비율이나 사건이 일어날 확률을 뜻하지 않아요.</p><ul>${Object.entries(e.totals).map(([k,v])=>`<li>${escape(names[k])}: ${v}단위</li>`).join('')}</ul>`:'';
     const selectionRule=selection.rows.length?`<p class="card-body">값이 큰 두 역할을 먼저 고르고, 두 번째 값보다 ${selection.roleSet.closeGap}단위 이내로 작은 역할도 함께 읽어요. 같은 값에는 같은 기준을 적용해요. 태어난 시간을 모르면 확인된 글자만 사용해요.</p>`:'';
-    const positions={YEAR:'해',MONTH:'달',DAY:'날',HOUR:'시간'},sources={STEM:'겉 글자',HIDDEN_STEM:'가지에 담긴 글자'};
-    const gods={BI_GYEON:'비견',GEOP_JAE:'겁재',SIK_SIN:'식신',SANG_GWAN:'상관',PYEON_JAE:'편재',JEONG_JAE:'정재',PYEON_GWAN:'편관',JEONG_GWAN:'정관',PYEON_IN:'편인',JEONG_IN:'정인'};
-    const occurrences=e.available?details('natal-position-evidence','어느 글자에서 나왔나요?',`<p class="hint">겉으로 보이는 글자와 가지에 담긴 글자를 나눠, 각 역할에 더한 값을 보여줘요.</p><p class="hint">${e.occurrences.map(o=>escape(`${positions[o.position]}의 ${sources[o.source]}: ${gods[o.tenGod]}, ${o.weightUnits}단위`)).join('<br>')}</p>`):'';
     const lenses=selection.rows.flatMap(row=>row.positionLensIds||[]);
     const lensGrounds=mixedNatalCopy.positionLenses.filter(l=>lenses.includes(l.id)).map(l=>`<p class="hint">${escape(l.grounds)} ${escape(l.inference)}</p>`).join('');
     const extraGrounds=lensGrounds?details('natal-lens-evidence','덧붙인 설명의 근거',lensGrounds):'';
-    const grounds=e.available?details('natal-selection-evidence','이 풀이에 쓰인 글자와 기준',`${projection}${selectionRule}${occurrences}${extraGrounds}`):'';
-    return details('natal-factual-basis','사주 글자와 기본 구성 보기',`${pillars}${dayStemCard(r.dayStemIntro)}${structure}${selected}${grounds}`);
+    const body=`${extraText}${selected}${projection}${selectionRule}${extraGrounds}`;
+    return body?details('natal-factual-basis','생활 풀이의 추가 설명과 기준',body):'';
   }
 
 
@@ -366,7 +365,7 @@
   function render(){
     const r=state.result;if(!r)return;let html='';
     if(state.tab==='today'){
-      const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('오늘 한 줄부터 가볍게 읽어볼까요?<br>더 궁금한 이야기는 바로 펼쳐보세요.','encourage')}${statusNotice(r)}${todayOverview(r)}`;
+      const [y,m,d]=r.date.split('-');html=`<h1>오늘의 운세</h1><p class="page-date">${Number(y)}년 ${Number(m)}월 ${Number(d)}일 · 한국 날짜</p>${guide('오늘 한 줄부터 가볍게 읽어볼까요?','encourage')}${statusNotice(r)}${todayOverview(r)}`;
     }else if(state.tab==='natal'){
       html=`<h1>내 사주</h1><p class="subtitle">양력 기준 ${escape(r.birthSolarDate)} · ${state.profile.time?escape(state.profile.time):'시간 모름'}</p>${professionalSaju(r)}${statusNotice(r)}${natalMbtiConnection(r)}`;
     }else if(state.tab==='mbti'){
