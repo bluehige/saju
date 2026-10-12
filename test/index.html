@@ -8,8 +8,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="theme-color" content="#FFF9F1">
   <title>사주MBTI · 오늘의 이야기</title>
-  <link rel="stylesheet" href="app.css?build=guide-r1">
-  <script defer src="app.js?build=WEB_VOICE_SENTENCE_2026_10_11_R14"></script>
+  <link rel="stylesheet" href="app.css?build=birth-input-r16">
+  <script defer src="app.js?build=birth-input-r16"></script>
 </head>
 <body>
   <header class="topbar"><a href="../" aria-label="사주MBTI 안내 사이트">사주MBTI</a><span class="test-badge">체험판</span></header>
@@ -27,9 +27,9 @@
         <fieldset><legend>내 MBTI</legend><input id="mbti" name="mbti" type="hidden" value=""><div id="mbti-buttons" class="type-grid" role="group" aria-label="MBTI 유형 선택"></div><p class="hint">별점은 사주로, 해볼 방법은 내 유형에 맞춰 읽어요. 아직 모르면 기본 사주부터 볼 수 있어요.</p></fieldset>
         <fieldset><legend>연애 운세</legend><label class="check"><input id="romance-hidden" name="romanceHidden" type="checkbox">관심 없어요 · 연애 항목 숨기기</label></fieldset>
         <p id="form-error" class="error" role="alert" hidden></p>
-        <div id="load-state" class="load-state" role="status" aria-live="polite">계산 자료를 준비하고 있어요…</div>
-        <button id="retry-load" class="secondary" type="button" hidden>자료 다시 준비하기</button>
-        <button id="submit-profile" class="primary" type="submit" disabled>자료 준비 중…</button>
+        <div id="load-state" class="load-state" role="status" aria-live="polite" hidden></div>
+        <button id="retry-load" class="secondary" type="button" hidden>다시 시도하기</button>
+        <button id="submit-profile" class="primary" type="submit">내 결과 보기</button>
         <button id="cancel-edit" class="secondary" type="button" hidden>입력 취소하고 결과로</button>
         <p class="privacy-note">입력은 이 탭에만 임시로 저장해요. 설정에서 언제든 지울 수 있어요.</p>
       </form>
@@ -37,6 +37,12 @@
     <section id="result-screen" hidden><div class="mode-note">공개 체험판 · 검토 중인 글</div><div id="result-content"></div><nav class="tabs" aria-label="앱 화면"><button type="button" data-tab="today" aria-selected="true">오늘</button><button type="button" data-tab="natal" aria-selected="false">내 사주</button><button type="button" data-tab="mbti" aria-selected="false">MBTI</button><button type="button" data-tab="settings" aria-selected="false">설정</button></nav></section>
     <noscript>브라우저 설정에서 JavaScript를 켜면 내 이야기를 열 수 있어요.</noscript>
   </main>
+  <dialog id="loading-dialog" aria-labelledby="loading-title" aria-describedby="loading-message">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <h2 id="loading-title">내 사주를 준비하고 있어요</h2>
+    <p id="loading-message" role="status" aria-live="polite">당신에게 맞는 사주를 찾고 있어요. 잠시만 기다려주세요.</p>
+    <button id="cancel-calculation" class="secondary" type="button">취소하고 입력으로 돌아가기</button>
+  </dialog>
   <footer><a href="../privacy.html">개인정보처리방침</a><a href="../support.html">문의</a></footer>
 </body>
 </html>

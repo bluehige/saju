@@ -13,7 +13,7 @@
   const storageKey='saju.browser.test.v1';
   const readingVersion='WEB_VOICE_SENTENCE_2026_10_11_R14';
   const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',tab:'today',expanded:{},scroll:{},cache:{}});
-  let state=fresh(),ready=false,pending=null,queuedCalculation=null,sequence=0,daySequence=0,dayRequest=null;
+  let state=fresh(),ready=false,pending=null,queuedCalculation=null,sequence=0,failedRequest=null,calculationTimer=null;
   try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1||saved?.version===2){
     state={...fresh(),...saved};
     if(saved.readingVersion!==readingVersion)state={...fresh(),profile:saved.profile,target:saved.target||'',tab:saved.tab||'today',expanded:saved.expanded||{},scroll:saved.scroll||{}};
@@ -32,16 +32,29 @@
   }
   function typeButtons(selected){return [...types,''].map(type=>`<button type="button" class="type-button ${type?'':'type-unknown'}" data-type="${type}" aria-pressed="${type===selected}">${type||'아직 몰라요 · 기본 사주만 보기'}</button>`).join('');}
   function formTypes(){
-    $('#mbti-buttons').innerHTML=typeButtons($('#mbti').value);
-    $$('#mbti-buttons [data-type]').forEach(button=>button.addEventListener('click',()=>{$('#mbti').value=button.dataset.type;formTypes();}));
+    if(!$('#mbti-buttons').children.length){
+      $('#mbti-buttons').innerHTML=typeButtons($('#mbti').value);
+      $$('#mbti-buttons [data-type]').forEach(button=>button.addEventListener('click',()=>{
+        if(busy())cancelCalculation();failedRequest=null;$('#retry-load').hidden=true;$('#form-error').hidden=true;
+        $('#mbti').value=button.dataset.type;formTypes();
+      }));
+    }
+    $$('#mbti-buttons [data-type]').forEach(button=>{const selected=button.dataset.type===$('#mbti').value;button.setAttribute('aria-pressed',String(selected));});
+  }
+  const lunarMonthIndex={"1899":[30,29,30,29,30,29,30,30,29,30,29,30,0,0],"1900":[29,30,29,29,30,29,30,30,30,30,29,30,8,29],"1901":[29,30,29,29,30,29,30,29,30,30,30,29,0,0],"1902":[30,29,30,29,29,30,29,30,29,30,30,30,0,0],"1903":[29,30,29,30,29,30,29,29,30,30,29,30,5,29],"1904":[30,30,29,30,29,29,30,29,29,30,30,29,0,0],"1905":[30,30,29,30,30,29,29,30,29,30,29,30,0,0],"1906":[29,30,30,29,29,30,29,30,29,30,29,30,4,30],"1907":[29,30,29,30,29,30,30,29,30,29,30,29,0,0],"1908":[30,29,29,30,30,29,30,29,30,30,29,30,0,0],"1909":[29,30,29,30,29,30,29,30,30,30,29,30,2,29],"1910":[29,30,29,29,30,29,30,29,30,30,30,29,0,0],"1911":[30,29,30,29,29,30,29,30,30,29,30,30,6,29],"1912":[30,29,30,29,29,30,29,29,30,30,29,30,0,0],"1913":[30,30,29,30,29,29,30,29,29,30,29,30,0,0],"1914":[30,30,29,30,30,29,30,29,30,29,29,30,5,29],"1915":[30,29,30,30,29,30,29,30,29,30,29,30,0,0],"1916":[29,30,29,30,29,30,30,29,30,29,30,29,0,0],"1917":[30,29,30,29,30,30,29,30,30,29,30,29,2,29],"1918":[30,29,29,30,29,30,29,30,30,30,29,30,0,0],"1919":[29,30,29,29,30,29,30,30,30,29,30,30,7,29],"1920":[29,30,29,29,30,29,29,30,30,29,30,30,0,0],"1921":[30,29,30,29,29,30,29,29,30,29,30,30,0,0],"1922":[30,29,30,30,29,30,29,29,30,29,30,30,5,29],"1923":[29,30,30,29,30,29,30,29,30,29,29,30,0,0],"1924":[30,29,30,29,30,30,29,30,29,30,29,29,0,0],"1925":[30,29,30,30,30,29,30,30,29,30,29,30,4,29],"1926":[29,29,30,29,30,29,30,30,29,30,30,29,0,0],"1927":[30,29,29,30,29,30,29,30,30,29,30,30,0,0],"1928":[29,30,29,30,29,29,30,30,29,30,30,30,2,29],"1929":[29,30,29,29,30,29,29,30,29,30,30,30,0,0],"1930":[29,30,30,29,29,30,29,30,29,30,30,29,6,29],"1931":[30,30,30,29,29,30,29,29,30,29,30,29,0,0],"1932":[30,30,30,29,30,29,30,29,29,30,29,30,0,0],"1933":[29,30,30,29,30,29,30,29,30,29,29,30,5,30],"1934":[29,30,29,30,30,29,30,30,29,30,29,30,0,0],"1935":[29,29,30,29,30,29,30,30,29,30,30,29,0,0],"1936":[30,29,29,29,30,29,30,29,30,30,30,29,3,30],"1937":[30,29,29,30,29,29,30,29,30,30,30,29,0,0],"1938":[30,30,29,29,30,29,29,29,30,30,29,30,7,30],"1939":[30,30,29,29,30,29,29,30,29,30,29,30,0,0],"1940":[30,30,29,30,29,30,29,29,30,29,30,29,0,0],"1941":[30,30,29,30,30,29,29,29,30,29,30,29,6,30],"1942":[30,29,30,30,29,30,30,29,30,29,29,30,0,0],"1943":[29,30,29,30,29,30,30,29,30,30,29,30,0,0],"1944":[29,29,30,29,29,30,29,30,30,29,30,30,4,30],"1945":[29,29,30,29,29,30,29,30,30,30,29,30,0,0],"1946":[30,29,29,30,29,29,30,29,30,30,29,30,0,0],"1947":[30,30,29,30,29,29,30,29,30,29,30,30,2,29],"1948":[30,29,30,29,30,29,29,30,29,30,29,30,0,0],"1949":[30,30,29,30,29,30,29,30,29,30,29,30,7,29],"1950":[30,29,30,30,29,30,29,29,30,29,30,29,0,0],"1951":[30,29,30,30,29,30,29,30,29,30,29,30,0,0],"1952":[29,30,29,30,29,30,29,30,29,30,29,30,5,30],"1953":[29,30,29,29,30,30,29,30,30,29,30,30,0,0],"1954":[29,29,30,29,29,30,29,30,30,29,30,30,0,0],"1955":[30,29,29,29,29,30,29,30,29,30,30,30,3,30],"1956":[29,30,29,30,29,29,30,29,30,29,30,30,0,0],"1957":[30,29,30,29,30,29,29,30,30,29,30,30,8,29],"1958":[29,30,30,29,30,29,29,30,29,30,29,30,0,0],"1959":[29,30,30,29,30,29,30,29,30,29,30,29,0,0],"1960":[30,29,30,29,30,30,30,29,30,29,30,29,6,29],"1961":[30,29,30,29,30,29,30,30,29,30,29,30,0,0],"1962":[29,30,29,29,30,29,30,30,29,30,30,29,0,0],"1963":[30,29,30,29,30,29,30,29,30,30,30,29,4,29],"1964":[30,29,30,29,29,30,29,30,29,30,30,30,0,0],"1965":[29,30,29,30,29,29,30,29,29,30,30,30,0,0],"1966":[29,30,30,30,29,29,30,29,29,30,30,29,3,29],"1967":[30,30,29,30,30,29,29,30,29,30,29,30,0,0],"1968":[29,30,30,29,30,29,30,30,29,30,29,30,7,29],"1969":[29,30,29,30,29,30,30,29,30,29,30,29,0,0],"1970":[30,29,29,30,30,29,30,29,30,30,29,30,0,0],"1971":[29,30,29,29,30,30,29,30,30,30,29,30,5,29],"1972":[29,30,29,29,30,29,30,29,30,30,30,29,0,0],"1973":[30,29,30,29,29,30,29,29,30,30,30,29,0,0],"1974":[30,30,29,30,29,30,29,29,30,30,29,30,4,29],"1975":[30,30,29,30,29,29,30,29,29,30,29,30,0,0],"1976":[30,30,29,30,29,30,29,30,30,29,29,30,8,29],"1977":[30,29,30,30,29,30,29,30,29,30,29,29,0,0],"1978":[30,30,29,30,29,30,30,29,30,29,30,29,0,0],"1979":[30,29,29,30,29,30,29,30,30,29,30,29,6,30],"1980":[30,29,29,30,29,30,29,30,30,29,30,30,0,0],"1981":[29,30,29,29,30,29,29,30,30,29,30,30,0,0],"1982":[30,29,30,29,30,29,29,30,30,29,30,30,4,29],"1983":[30,29,30,29,29,30,29,29,30,29,30,30,0,0],"1984":[30,29,30,30,29,29,30,29,29,30,30,30,10,29],"1985":[29,30,30,29,30,29,30,29,29,30,29,30,0,0],"1986":[29,30,30,29,30,30,29,30,29,30,29,29,0,0],"1987":[30,29,30,30,29,30,30,30,29,30,29,30,6,29],"1988":[29,29,30,29,30,29,30,30,29,30,30,29,0,0],"1989":[30,29,29,30,29,30,29,30,30,29,30,30,0,0],"1990":[29,30,29,29,30,29,30,30,29,30,30,30,5,29],"1991":[29,30,29,29,30,29,29,30,29,30,30,30,0,0],"1992":[29,30,30,29,29,30,29,29,30,29,30,30,0,0],"1993":[29,30,30,30,29,30,29,29,30,29,30,29,3,29],"1994":[30,30,30,29,30,29,30,29,29,30,29,30,0,0],"1995":[29,30,30,29,30,30,29,30,30,29,29,30,8,29],"1996":[29,30,29,30,30,29,30,29,30,30,29,30,0,0],"1997":[29,29,30,29,30,29,30,30,29,30,30,29,0,0],"1998":[30,29,29,30,29,30,30,29,30,30,30,29,5,29],"1999":[30,29,29,30,29,29,30,29,30,30,30,29,0,0],"2000":[30,30,29,29,30,29,29,30,29,30,30,29,0,0],"2001":[30,30,30,29,30,29,29,30,29,30,29,30,4,29],"2002":[30,30,29,30,29,30,29,29,30,29,30,29,0,0],"2003":[30,30,29,30,30,29,30,29,29,30,29,30,0,0],"2004":[29,30,30,30,29,30,29,30,29,30,29,30,2,29],"2005":[29,30,29,30,29,30,30,29,30,30,29,29,0,0],"2006":[30,29,30,29,30,29,30,30,30,29,30,30,7,29],"2007":[29,29,30,29,29,30,29,30,30,30,29,30,0,0],"2008":[30,29,29,30,29,29,30,29,30,30,29,30,0,0],"2009":[30,30,29,29,30,29,30,29,30,29,30,30,5,29],"2010":[30,29,30,29,30,29,29,30,29,30,29,30,0,0],"2011":[30,29,30,30,29,30,29,29,30,29,30,29,0,0],"2012":[30,29,30,30,29,30,29,29,30,29,30,29,3,30],"2013":[30,29,30,30,29,30,29,30,29,30,29,30,0,0],"2014":[29,30,29,30,29,30,29,30,30,30,29,30,9,29],"2015":[29,30,29,29,30,29,30,30,30,29,30,29,0,0],"2016":[30,29,30,29,29,30,29,30,30,29,30,30,0,0],"2017":[29,30,29,30,29,30,29,30,29,30,30,30,5,29],"2018":[29,30,29,30,29,29,30,29,30,29,30,30,0,0],"2019":[30,29,30,29,30,29,29,30,29,30,29,30,0,0],"2020":[30,29,30,30,30,29,29,30,29,30,29,30,4,29],"2021":[29,30,30,29,30,29,30,29,30,29,30,29,0,0],"2022":[30,29,30,29,30,30,29,30,29,30,29,30,0,0],"2023":[29,30,30,29,30,29,30,30,29,30,29,30,2,29],"2024":[29,30,29,29,30,29,30,30,29,30,30,29,0,0],"2025":[30,29,30,29,29,30,30,29,30,30,30,29,6,29],"2026":[30,29,30,29,29,30,29,30,29,30,30,30,0,0],"2027":[29,30,29,30,29,29,30,29,29,30,30,30,0,0],"2028":[29,30,30,29,30,29,30,29,29,30,30,29,5,29],"2029":[30,30,29,30,30,29,29,30,29,29,30,30,0,0],"2030":[29,30,29,30,30,29,30,29,30,29,30,29,0,0],"2031":[30,29,30,30,29,30,30,29,30,29,30,29,3,29],"2032":[30,29,29,30,29,30,30,29,30,30,29,30,0,0],"2033":[29,30,29,29,30,29,30,29,30,30,30,30,11,29],"2034":[29,30,29,29,30,29,30,29,30,30,30,29,0,0],"2035":[30,29,30,29,29,30,29,29,30,30,29,30,0,0],"2036":[30,30,29,30,29,29,29,29,30,30,29,30,6,30],"2037":[30,30,29,30,29,29,30,29,29,30,29,30,0,0],"2038":[30,30,29,30,29,30,29,30,29,29,30,29,0,0],"2039":[30,30,29,30,30,30,29,30,29,30,29,29,5,29],"2040":[30,29,30,30,29,30,30,29,30,29,30,29,0,0],"2041":[30,29,29,30,29,30,30,29,30,30,29,30,0,0],"2042":[29,30,29,30,29,30,29,30,30,29,30,30,2,29],"2043":[29,30,29,29,30,29,29,30,30,29,30,30,0,0],"2044":[30,29,30,29,29,30,29,30,29,30,30,30,7,29],"2045":[30,29,30,29,29,30,29,29,30,29,30,30,0,0],"2046":[30,29,30,30,29,29,30,29,29,30,29,30,0,0],"2047":[30,29,30,30,29,29,30,29,29,30,29,30,5,30],"2048":[29,30,30,29,30,30,29,30,29,30,29,29,0,0],"2049":[30,29,30,29,30,30,29,30,30,29,30,29,0,0],"2050":[30,29,29,29,30,29,30,30,29,30,18,0,3,30]};
+  function localMonthDays(year,month,lunar,leap){
+    if(!Number.isInteger(year)||!Number.isInteger(month)||month<1||month>12)return 0;
+    if(!lunar)return new Date(Date.UTC(year,month,0)).getUTCDate();
+    const data=lunarMonthIndex[year];if(!data)return 0;
+    return leap?(month===data[12]?data[13]:0):data[month-1];
   }
   function birthDays(wanted=$('#birth-day').value){
     const year=Number($('#birth-year').value),month=Number($('#birth-month').value);
-    $('#birth-day').disabled=true;
-    if(!year||!month){dayRequest=null;options($('#birth-day'),[],'일 선택');$('#birth-day-hint').textContent='연도와 월을 먼저 골라주세요.';$('#submit-profile').disabled=!ready||pending!==null;return;}
-    if(!ready){$('#birth-day-hint').textContent='자료 준비가 끝나면 실제 날짜 수에 맞춰 일을 고를 수 있어요.';return;}
-    dayRequest={id:++daySequence,wanted};$('#birth-day-hint').textContent='이 달의 날짜를 확인하고 있어요…';$('#submit-profile').disabled=true;
-    worker.postMessage({kind:'month-days',id:dayRequest.id,year,month,lunar:$('#birth-calendar').value==='KOREAN_LUNAR',leap:$('#birth-leap').checked});
+    const lunar=$('#birth-calendar').value==='KOREAN_LUNAR',leap=$('#birth-leap').checked;
+    const days=year&&month?localMonthDays(year,month,lunar,leap):0;
+    options($('#birth-day'),Array.from({length:days},(_,i)=>i+1),'일 선택','일',wanted);
+    $('#birth-day').disabled=!days;
+    $('#birth-day-hint').textContent=!year||!month?'연도와 월을 먼저 골라주세요.':days?`이 달은 ${days}일까지 있어요.`:leap?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'이 달의 날짜 자료를 확인할 수 없어요. 연도와 월을 확인해주세요.';
   }
   function syncForm(wanted=$('#birth-day').value){
     birthYears();
@@ -59,81 +72,121 @@
   options($('#birth-minute'),Array.from({length:60},(_,i)=>String(i).padStart(2,'0')),'분 선택','분');formTypes();
   function fillForm(profile){if(!profile)return;$('#birth-calendar').value=profile.calendar;birthYears();$('#birth-year').value=profile.year;$('#birth-month').value=profile.month;$('#birth-leap').checked=profile.leap;$('#time-unknown').checked=!profile.time;const parts=(profile.time||':').split(':');$('#birth-hour').value=parts[0];$('#birth-minute').value=parts[1];$('#mbti').value=profile.mbti;formTypes();$('#romance-hidden').checked=profile.romanceHidden;syncForm(profile.day);}
   function error(message){$('#form-error').textContent=message;$('#form-error').hidden=false;$('#form-error').scrollIntoView({block:'center',behavior:'smooth'});}
-  function failQueuedCalculation(message){
-    if(!queuedCalculation)return;
-    queuedCalculation=null;
-    if(!$('#result-screen').hidden&&state.result){render();const notice=document.createElement('div');notice.className='notice';notice.setAttribute('role','alert');notice.textContent=message;$('#result-content').prepend(notice);}
+  let worker=null,startupTimer=null,loadingFocus=null;
+  const busy=()=>pending!==null||queuedCalculation!==null;
+  function updateSubmit(){
+    $('#submit-profile').disabled=busy();$('#submit-profile').textContent=busy()?'사주를 찾고 있어요…':'내 결과 보기';
+    $('#profile-form').setAttribute('aria-busy',String(busy()));
   }
-  let worker=null,startupTimer=null;
+  function showLoading(){
+    loadingFocus=document.activeElement;
+    $('#cancel-calculation').textContent=$('#input-screen').hidden?'취소하고 이전 화면으로 돌아가기':'취소하고 입력으로 돌아가기';
+    if(!$('#loading-dialog').open)$('#loading-dialog').showModal();
+    $('#cancel-calculation').focus();updateSubmit();
+  }
+  function hideLoading(){
+    updateSubmit();
+    if($('#loading-dialog').open)$('#loading-dialog').close();
+    if(loadingFocus?.isConnected)loadingFocus.focus({preventScroll:true});loadingFocus=null;
+  }
+  function cancelCalculation(){
+    sequence++;pending=null;queuedCalculation=null;failedRequest=null;clearTimeout(calculationTimer);
+    if(worker&&!ready){clearTimeout(startupTimer);worker.terminate();worker=null;}
+    hideLoading();$('#retry-load').hidden=true;$('#load-state').hidden=true;
+    const romance=$('#setting-romance');if(romance)romance.checked=!!state.profile?.romanceHidden;
+  }
+  $('#cancel-calculation').addEventListener('click',cancelCalculation);
+  $('#loading-dialog').addEventListener('cancel',event=>{event.preventDefault();cancelCalculation();});
+  $('#profile-form').addEventListener('change',()=>{if(busy())cancelCalculation();failedRequest=null;$('#retry-load').hidden=true;$('#form-error').hidden=true;});
+  function requestFailed(request,message,retry=true){
+    if(!request||request.id!==sequence)return;
+    clearTimeout(calculationTimer);pending=null;queuedCalculation=null;failedRequest=retry?request:null;hideLoading();
+    if($('#input-screen').hidden)fillForm(request.profile);
+    showInput(true);$('#load-state').hidden=true;$('#retry-load').hidden=!retry;error(message);
+  }
   function startupFailed(message){
-    clearTimeout(startupTimer);ready=false;worker?.terminate();
-    failQueuedCalculation(message);pending=null;dayRequest=null;
-    $('#load-state').textContent=message;$('#load-state').classList.remove('ready');
-    $('#submit-profile').disabled=true;$('#submit-profile').textContent='자료 준비를 다시 시작해주세요';
-    $('#birth-day').disabled=true;$('#retry-load').hidden=false;
+    const request=queuedCalculation||pending;
+    clearTimeout(startupTimer);worker?.terminate();worker=null;ready=false;
+    requestFailed(request,message,true);
+  }
+  function finishResult(request,result){
+    if(request.id!==sequence)return;
+    if(result.quality==='UNSUPPORTED'){requestFailed(request,warnings[result.warnings[0]]||'입력한 날짜·시간으로 계산할 수 없어요. 입력을 확인해주세요.',false);return;}
+    clearTimeout(calculationTimer);pending=null;queuedCalculation=null;failedRequest=null;
+    state.profile=request.profile;state.target=request.target;state.result=result;
+    if(request.reset){state.expanded={};state.scroll={};}
+    state.cache[cacheKey(request.profile,request.target)]=result;
+    const keys=Object.keys(state.cache);if(keys.length>48)for(const k of keys.slice(0,keys.length-48))delete state.cache[k];
+    hideLoading();save();showResult(request.tab||'today',request.reset);
+    const title=$('#result-content h1');if(title){title.tabIndex=-1;title.focus({preventScroll:true});}
+  }
+  function postCalculation(request){
+    if(request.id!==sequence)return;
+    queuedCalculation=null;pending=request;updateSubmit();
+    clearTimeout(calculationTimer);calculationTimer=setTimeout(()=>startupFailed('계산 시간이 길어졌어요. 입력은 그대로 두었으니 다시 시도해주세요.'),30000);
+    worker.postMessage({kind:'calculate',...request,today:koreaToday()});
   }
   function startWorker(){
-    clearTimeout(startupTimer);worker?.terminate();ready=false;dayRequest=null;
-    $('#retry-load').hidden=true;$('#submit-profile').disabled=true;$('#submit-profile').textContent='자료 준비 중…';
-    $('#load-state').classList.remove('ready');$('#load-state').textContent='읽을 자료를 다시 준비하고 있어요…';
-    worker=new Worker('worker.js?build=startup-approved-r13');const currentWorker=worker;
-    startupTimer=setTimeout(()=>{if(worker===currentWorker&&!ready)startupFailed('준비 시간이 길어졌어요. 아래 버튼으로 다시 시작할 수 있어요.');},90000);
+    clearTimeout(startupTimer);ready=false;
+    try{worker=new Worker('worker.js?build=startup-approved-r13');}
+    catch{startupFailed('이 브라우저에서 계산 자료를 열지 못했어요. 입력은 그대로 두었으니 다시 시도하거나 다른 브라우저에서 열어주세요.');return;}
+    const currentWorker=worker;
+    startupTimer=setTimeout(()=>{if(worker===currentWorker&&!ready)startupFailed('준비 시간이 길어졌어요. 입력은 그대로 두었으니 다시 시도해주세요.');},90000);
     worker.onmessage=({data})=>{
-    if(worker!==currentWorker)return;
-    if(data.kind==='progress')$('#load-state').textContent=data.message;
-    else if(data.kind==='ready'){
-      clearTimeout(startupTimer);$('#retry-load').hidden=true;ready=true;$('#load-state').textContent='준비됐어요. 날짜와 MBTI를 넣고 결과를 열어보세요.';$('#load-state').classList.add('ready');$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
-      birthDays(state.profile?.day||$('#birth-day').value);
-      const queued=queuedCalculation;queuedCalculation=null;
-      if(queued)calculate(queued.profile,queued.target,queued.tab,queued.reset);
-      else if(state.profile&&!state.result&&!pending)calculate(state.profile,state.target||koreaToday(),state.tab,false);
-    }else if(data.kind==='month-days'&&data.id===dayRequest?.id){
-      const wanted=dayRequest.wanted;dayRequest=null;
-      options($('#birth-day'),Array.from({length:data.days},(_,i)=>i+1),'일 선택','일',wanted?Math.min(Number(wanted),data.days):'');
-      $('#birth-day').disabled=data.days===0;
-      $('#submit-profile').disabled=!ready||pending!==null;
-      $('#birth-day-hint').textContent=data.days?`이 달은 ${data.days}일까지 있어요.`:($('#birth-leap').checked?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'이 달의 날짜 자료를 확인할 수 없어요. 연도와 월을 확인해주세요.');
-    }else if(data.kind==='init-error'){
-      startupFailed(data.code==='BROWSER_GZIP_UNSUPPORTED'?'최신 Chrome·Safari·Edge에서 자료를 열 수 있어요. 브라우저를 바꿔 다시 열어주세요.':data.code==='RESOURCE_TIMEOUT'?'자료를 받는 시간이 길어졌어요. 연결을 확인하고 다시 준비해주세요.':'자료 준비 중 문제가 생겼어요. 아래 버튼으로 다시 준비해주세요.');
-    }else if(data.kind==='result'&&pending?.id===data.id){
-      const request=pending;pending=null;$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';
-      if(data.result.quality==='UNSUPPORTED'){
-        if($('#input-screen').hidden)showInput();
-        error(warnings[data.result.warnings[0]]||'입력한 날짜·시간으로 계산할 수 없어요. 입력을 확인해주세요.');return;
+      if(worker!==currentWorker)return;
+      if(data.kind==='ready'){
+        clearTimeout(startupTimer);ready=true;
+        if(queuedCalculation?.id===sequence)postCalculation(queuedCalculation);
+      }else if(data.kind==='init-error'){
+        startupFailed(data.code==='BROWSER_GZIP_UNSUPPORTED'?'최신 Chrome·Safari·Edge에서 자료를 열 수 있어요. 브라우저를 바꿔 다시 열어주세요.':data.code==='RESOURCE_TIMEOUT'?'자료를 받는 시간이 길어졌어요. 연결을 확인하고 다시 시도해주세요.':'자료 준비 중 문제가 생겼어요. 입력은 그대로 두었으니 다시 시도해주세요.');
+      }else if(data.kind==='result'&&pending?.id===data.id){
+        finishResult(pending,data.result);
+      }else if(data.kind==='calculation-error'&&pending?.id===data.id){
+        requestFailed(pending,'결과를 읽지 못했어요. 입력은 그대로 두었으니 다시 시도해주세요.');
       }
-      state.profile=request.profile;state.target=request.target;state.result=data.result;
-      if(request.reset){state.expanded={};state.scroll={};}
-      state.cache[cacheKey(request.profile,request.target)]=data.result;
-      const keys=Object.keys(state.cache);if(keys.length>48)for(const k of keys.slice(0,keys.length-48))delete state.cache[k];
-      save();showResult(request.tab||'today',request.reset);return;
-    }else if(data.kind==='calculation-error'&&pending?.id===data.id){
-      pending=null;$('#submit-profile').disabled=false;$('#submit-profile').textContent='내 결과 보기';showInput();error('결과를 읽지 못했어요. 입력을 확인하고 다시 시도해주세요.');
-    }
-  };
-    worker.onerror=()=>{if(worker===currentWorker)startupFailed('읽을 자료를 여는 중 문제가 생겼어요. 아래 버튼으로 다시 준비해주세요.');};
+    };
+    worker.onerror=()=>{if(worker===currentWorker)startupFailed('읽을 자료를 여는 중 문제가 생겼어요. 입력은 그대로 두었으니 다시 시도해주세요.');};
     worker.postMessage({kind:'init'});
   }
-  $('#retry-load').addEventListener('click',startWorker);
-  startWorker();
-  function calculate(profile,target,tab='today',reset=false){
-    $('#form-error').hidden=true;
+  $('#retry-load').addEventListener('click',()=>{
+    if(busy())return;
+    if(failedRequest)calculate(failedRequest.profile,failedRequest.target,failedRequest.tab,failedRequest.reset);
+    else $('#profile-form').requestSubmit();
+  });
+  async function calculate(profile,target,tab='today',reset=false){
+    if(busy())cancelCalculation();
+    $('#form-error').hidden=true;$('#retry-load').hidden=true;failedRequest=null;
+    const request={id:++sequence,profile:{...profile},target,tab,reset};queuedCalculation=request;
+    showLoading();
+    // 두 화면 갱신과 다음 작업 차례를 지나 로딩창이 그려진 뒤 자료 준비를 시작한다.
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(resolve,0))));
+    if(request.id!==sequence||queuedCalculation?.id!==request.id)return;
     const cached=state.cache[cacheKey(profile,target)];
-    if(cached){pending=null;queuedCalculation=null;state.profile=profile;state.target=target;state.result=cached;if(reset){state.expanded={};state.scroll={};}save();showResult(tab,reset);return;}
-    if(!ready){queuedCalculation={profile,target,tab,reset};if(!$('#result-screen').hidden)render();return;}
-    pending={id:++sequence,profile,target,tab,reset};$('#submit-profile').disabled=true;$('#submit-profile').textContent='내 이야기를 펼치는 중…';
-    worker.postMessage({kind:'calculate',...pending,today:koreaToday()});
+    if(cached){finishResult(request,cached);return;}
+    if(ready&&worker)postCalculation(request);
+    else if(!worker)startWorker();
   }
   $('#profile-form').addEventListener('submit',event=>{
-    event.preventDefault();const year=Number($('#birth-year').value),month=Number($('#birth-month').value),day=Number($('#birth-day').value);
-    if(dayRequest){error('이 달의 날짜 목록을 준비하고 있어요. 잠시 후 다시 열어주세요.');return;}
-    if(![year,month,day].every(Number.isInteger)||year<($('#birth-calendar').value==='KOREAN_LUNAR'?1899:1900)||year>Number(koreaToday().slice(0,4))||month<1||month>12||day<1||day>31){error($('#birth-leap').checked&&$('#birth-day').disabled&&!dayRequest?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'년·월·일을 모두 선택해주세요. 실제로 있는 날짜만 고를 수 있어요.');return;}
+    event.preventDefault();if(busy())return;
+    const year=Number($('#birth-year').value),month=Number($('#birth-month').value),day=Number($('#birth-day').value);
+    const calendar=$('#birth-calendar').value,leap=$('#birth-leap').checked;
+    if(!['SOLAR','KOREAN_LUNAR'].includes(calendar)||![year,month,day].every(Number.isInteger)||year<(calendar==='KOREAN_LUNAR'?1899:1900)||year>Number(koreaToday().slice(0,4))||month<1||month>12||day<1){error('년·월·일을 모두 선택해주세요. 실제로 있는 날짜만 고를 수 있어요.');return;}
+    const days=localMonthDays(year,month,calendar==='KOREAN_LUNAR',leap);
+    if(!days){error(leap?'이 연도·월에는 해당 윤달이 없어요. 날짜나 윤달 여부를 바꿔주세요.':'이 달의 날짜 자료를 확인할 수 없어요. 연도와 월을 확인해주세요.');return;}
+    if(day>days){error('이 달에 없는 날짜예요. 일 선택을 다시 확인해주세요.');return;}
+    if(calendar==='SOLAR'&&`${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`>koreaToday()){error('태어난 날짜는 한국 기준 오늘까지 입력할 수 있어요.');return;}
     const time=$('#time-unknown').checked?'':$('#birth-hour').value+':'+$('#birth-minute').value;
     if(!$('#time-unknown').checked&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){error('태어난 시·분을 모두 고르거나 시간 모름을 선택해주세요.');return;}
-    const profile={year,month,day,calendar:$('#birth-calendar').value,leap:$('#birth-leap').checked,time,mbti:$('#mbti').value,romanceHidden:$('#romance-hidden').checked};
-    calculate(profile,state.target||koreaToday(),'today',true);
+    if(!types.includes($('#mbti').value)&&$('#mbti').value!==''){error('목록에서 MBTI를 고르거나 아직 몰라요를 선택해주세요.');return;}
+    calculate({year,month,day,calendar,leap,time,mbti:$('#mbti').value,romanceHidden:$('#romance-hidden').checked},state.target||koreaToday(),'today',true);
   });
-  function showInput(){rememberView();fillForm(state.profile);$('#input-screen').hidden=false;$('#result-screen').hidden=true;$('#cancel-edit').hidden=!state.result;window.scrollTo(0,0);}
-  $('#cancel-edit').addEventListener('click',()=>showResult(state.tab,false));
+  function showInput(preserveForm=false){
+    rememberView();if(busy())cancelCalculation();
+    if(!preserveForm)fillForm(state.profile);
+    $('#input-screen').hidden=false;$('#result-screen').hidden=true;$('#cancel-edit').hidden=!state.result;window.scrollTo(0,0);
+    if(location.hash!=='#input')history.pushState({tab:'input'},'','#input');
+  }
+  $('#cancel-edit').addEventListener('click',()=>{cancelCalculation();showResult(state.tab,false);});
   function statusNotice(r){
     if(r.quality!=='NO_HOUR'&&r.quality!=='BOUNDARY_PARTIAL')return '';
     const flags=new Set(r.warnings),messages=[];
@@ -310,7 +363,7 @@
         else if(location.hash==='#today-details'){if(history.state?.testDetail)history.back();else history.replaceState({tab:'today'},'','#today');}
       }
     }));
-    $('#edit-profile')?.addEventListener('click',showInput);
+    $('#edit-profile')?.addEventListener('click',()=>showInput());
     $$('#quick-mbti [data-type]').forEach(button=>button.addEventListener('click',()=>{rememberView();calculate({...state.profile,mbti:button.dataset.type},state.target,'mbti');}));
     $('#setting-romance')?.addEventListener('change',event=>{rememberView();calculate({...state.profile,romanceHidden:event.target.checked},state.target,'settings');});
     const changeDate=date=>{
@@ -318,7 +371,7 @@
       rememberView();state.scroll.today=0;calculate(state.profile,date,'today');
     };
     $('#change-date')?.addEventListener('click',()=>changeDate($('#target-date').value));$('#today-date')?.addEventListener('click',()=>changeDate(koreaToday()));
-    $('#clear-data')?.addEventListener('click',()=>{pending=null;queuedCalculation=null;state=fresh();try{sessionStorage.removeItem(storageKey);}catch{}$('#profile-form').reset();syncForm();$('#cancel-edit').hidden=true;$('#form-error').hidden=true;history.replaceState(null,'','#input');showInput();});
+    $('#clear-data')?.addEventListener('click',()=>{cancelCalculation();state=fresh();try{sessionStorage.removeItem(storageKey);}catch{}$('#profile-form').reset();syncForm();$('#cancel-edit').hidden=true;$('#form-error').hidden=true;history.replaceState(null,'','#input');showInput();});
   }
   function pushTodayDetailHistory(){
     if(location.hash==='#today-details'&&history.state?.testDetail)return;
@@ -333,10 +386,10 @@
     requestAnimationFrame(()=>window.scrollTo(0,reset?0:(state.scroll[state.tab]||0)));
   }
   $$('.tabs button').forEach(button=>button.addEventListener('click',()=>{if(button.dataset.tab===state.tab)return;rememberView();showResult(button.dataset.tab);}));
-  window.addEventListener('popstate',()=>{rememberView();if(location.hash==='#input')showInput();else if(state.result){if(location.hash==='#today')state.expanded['today-detailed-reading']=false;showResult(location.hash.slice(1)||'today');}});
-  window.addEventListener('pagehide',rememberView);
+  window.addEventListener('popstate',()=>{cancelCalculation();rememberView();if(location.hash==='#input')showInput(true);else if(state.result){if(location.hash==='#today')state.expanded['today-detailed-reading']=false;showResult(location.hash.slice(1)||'today');}});
+  window.addEventListener('pagehide',()=>{rememberView();if(busy())cancelCalculation();});
   let scrollTimer;window.addEventListener('scroll',()=>{clearTimeout(scrollTimer);scrollTimer=setTimeout(rememberView,150);},{passive:true});
-  if(state.profile&&state.result){fillForm(state.profile);showResult(location.hash.slice(1)||state.tab);}else{syncForm();history.replaceState(null,'','#input');}
+  if(state.profile&&state.result){fillForm(state.profile);showResult(location.hash.slice(1)||state.tab);}else{if(state.profile)fillForm(state.profile);else syncForm();history.replaceState(null,'','#input');}
   // Read-only observation for parity tests; no inputs are transmitted or put in the URL.
-  Object.defineProperty(window,'sajuTest',{value:{get result(){return state.result;},get ready(){return ready;},get tab(){return state.tab;}},writable:false});
+  Object.defineProperty(window,'sajuTest',{value:{get result(){return state.result;},get ready(){return ready;},get inputReady(){return true;},get busy(){return busy();},get workerStarted(){return worker!==null;},get tab(){return state.tab;}},writable:false});
 })();
