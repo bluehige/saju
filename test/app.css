@@ -8,3 +8,6 @@
 
 /* 실제 명식의 겉오행 분포. 사주 근거를 첫 화면에서 읽는다. */
 [data-professional-saju] > .card{margin-bottom:18px}.element-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:14px 0}.element-grid>div{text-align:center;padding:10px 2px;border-radius:12px;background:#f6f3fc}.element-grid span{display:block;font-size:13px}.element-grid strong{display:block;font-size:25px}.element-grid small{font-size:12px;font-weight:400;margin-left:3px}[data-natal-mbti-connection]>h2{margin-top:26px}
+
+/* 개인풀이: 접힌 요약과 펼친 상세를 동시에 반복하지 않는다. */
+[data-natal-personal]:has(> details[open]) > .reading-summary{display:none}
