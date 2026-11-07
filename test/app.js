@@ -15,15 +15,15 @@
   const readingVersion='WEB_ARGON_2026_11_07_PROOFREAD_EV2';
   const tabs=['today','natal','mbti','settings'];
   // unlocked: 체험판에서 연 한국 날짜(유형이 바뀌어도 그대로), natalUnlocked: 내 사주 × MBTI 6장을 연 유형.
-  const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',targetMode:'today',tab:'today',expanded:{},scroll:{},cache:{},unlocked:{},natalUnlocked:{}});
+  const fresh=()=>({version:2,readingVersion,profile:null,result:null,target:'',targetMode:'today',tab:'today',expanded:{},scroll:{},cache:{},unlocked:{},natalUnlocked:{},checks:{}});
   let state=fresh(),ready=false,pending=null,queuedCalculation=null,sequence=0,failedRequest=null,calculationTimer=null;
   try{const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');if(saved?.version===1||saved?.version===2){
     state={...fresh(),...saved};
     // 문구 묶음이 바뀌면 결과와 캐시는 버리고 입력·화면 위치·연 날짜만 이어 쓴다.
-    if(saved.readingVersion!==readingVersion)state={...fresh(),profile:saved.profile,target:saved.target||'',targetMode:saved.targetMode==='custom'?'custom':'today',tab:saved.tab||'today',expanded:saved.expanded||{},scroll:saved.scroll||{},unlocked:saved.unlocked||{},natalUnlocked:saved.natalUnlocked||{}};
+    if(saved.readingVersion!==readingVersion)state={...fresh(),profile:saved.profile,target:saved.target||'',targetMode:saved.targetMode==='custom'?'custom':'today',tab:saved.tab||'today',expanded:saved.expanded||{},scroll:saved.scroll||{},unlocked:saved.unlocked||{},natalUnlocked:saved.natalUnlocked||{},checks:saved.checks||{}};
     if(!tabs.includes(state.tab))state.tab='today';
     if(state.targetMode!=='custom')state.targetMode='today';
-    for(const key of ['expanded','scroll','cache','unlocked','natalUnlocked'])if(!state[key]||typeof state[key]!=='object')state[key]={};
+    for(const key of ['expanded','scroll','cache','unlocked','natalUnlocked','checks'])if(!state[key]||typeof state[key]!=='object')state[key]={};
   }}catch{}
   function save(){try{if(!state.profile&&!state.result)sessionStorage.removeItem(storageKey);else sessionStorage.setItem(storageKey,JSON.stringify(state));}catch{ /* Current page still works when private-mode storage is disabled. */ }}
   const koreaToday=()=>new Date(Date.now()+9*3600000).toISOString().slice(0,10);
@@ -352,7 +352,8 @@
   const visibleDomains=r=>r.domains.filter(domain=>domain.id!=='OVERALL'&&(!romanceHidden(r)||domain.id!=='ROMANCE'));
   const isTodayResult=r=>r.date===koreaToday();
 
-  /* ---------- 오늘 ---------- */
+  /* ---------- 오늘 (2026-11-07 혼합안: A 맛보기 먼저 + B 분야 시트 + D 할 일 체크) ---------- */
+  // 일주 보류 사용자에게만 쓰는 기존 판정 카드.
   function verdictCard(r,overall){
     const today=isTodayResult(r),fact=r.dailyFacts?.DAY?.korean||'';
     const chip=`${today?'오늘':dateMD(r.date)}${fact?' · '+fact:''}`;
@@ -369,57 +370,123 @@
       <button type="button" class="linkbtn" data-action="rating">별점 기준 보기</button>
     </section>`;
   }
-  function stripCard(r){
-    const list=visibleDomains(r),graded=list.filter(d=>d.grade!==null&&d.grade!==undefined);
-    if(!list.length)return '';
-    const max=graded.length?Math.max(...graded.map(d=>d.grade)):0,allSame=graded.length>0&&graded.every(d=>d.grade===graded[0].grade);
-    // 가장 높은 별점이 한 분야일 때만 강조한다. 여러 분야가 같으면 점수 원값으로 하나를 고르지 않는다.
-    const best=graded.filter(d=>d.grade===max),top=!allSame&&best.length===1?best[0]:null;
-    const tiles=list.map(d=>{
-      const g=d.grade,name=domains[d.id];
-      return `<button type="button" class="tile${d===top?' top':''}" data-action="scroll-domain" data-domain="${escape(d.id)}" aria-label="${escape(name)} ${g?`5점 중 ${g}점, ${escape(gradeLabel(d))}`:'별점 보류'}"><span class="tn">${escape(name)}</span><span class="tv">${g?`★${g}`:'보류'}</span></button>`;
-    }).join('');
-    const star=g=>`<span role="img" aria-label="${g}점">★${g}</span>`;
-    let caption='';
-    if(allSame)caption=`모든 분야 ${star(max)} ${escape(gradeLabel(graded[0]))}`;
-    else if(top){
-      const others=graded.filter(d=>d!==top),onlyOne=graded.filter(d=>d.grade===max).length===1&&others.length>0&&others.every(d=>d.grade===others[0].grade);
-      caption=onlyOne?`<b>${escape(domains[top.id])}만 ${star(max)}</b> ${escape(gradeLabel(top))} · 나머지 ${star(others[0].grade)}`:`${isTodayResult(r)?'오늘':'그날'} 힘 받는 분야 · <b>${escape(domains[top.id])} ${star(top.grade)}</b> ${escape(gradeLabel(top))}`;
-    }
-    else if(best.length>1)caption=`가장 높은 별점 ${star(max)} · <b>${best.map(d=>escape(domains[d.id])).join(', ')}</b>`;
-    if(romanceHidden(r))caption+=`${caption?' · ':''}연애는 숨김`;
-    return `<div class="strip n${list.length}" data-strip>${tiles}</div>${caption?`<p class="stripcap">${caption}</p>`:''}`;
+  // A: 첫 화면 맨 위는 키워드·총운 별점과 기본 풀이 두 줄만. 기본 풀이 본문은 접는다.
+  function headCard(r,overall){
+    const today=isTodayResult(r),fact=r.dailyFacts?.DAY?.korean||'';
+    const chip=`${today?'오늘':dateMD(r.date)}${fact?' · '+fact:''}`;
+    const keyword=overall&&overall.grade!==null?keywordLabels[overall.meaning]:'';
+    const base=overall?.base,c=copy(base);
+    const more=c?additionalReading(base,[c.summary]):'';
+    return `<section class="card verdict headcard" aria-labelledby="verdict-keyword" data-verdict>
+      <div class="vrow"><button type="button" class="daychip" data-action="rating" aria-label="${escape(chip)}, ${today?'오늘':'그날'} 글자, 별점 기준 보기"><span class="chip plain">${escape(chip)}<span class="chev" aria-hidden="true">›</span></span></button><span class="chip">${today?'오늘의 키워드':'그날의 키워드'}</span></div>
+      <h2 class="kw" id="verdict-keyword">${escape(keyword||(today?'오늘의 흐름':'그날의 흐름'))}</h2>
+      <p class="grade"><span class="glead">총운</span>${starsEl(overall,'vstars')}${overall?.grade?`<span class="glabel">${escape(gradeLabel(overall))}</span>`:''}</p>
+      ${c?`<p class="micro">사주 기본 풀이 · 무료</p><h3 class="vh3">${text(c.title)}</h3><p class="vsum">${text(c.summary)}</p>${more?details('today-base','기본 풀이 더 읽기',more,'총운'):''}`:manuscript(base)}
+    </section>`;
   }
   function todayCount(r){return 1+visibleDomains(r).filter(d=>d.mbti?.texts).length;}
-  function lockedList(r,lines,headText){
-    return `<div class="locked"><p class="lhead">${headText}</p>${lines.join('')}</div>`;
-  }
   function chooseTypeCard(title,body,id='gate-title'){
     return `<section class="card gate choose" aria-labelledby="${id}"><span class="pill">내 유형 맞춤</span><h2 class="gtitle" id="${id}" tabindex="-1">${title}</h2><p class="gsum">${body}</p><button type="button" class="cta" data-action="go-mbti">내 MBTI 고르기</button><p class="cap">잘 몰라도 괜찮아요. 16유형 한 줄 소개를 보고 가까운 유형을 골라도 돼요.</p></section>`;
   }
-  // 웹 데모 게이트: 잠긴 상세·피할 것은 열기 전에는 DOM에 넣지 않는다. 가짜 광고 화면은 만들지 않는다.
-  function todayGate(r,overall){
+  // 잠긴 본문은 열기 전에는 DOM에 넣지 않는다. 흐린 줄은 글자 없는 모양뿐이다.
+  const teaser=`<div class="teaser" aria-hidden="true"><i></i><i></i><i class="s"></i></div>`;
+  const adButton=(r,label,domain='')=>{const T=escape(r.type),n=todayCount(r),dl=dateMD(r.date);
+    return `<button type="button" class="cta" data-action="ad-today"${domain?` data-domain="${escape(domain)}"`:''} data-guard aria-label="${dl} ${T} 맞춤 풀이 ${n}개 열기, 광고 1편. 체험판은 광고 없이 열려요">${label} <span class="adtag">광고 1편</span></button>`;};
+  const adCaption=`<p class="cap">연 날짜는 계속 볼 수 있어요 · 별점과 기본 풀이는 무료</p>`;
+  // A: 맞춤 풀이 첫 문장을 보여 주고, 끊긴 자리에 바로 버튼을 둔다.
+  function hookCard(r,overall){
     if(!r.type)return chooseTypeCard('유형을 고르면 오늘 해볼 행동이 더해져요','별점과 기본 풀이는 그대로예요. 해볼 말과 행동만 내 유형에 맞춰요.');
     const T=escape(r.type),m=overall?.mbti,c=copy(m),dl=dateMD(r.date),today=isTodayResult(r);
     if(!m?.texts||!c)return `<section class="card gate" aria-labelledby="gate-title"><span class="pill">${T} 맞춤 풀이</span><h2 class="gtitle" id="gate-title" tabindex="-1">${T} 맞춤 풀이</h2>${manuscript(m)}</section>`;
     const n=todayCount(r),avoid=m.texts.avoid;
     if(state.unlocked[r.date]){
-      return `<section class="card gate open" aria-labelledby="gate-title" data-gate="open">
-        <div class="ghead"><span class="pill ok">${T} 맞춤 풀이 · ${today?'오늘 ':''}열림</span><span class="lockstate">${dl}</span></div>
+      return `<section class="card gate hook open" aria-labelledby="gate-title" data-gate="open">
+        <div class="ghead"><span class="pill ok">${T}라면 ${today?'오늘은':'이날은'}</span><span class="lockstate">${checkIcon}${dl} 열림</span></div>
         <h2 class="gtitle" id="gate-title" tabindex="-1">${text(c.title)}</h2><p class="gsum">${text(c.summary)}</p>
         <div class="reveal">${readingDetail(m,'rdetail')}${avoid?`<p class="rlabel">${today?'오늘':'이날'} 피할 것</p><p class="ravoid">${text(avoid)}</p>`:''}</div>
-        <div class="donebar"><p>${checkIcon}<span>${dl} ${T} 풀이 ${n}개가 열렸어요. 체험판이라 이 탭에서는 계속 열려 있어요.</span></p><button type="button" class="donelink" data-action="go-domains">분야별 풀이 보기 <span aria-hidden="true">↓</span></button></div>
       </section>`;
     }
-    const lines=[`<p class="lrow">${lockIcon()}<span><b>총운 ${T} 풀이 1개</b>${avoid?` · <span class="nw">${today?'오늘':'이날'} 피할 것 포함</span>`:''}</span></p>`,`<p class="lrow">${lockIcon()}<span><b>분야별 ${T} 풀이 ${n-1}개</b> · <span class="nw">아래 카드마다</span></span></p>`];
-    if(!state.natalUnlocked[r.type])lines.push(`<p class="lrow">${giftIcon}<span aria-hidden="true"><b>첫 광고 때: <span class="nw">내 사주 × ${T}</span> <span class="nw">생활 풀이 ${natalPaidCount(r)}장</span></b> · <span class="nw">이 기기에 계속 보관</span></span><span class="sr-only">첫 광고 때: 내 사주와 ${T} 생활 풀이 ${natalPaidCount(r)}장, 이 기기에 계속 보관</span></p>`);
-    return `<section class="card gate" aria-labelledby="gate-title" data-gate="locked">
-      <div class="ghead"><span class="pill">${T} 맞춤 풀이</span><span class="lockstate" role="img" aria-label="잠김, 앱에서는 광고 1편으로 ${n}개 열림">${lockIcon()}잠김 · ${n}개</span></div>
-      <h2 class="gtitle" id="gate-title" tabindex="-1">${text(c.title)}</h2><p class="gsum">${text(firstSentence(c.summary))}</p>
-      ${lockedList(r,lines,`앱에서는 광고 1편으로 <span class="nw">${dl} 풀이가</span> 함께 열려요`)}
-      <button type="button" class="cta" data-action="unlock-today" data-guard aria-label="체험판에서 ${dl} ${T} 맞춤 풀이 ${n}개 바로 열기. 앱에서는 광고 1편으로 열려요">체험판에서는 바로 열려요 · 앱에서는 광고 1편</button>
-      <p class="cap">앱에서는 광고 1편 · <span class="nw">${dl}분은</span> <span class="nw">이 기기에 계속 ·</span> <span class="nw">기본 풀이는 무료</span></p>
+    return `<section class="card gate hook" aria-labelledby="gate-title" data-gate="locked">
+      <div class="ghead"><span class="pill">${T}라면 ${today?'오늘은':'이날은'}</span><span class="lockstate" role="img" aria-label="잠김, ${n}개">${lockIcon()}${n}개 잠김</span></div>
+      <h2 class="gtitle" id="gate-title" tabindex="-1">${text(c.title)}</h2><p class="gsum">${text(c.summary)}</p>
+      ${teaser}
+      ${adButton(r,`${T} 풀이 ${n}개 열기`)}
+      ${adCaption}
     </section>`;
+  }
+  // D: 맞춤 풀이 제목을 오늘 할 일로 보여 준다. 1개는 무료, 나머지는 열면 보인다.
+  function todoItems(r){
+    return visibleDomains(r).filter(d=>copy(d.mbti)&&d.grade!==null&&d.grade!==undefined)
+      .map((d,i)=>({d,i})).sort((a,b)=>b.d.grade-a.d.grade||a.i-b.i).slice(0,3).map(x=>x.d);
+  }
+  function todoCard(r){
+    if(!r.type)return '';
+    const items=todoItems(r);if(!items.length)return '';
+    const open=!!state.unlocked[r.date],T=escape(r.type),checked=new Set(state.checks[r.date]||[]);
+    const rows=items.map((d,i)=>{
+      const name=escape(domains[d.id]),title=copy(d.mbti).title,locked=!open&&i>0,on=checked.has(d.id);
+      if(locked)return `<li class="titem locked-item"><span class="tbox" aria-hidden="true">${lockIcon(13)}</span><div><span class="tskel" aria-hidden="true"></span><p class="tmeta">${name} ${starsEl(d,'tstars')} · 잠김</p></div></li>`;
+      return `<li class="titem"><button type="button" class="tbox" data-action="todo-check" data-domain="${escape(d.id)}" aria-pressed="${on}" aria-label="${name} 할 일 ${on?'해냄 표시 지우기':'해냈어요'}">${on?checkIcon:''}</button><div><p class="ttext${on?' done':''}">${text(title)}</p><p class="tmeta">${name} ${starsEl(d,'tstars')}</p></div></li>`;
+    }).join('');
+    const done=items.filter(d=>checked.has(d.id)).length;
+    return `<section class="card todo-card" aria-labelledby="todo-title" data-todo>
+      <div class="ghead"><h2 class="todo-h" id="todo-title" tabindex="-1">${T}의 ${isTodayResult(r)?'오늘':'이날'} 할 일 ${items.length}가지</h2>${open?`<span class="lockstate">${done}/${items.length} 해냄</span>`:''}</div>
+      <p class="tsub">별점이 높은 분야부터 골랐어요. 해낸 일은 체크해 보세요.</p>
+      <ul class="tlist">${rows}</ul>
+      ${!open&&items.length>1?`<button type="button" class="linkbtn strong" data-action="ad-today" data-guard>광고 1편으로 할 일 ${items.length-1}개 더 보기</button>`:''}
+    </section>`;
+  }
+  // B: 분야는 큰 칸으로 고르고, 누르면 아래 시트에서 읽는다.
+  function domainGrid(r){
+    const list=visibleDomains(r);if(!list.length)return '';
+    const graded=list.filter(d=>d.grade!==null&&d.grade!==undefined),max=graded.length?Math.max(...graded.map(d=>d.grade)):0;
+    const best=graded.filter(d=>d.grade===max),top=best.length===1&&graded.length>1?best[0]:null;
+    const open=!!state.unlocked[r.date],T=r.type?escape(r.type):'';
+    const tiles=list.map(d=>{
+      const g=d.grade,name=domains[d.id],hasM=!!copy(d.mbti);
+      const tag=!T?'풀이 보기':hasM?(open?`${T} 제안 보기`:`${lockIcon(12)}${T} 제안`):'풀이 보기';
+      return `<button type="button" class="dtile${d===top?' top':''}" data-action="domain-sheet" data-domain="${escape(d.id)}" aria-label="${escape(name)} ${g?`5점 중 ${g}점, ${escape(gradeLabel(d))}`:'별점 보류'}, 풀이 열기"><span class="dn">${escape(name)}</span><span class="dv">${g?'★'.repeat(g):'보류'}</span><span class="dg">${g?escape(gradeLabel(d)):'이 조건의 풀이는 보류했어요'}</span><span class="dl">${tag} ›</span></button>`;
+    }).join('');
+    const cap=top?`${isTodayResult(r)?'오늘':'그날'} 힘 받는 분야는 <b>${escape(domains[top.id])}</b>예요`:'';
+    return `<h2 class="sech" id="domains-heading" tabindex="-1">분야별 ${isTodayResult(r)?'오늘':'그날'}</h2><p class="secsub">궁금한 분야를 눌러 보세요.${romanceHidden(r)?' 연애는 숨겼어요.':''}</p>
+      <div class="dgrid" data-strip>${tiles}</div>${cap?`<p class="stripcap">${cap}</p>`:''}`;
+  }
+  function domainSheet(r,id){
+    const d=r.domains.find(x=>x.id===id);if(!d)return '';
+    const name=domains[d.id]||'총운',c=copy(d.base),open=!!state.unlocked[r.date],T=r.type?escape(r.type):'';
+    const base=c?`<p class="micro">사주 기본 풀이 · 무료</p><h3 class="vh3">${text(c.title)}</h3><p class="vsum">${text(c.summary)}</p>${readingDetail(d.base,'vdetail')}`:manuscript(d.base);
+    let layer='';
+    if(!T)layer=`<div class="mbox"><p class="rlabel">내 유형 맞춤</p><p class="sp">MBTI를 고르면 이 분야에서 해볼 말과 행동이 더해져요.</p><button type="button" class="sbtn fill" data-action="sheet-go-mbti">내 MBTI 고르기</button></div>`;
+    else{
+      const m=d.mbti,mc=copy(m);
+      if(!m?.texts||!mc)layer=`<div class="mbox"><p class="rlabel">${T}라면</p>${manuscript(m)}</div>`;
+      else if(open)layer=`<div class="mbox open"><p class="rlabel">${T}는 이렇게 해 보세요</p><h4 class="mtitle">${text(mc.title)}</h4>${readingDetail(m,'dbody')}</div>`;
+      else layer=`<div class="mbox"><p class="rlabel">${lockIcon(12)} ${T}는 이렇게 해 보세요</p><h4 class="mtitle">${text(mc.title)}</h4>${teaser}${adButton(r,`${T} 풀이 ${todayCount(r)}개 열기`,d.id)}${adCaption}</div>`;
+    }
+    return `<div class="sheet-inner"><div class="dsh"><h2 class="sh" id="sheet-title" tabindex="-1">${escape(name)}</h2>${starsEl(d,'dstars')}</div>${d.grade?`<p class="dgl">${escape(gradeLabel(d))}</p>`:''}
+      ${base}${layer}
+      <button type="button" class="sbtn outi wide" data-action="sheet-close">닫기</button></div>`;
+  }
+  // 체험판에는 실제 광고가 없다. 앱에서 광고가 나오는 자리임을 밝히고 잠시 뒤 연다(가짜 광고 화면은 만들지 않는다).
+  let adTimer=0;
+  function adSheet(r){
+    const T=escape(r.type),dl=dateMD(r.date),n=todayCount(r);
+    return `<div class="sheet-inner adsim"><p class="adlabel">체험판 안내</p><h2 class="sh" id="sheet-title" tabindex="-1">앱에서는 여기서 광고 1편이 나와요</h2>
+      <p class="sp">광고를 끝까지 보면 ${dl} ${T} 풀이 ${n}개가 열리고, 이 기기에서 계속 볼 수 있어요. 체험판은 광고 없이 곧 열려요.</p>
+      <div class="adbar" aria-hidden="true"><i></i></div>
+      <button type="button" class="sbtn outi wide" data-action="sheet-close">그만두기</button></div>`;
+  }
+  function openAd(domain){
+    const r=state.result;if(!r?.type)return;
+    clearTimeout(adTimer);openSheet(adSheet(r));
+    adTimer=setTimeout(()=>{
+      if(!$('#sheet-body .adsim'))return;
+      if(!domain){unlockToday();return;}
+      // 시트를 닫았다 다시 열면 닫힘 이벤트가 새 내용을 지우므로, 열린 채로 내용만 바꾼다.
+      const now=state.result;state.unlocked[now.date]=true;state.natalUnlocked[now.type]=true;save();
+      const y=window.scrollY;render();window.scrollTo(0,y);openSheet(domainSheet(now,domain));
+      announce(`${dateMD(now.date)} ${now.type} 맞춤 풀이 ${todayCount(now)}개가 열렸어요.`);
+    },1600);
   }
   function tomorrowCard(r){
     if(!state.profile)return '';
@@ -437,31 +504,14 @@
       ${same?`<p class="tmsame">${word}도 같은 흐름이에요.</p>`:''}
     </section>`;
   }
-  function domainCard(r,d,open){
-    const c=copy(d.base),name=domains[d.id],T=r.type?escape(r.type):'';
-    const base=c?`<p class="dtitle">${text(c.title)}</p><p class="dbody">${text(c.summary)}</p>${readingDetail(d.base,'dbody')}`:manuscript(d.base);
-    let layer='';
-    if(r.type){
-      const m=d.mbti,mc=copy(m);
-      if(!m?.texts||!mc)layer=`<div class="mrow"><p class="mlabel">${T}라면</p>${manuscript(m)}</div>`;
-      else if(open)layer=`<div class="mrow"><p class="mlabel">${T}라면</p><h4 class="mtitle">${text(mc.title)}</h4>${readingDetail(m,'dbody')}</div>`;
-      else layer=`<div class="mrow"><p class="mlabel">${T}라면 <span class="lockmark" role="img" aria-label="잠김">${lockIcon(12)}</span></p><h4 class="mtitle">${text(mc.title)}</h4><button type="button" class="drow" data-action="choice-today" data-guard><span>광고 1편이면 <span class="nw">이 풀이 포함</span> <span class="nw">${todayCount(r)}개가 열려요 ›</span><span class="sr-only"> · ${escape(name)}</span></span></button></div>`;
-    }
-    return `<article class="card dcard" id="domain-card-${escape(d.id)}" data-domain="${escape(d.id)}" aria-labelledby="domain-name-${escape(d.id)}">
-      <div class="dtop"><h3 class="dname" id="domain-name-${escape(d.id)}" tabindex="-1">${escape(name)}</h3>${starsEl(d,'dstars')}${d.grade?`<span class="dgl">${escape(gradeLabel(d))}</span>`:''}</div>
-      ${base}${layer}
-    </article>`;
-  }
   function todayTab(r){
-    const overall=r.domains.find(d=>d.id==='OVERALL'),today=isTodayResult(r),open=!!state.unlocked[r.date];
+    const overall=r.domains.find(d=>d.id==='OVERALL'),today=isTodayResult(r);
     const heading=today?`오늘의 운세 · ${dateLabel(r.date)}`:`${dateLabel(r.date)}의 운세`;
     const other=today?'':`<div class="notice date-note"><p>${escape(dateLabel(r.date))} 운세를 보고 있어요.</p><button type="button" class="secondary small" data-action="back-today">오늘 운세 보기</button></div>`;
     return `<h1 id="page-title" class="${today?'sr-only':'page-h1'}" tabindex="-1">${escape(heading)}</h1>${other}
       <p class="page-date">${escape(dateLabel(r.date))} · 한국 시간 기준</p>
       ${dayHeld(r)?`${verdictCard(r,overall)}<p class="footer-note" data-reference-notice>${referenceNotice}</p>`:''}
-      ${dayHeld(r)?'':`${verdictCard(r,overall)}${stripCard(r)}${todayGate(r,overall)}<div id="tomorrow-slot">${tomorrowCard(r)}</div>
-      <h2 class="sech" id="domains-heading" tabindex="-1">분야별 ${today?'오늘':'그날'}</h2><p class="secsub">${r.type?`별점과 기본 풀이는 사주로, 해볼 행동은 ${escape(r.type)}로 읽어요.`:'별점과 기본 풀이는 사주로 읽어요.'}</p>
-      <div class="cards" data-today-detail-cards>${visibleDomains(r).map(d=>domainCard(r,d,open)).join('')}</div>
+      ${dayHeld(r)?'':`${headCard(r,overall)}${hookCard(r,overall)}${todoCard(r)}${domainGrid(r)}<div id="tomorrow-slot">${tomorrowCard(r)}</div>
       <p class="footer-note" data-reference-notice>${referenceNotice}</p>`}`;
   }
   function ratingSheet(r){
@@ -847,6 +897,10 @@
       case 'unlock-today':case 'sheet-unlock-today':unlockToday();break;
       case 'unlock-natal':case 'sheet-unlock-natal':unlockNatal();break;
       case 'choice-today':if(r)openSheet(choiceSheet(r,'today'));break;
+      case 'ad-today':openAd(el.dataset.domain||'');break;
+      case 'domain-sheet':if(r)openSheet(domainSheet(r,el.dataset.domain));break;
+      case 'sheet-go-mbti':closeSheet();rememberView();showResult('mbti',{focus:true});break;
+      case 'todo-check':if(r){const id=el.dataset.domain,list=new Set(state.checks[r.date]||[]);list.has(id)?list.delete(id):list.add(id);state.checks[r.date]=[...list];save();rerenderKeep(`[data-action="todo-check"][data-domain="${id}"]`);}break;
       case 'choice-natal':if(r)openSheet(choiceSheet(r,'natal'));break;
       case 'sheet-close':closeSheet();break;
       case 'go-domains':{const h=$('#domains-heading');if(h){h.scrollIntoView({block:'start',behavior:'smooth'});h.focus({preventScroll:true});}break;}
