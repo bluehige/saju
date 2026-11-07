@@ -244,8 +244,11 @@ limitations under the License.
    See the License for the specific language governing permissions and
    limitations under the License.
 
-Solar terms: MIT Astronomy Engine predictions cross-checked against KASI observations (URLs in tools/calendar/kasi_solar_observations.json). Source precision one minute; uncertainty = abs(observed difference) rounded up + 60 seconds. calendarData references are preliminary, not gazetted almanacs. KASI fixtures are local test references, not included in the app.
-Astronomy Engine v2.1.19 used only as a build-time independent calculation check:
+Solar terms - sources of the bundled data, by period:
+- 1899-1900: date-level windows taken from the National Astronomical Observatory of Japan (NAOJ) Koyomi phenomena pages, https://eco.mtk.nao.ac.jp/cgi-bin/koyomi/cande/phenomena_sy.cgi (status LIMITED).
+- 1901-1906: Hong Kong Observatory (HKO) published Gregorian solar-term dates, https://www.hko.gov.hk/en/gts/time/calendar/text/files/T1901e.txt to T1906e.txt. These published dates are distributed in the calendar data as whole-day windows (HKT civil day); they are not second-precise timestamps.
+- 1907-2051: solar-term instants computed with Astronomy Engine v2.1.19 (MIT License, below) and distributed in the calendar data. They were cross-checked against the minute values published by the Korea Astronomy and Space Science Institute (KASI), https://astro.kasi.re.kr/kor/life/post/almanac and https://astro.kasi.re.kr/kor/life/post/calendarData . KASI values were used only for checking and are not included in the app. KASI calendarData pages are preliminary references, not gazetted almanacs.
+Astronomy Engine v2.1.19 (source of the 1907-2051 solar-term instants):
 MIT License
 
 Copyright (c) 2019-2023 Don Cross <cosinekitty@gmail.com>
@@ -268,6 +271,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-HKO date comparison: Hong Kong Observatory Gregorian solar-term date tables, https://www.hko.gov.hk/en/gts/time/conversion.htm . Only astronomical date facts used for independent checks. No Chinese lunar data included. Day-only rows preserve the whole HKT civil day plus five minutes as uncertainty; dates are not second-precise timestamps.
+HKO date tables: Hong Kong Observatory Gregorian solar-term date tables, https://www.hko.gov.hk/en/gts/time/conversion.htm . Only astronomical date facts are used: the 1901-1906 dates are distributed as described above, and the tables are also a date-level cross-check for later years. No Chinese lunar data included.
 
 Verified minute supplement: National Astronomical Observatory of Japan, 1983 almanac p.2, https://eco.mtk.nao.ac.jp/koyomi/yoko/pdf/yoko1983.pdf#page=2 . Cold Dew is printed as Oct 9 05:51 central standard time (UT+9). The minute label and unspecified rounding rule are retained; neighbouring-minute inclusion is the application display-precision policy, not an observed exact second or a source-certified physical error bound. Other date-only rows remain unchanged.
+
+Independent minute check (2026-11-07): every 1907-2051 row was recomputed with a second, independent method (Meeus: truncated VSOP87D, IAU 1980 nutation, aberration, observed Delta-T table; a build-time script using only the Python standard library; the script is not distributed). Maximum difference from the bundled instants is 55.8 seconds; KASI published minutes differ from the bundled instants by at most 70.2 seconds. The former day-only rows now use a 240-second uncertainty (largest observed difference + 60 s minute display + 60 s future Delta-T margin, rounded up to a minute). The HKO date tables remain the date-level cross-check.

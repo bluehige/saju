@@ -20,8 +20,8 @@
   "calendar/solar_terms.csv": {
     "path": "data/calendar/solar_terms.csv",
     "gzip": false,
-    "sha256": "a37e4168e5cb08257d6a43d95e28ca2bd05daa94c94622839facc9758f586193",
-    "bytes": 70883
+    "sha256": "b495ee4bc19f41370ffe31960915856cc5f78574b37924d56ef4d7de43c362ac",
+    "bytes": 67909
   },
   "calendar/verified_solar_minutes.csv": {
     "path": "data/calendar/verified_solar_minutes.csv",
@@ -32,8 +32,8 @@
   "content/preview.json": {
     "path": "data/content/preview.json.gz",
     "gzip": true,
-    "sha256": "f00e538e604b3826e9cce1ea185c1881f25af357cbc664de8f21bf5abf314de6",
-    "bytes": 10604679
+    "sha256": "f21f4bd7c13afdd1dd735443d8978def544f4fe9f45652c654893dbbd665d8a9",
+    "bytes": 10604644
   },
   "content/content_record.schema.json": {
     "path": "data/content/content_record.schema.json",
@@ -62,7 +62,7 @@
   "review/web_reading_copy.json": {
     "path": "data/review/web_reading_copy.json.gz",
     "gzip": true,
-    "sha256": "e0fcc9da3f296d0efa2f2bde87b3d11c43897cd05596040fbce7732808b7d0a4",
-    "bytes": 6077259
+    "sha256": "25c98dbd7b0f772a4264d60c9acaacdbd4d0d832b7c6b4dc5748ccec789b2174",
+    "bytes": 6032406
   }
 }
