@@ -447,7 +447,7 @@
       const tag=!T?'풀이 보기':hasM?(open?`${T} 제안 보기`:`${lockIcon(12)}${T} 제안`):'풀이 보기';
       return `<button type="button" class="dtile${d===top?' top':''}" data-action="domain-sheet" data-domain="${escape(d.id)}" aria-label="${escape(name)} ${g?`5점 중 ${g}점, ${escape(gradeLabel(d))}`:'별점 보류'}, 풀이 열기"><span class="dn">${escape(name)}</span><span class="dv">${g?'★'.repeat(g):'보류'}</span><span class="dg">${g?escape(gradeLabel(d)):'이 조건의 풀이는 보류했어요'}</span><span class="dl">${tag} ›</span></button>`;
     }).join('');
-    const cap=top?`${isTodayResult(r)?'오늘':'그날'} 힘 받는 분야는 <b>${escape(domains[top.id])}</b>예요`:'';
+    const cap=top?`${isTodayResult(r)?'오늘':'그날'} 힘 받는 분야는 <b>${escape(domains[top.id])}</b>${josa(domains[top.id],'이에요','예요')}`:'';
     return `<h2 class="sech" id="domains-heading" tabindex="-1">분야별 ${isTodayResult(r)?'오늘':'그날'}</h2><p class="secsub">궁금한 분야를 눌러 보세요.${romanceHidden(r)?' 연애는 숨겼어요.':''}</p>
       <div class="dgrid" data-strip>${tiles}</div>${cap?`<p class="stripcap">${cap}</p>`:''}`;
   }
