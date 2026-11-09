@@ -469,24 +469,29 @@
   }
   // 체험판에는 실제 광고가 없다. 앱에서 광고가 나오는 자리임을 밝히고 잠시 뒤 연다(가짜 광고 화면은 만들지 않는다).
   let adTimer=0;
-  function adSheet(r){
-    const T=escape(r.type),dl=dateMD(r.date),n=todayCount(r);
+  function adSheet(body){
     return `<div class="sheet-inner adsim"><p class="adlabel">체험판 안내</p><h2 class="sh" id="sheet-title" tabindex="-1">앱에서는 여기서 광고 1편이 나와요</h2>
-      <p class="sp">광고를 끝까지 보면 ${dl} ${T} 풀이 ${n}개가 열리고, 이 기기에서 계속 볼 수 있어요. 체험판은 광고 없이 곧 열려요.</p>
+      <p class="sp">${body} 체험판은 광고 없이 곧 열려요.</p>
       <div class="adbar" aria-hidden="true"><i></i></div>
       <button type="button" class="sbtn outi wide" data-action="sheet-close">그만두기</button></div>`;
   }
-  function openAd(domain){
-    const r=state.result;if(!r?.type)return;
-    clearTimeout(adTimer);openSheet(adSheet(r));
+  // 시트를 닫았다 다시 열면 닫힘 이벤트가 새 내용을 지우므로, 시트에서 시작했으면 열린 채로 내용만 바꾼다.
+  function runAd(body,finish,reopen,message){
+    clearTimeout(adTimer);openSheet(adSheet(body));
     adTimer=setTimeout(()=>{
       if(!$('#sheet-body .adsim'))return;
-      if(!domain){unlockToday();return;}
-      // 시트를 닫았다 다시 열면 닫힘 이벤트가 새 내용을 지우므로, 열린 채로 내용만 바꾼다.
+      if(!reopen){finish();return;}
       const now=state.result;state.unlocked[now.date]=true;state.natalUnlocked[now.type]=true;save();
-      const y=window.scrollY;render();window.scrollTo(0,y);openSheet(domainSheet(now,domain));
-      announce(`${dateMD(now.date)} ${now.type} 맞춤 풀이 ${todayCount(now)}개가 열렸어요.`);
+      const y=window.scrollY;render();window.scrollTo(0,y);openSheet(reopen(now));announce(message(now));
     },1600);
+  }
+  function openAd(domain){
+    const r=state.result;if(!r?.type)return;
+    runAd(`광고를 끝까지 보면 ${dateMD(r.date)} ${escape(r.type)} 풀이 ${todayCount(r)}개가 열리고, 이 기기에서 계속 볼 수 있어요.`,unlockToday,domain?now=>domainSheet(now,domain):null,now=>`${dateMD(now.date)} ${now.type} 맞춤 풀이 ${todayCount(now)}개가 열렸어요.`);
+  }
+  function openNatalAd(key){
+    const r=state.result;if(!r?.type)return;
+    runAd(`광고를 끝까지 보면 내 사주 × ${escape(r.type)} 생활 풀이 ${natalLockedBlocks(r).length}장이 열리고, 이 기기에 계속 보관돼요.`,unlockNatal,key?now=>natalSheet(now,'mbti',key):null,now=>`내 사주와 ${now.type} 생활 풀이 ${natalLockedBlocks(now).length}장이 열렸어요.`);
   }
   function tomorrowCard(r){
     if(!state.profile)return '';
@@ -524,23 +529,6 @@
       <p class="sp">운세는 생활 참고용이에요.</p>
       <div class="sbtns"><button type="button" class="sbtn outi" data-action="sheet-close" data-autofocus>닫기</button></div></div>`;
   }
-  function choiceSheet(r,origin){
-    const T=escape(r.type),dl=dateMD(r.date);
-    if(origin==='natal'){
-      const k=natalLockedBlocks(r).length;
-      return `<div class="sheet-inner"><h2 class="sh" id="sheet-title" tabindex="-1" aria-label="내 사주와 ${T} 생활 풀이 ${k}장 열기">내 사주 × ${T} <span class="nw">생활 풀이 ${k}장</span> 열기</h2>
-        <p class="sp">앱에서는 광고 1편을 끝까지 보면 ${k}장이 열려 이 기기에 계속 보관돼요. ${isTodayResult(r)?'오늘':'그날'}(${dl}) ${T} 풀이도 함께 열려요.</p>
-        <p class="sp">체험판에서는 광고 없이 바로 열어 볼 수 있어요.</p>
-        <div class="sbtns"><button type="button" class="sbtn fill" data-action="sheet-unlock-natal" data-guard>체험판에서 바로 열기</button><button type="button" class="sbtn outi" data-action="sheet-close" data-guard>지금은 괜찮아요</button></div></div>`;
-    }
-    const n=todayCount(r);
-    return `<div class="sheet-inner"><h2 class="sh" id="sheet-title" tabindex="-1">${dl} ${T} 풀이 열기</h2>
-      <p class="sp">앱에서는 광고 1편을 끝까지 보면 ${dl} ${T} 풀이 ${n}개가 모두 열려요. 별점과 기본 풀이는 어느 쪽을 골라도 계속 무료예요. <span class="nw">연 날짜는</span> <span class="nw">이 기기에서</span> <span class="nw">계속 볼 수 있어요.</span></p>
-      <p class="sp">체험판에서는 광고 없이 바로 열어 볼 수 있어요.</p>
-      <div class="sbtns"><button type="button" class="sbtn fill" data-action="sheet-unlock-today" data-guard>체험판에서 바로 열기</button><button type="button" class="sbtn outi" data-action="sheet-close" data-guard>지금은 괜찮아요</button></div>
-      <p class="snote">앱의 1회 구매는 구독이 아니에요. 가격은 Google Play 구매 화면에서 확인해요.</p></div>`;
-  }
-
   /* ---------- 내 사주 ---------- */
   function typeTraitCards(type){return `<div class="cards" data-type-traits>${(typeProfiles[type]||[]).map((row,i)=>`<article class="card" data-type-trait="${i}"><h3 class="card-title">${textFor(row.title,type)}</h3><p class="card-body">${textFor(row.description,type)}</p></article>`).join('')}</div>`;}
   // 확정 기둥과 기존 EDITORIAL_WEIGHT_V1의 표시 투영. 역법·점수·기존 원고 선택은 바꾸지 않는다.
@@ -722,27 +710,41 @@
   // 유형은 골랐지만 날의 글자 보류 등으로 사주×유형 생활 풀이가 하나도 없는 경우.
   const natalMbtiMissing=r=>!!r?.type&&!r.natalMbti?.SUMMARY?.texts&&!natalLockedBlocks(r).length;
   const dayHeld=r=>r?.pillars?.DAY===null;
+  // 내 사주 혼합안: 무료 1장 → 다음 장 맛보기 → 광고 버튼 → 장별 칸(누르면 아래 시트).
+  function natalTile(kind,key,label,title,locked){
+    return `<button type="button" class="dtile ntile" data-action="natal-sheet" data-kind="${kind}" data-key="${escape(key)}" aria-label="${escape(label)}${locked?', 잠김':''}, 풀이 열기"><span class="dn">${escape(label)}</span>${title?`<span class="ntt">${text(title)}</span>`:''}<span class="dl">${locked?`${lockIcon(12)}잠김 ›`:'읽기 ›'}</span></button>`;
+  }
+  const natalAdButton=(r,k,key='')=>`<button type="button" class="cta" data-action="ad-natal"${key?` data-key="${escape(key)}"`:''} data-guard aria-label="내 사주와 ${escape(r.type)} 생활 풀이 ${k}장 열기, 광고 1편. 체험판은 광고 없이 열려요">생활 풀이 ${k}장 열기 <span class="adtag">광고 1편</span></button>`;
+  const natalAdCaption=(r,k)=>`<p class="cap"><span class="nw">앱에서는 ${k}장이 이 기기에 계속 보관돼요 ·</span> <span class="nw">${isTodayResult(r)?'오늘':'그날'} ${escape(r.type)} 풀이도</span> 함께 열려요</p>`;
   function natalGate(r){
-    const T=escape(r.type),summary=r.natalMbti?.SUMMARY,sc=copy(summary),locked=natalLockedBlocks(r),k=locked.length;
-    const free=sc?`<div class="nfree"><p class="nlabel">${escape(blocks.SUMMARY)} · 무료</p><h3 class="ntitle2">${text(sc.title)}</h3><p class="nbody2">${text(sc.summary)}</p>${readingDetail(summary,'nbody2')}</div>`:manuscript(summary);
-    if(state.natalUnlocked[r.type]){
-      return `<section class="card gate open" aria-labelledby="natal-gate-title" data-natal-gate="open"><div class="ghead"><span class="pill ok">${T} 맞춤 · <span class="nw">체험판에서 열림</span></span><span class="lockstate">${k+1}장</span></div>${free}
-        ${locked.map(key=>{const v=r.natalMbti[key],c=copy(v);return `<div class="nopen" data-section="${escape(key)}" data-natal-personal><p class="nlabel">${escape(blocks[key]||key)}</p><h3 class="ntitle2">${text(c?.title||v.texts.title)}</h3>${c?`<p class="nbody2">${text(c.summary)}</p>${readingDetail(v,'nbody2')}`:manuscript(v)}</div>`;}).join('')}</section>`;
-    }
-    const rows=locked.map(key=>{const v=r.natalMbti[key],c=copy(v);return `<button type="button" class="nrow" data-action="choice-natal" data-guard><span class="bn">${escape(blocks[key]||key)}</span><span class="bt">${text(c?.title||v.texts.title)}</span><span class="lockmark" role="img" aria-label="잠김">${lockIcon(12)}</span></button>`;}).join('');
-    return `<section class="card gate" aria-labelledby="natal-gate-title" data-natal-gate="locked"><div class="ghead"><span class="pill">${T} 맞춤 · 1장 무료</span><span class="lockstate" role="img" aria-label="잠김, 앱에서는 광고 1편으로 ${k}장 열림">${lockIcon()}잠김 · ${k}장</span></div>${free}
-      <div class="nrows">${rows}</div>
-      <button type="button" class="cta" data-action="unlock-natal" data-guard aria-label="체험판에서 내 사주와 ${T} 생활 풀이 ${k}장 바로 열기. 앱에서는 광고 1편으로 열려요">체험판에서는 바로 열려요 · 앱에서는 광고 1편</button>
-      <p class="cap"><span class="nw">앱에서는 ${k}장이 이 기기에 계속 보관돼요 ·</span> <span class="nw">${isTodayResult(r)?'오늘':'그날'}(${dateMD(r.date)})</span> ${T} 풀이도 함께 열려요</p></section>`;
+    const T=escape(r.type),summary=r.natalMbti?.SUMMARY,sc=copy(summary),locked=natalLockedBlocks(r),k=locked.length,open=!!state.natalUnlocked[r.type];
+    const free=sc?`<div class="nfree"><h3 class="ntitle2">${text(sc.title)}</h3><p class="nbody2">${text(sc.summary)}</p></div>`:manuscript(summary);
+    const freeMore=sc?moreReading('natal-mbti-summary','무료 1장 더 읽기',summary,[sc.summary],blocks.SUMMARY):'';
+    const titleOf=key=>{const v=r.natalMbti[key];return copy(v)?.title||v.texts.title;};
+    const tiles=`<div class="dgrid">${locked.map(key=>natalTile('mbti',key,blocks[key]||key,titleOf(key),!open)).join('')}</div>`;
+    if(open)return `<section class="card gate hook open" aria-labelledby="natal-gate-title" data-natal-gate="open"><div class="ghead"><span class="pill ok">${T} 맞춤 · <span class="nw">체험판에서 열림</span></span><span class="lockstate">${k+1}장</span></div>${free}${freeMore}${tiles}</section>`;
+    const next=locked[0];
+    return `<section class="card gate hook" aria-labelledby="natal-gate-title" data-natal-gate="locked"><div class="ghead"><span class="pill">사주 × ${T} · 1장 무료</span><span class="lockstate" role="img" aria-label="잠김, ${k}장">${lockIcon()}${k}장 잠김</span></div>${free}
+      ${next?teaser:''}
+      ${natalAdButton(r,k)}${natalAdCaption(r,k)}${tiles}${freeMore}</section>`;
   }
   function natalFreeList(r,life){
     if(life.held)return `<div class="notice" data-${life.held==='PARTIAL'?'partial-reading':'mixed-reading-held'}>${life.held==='PARTIAL'?'확인된 사주 글자부터 읽어볼게요. 아래 전문 용어 풀이에서 사주 글자와 오행을 함께 살펴보세요.':'여러 역할이 함께 보여요. 이 조합은 아래 전문 용어 풀이의 사주 글자와 오행부터 살펴볼게요.'}</div>`;
     const entries=Object.entries(life.values).filter(([key])=>key!=='TEMPERAMENT'&&(!romanceHidden(r)||key!=='ROMANCE'));
     if(!entries.length)return '';
-    return `<div class="card natalfree"${life.branch?` data-mixed-reading="${escape(life.branch)}"`:''}>${entries.map(([key,value])=>{
-      const c=copy(value),name=sections[key]||key;
-      return `<div class="frow" data-section="${escape(key)}"><p class="flabel">${escape(name)}</p>${value.texts?`<h3 class="ftitle">${text(c?.title||value.texts.title)}</h3>${c?`<p class="fsum">${text(c.summary)}</p>${moreReading('natal-'+key,'자세히',value,[c.summary],name)}`:manuscript(value)}`:manuscript(value)}</div>`;
-    }).join('')}</div>`;
+    return `<div class="dgrid natalfree-grid"${life.branch?` data-mixed-reading="${escape(life.branch)}"`:''}>${entries.map(([key,value])=>natalTile('base',key,sections[key]||key,value.texts?(copy(value)?.title||value.texts.title):'',false)).join('')}</div>`;
+  }
+  function temperSheet(r){
+    const temper=natalLife(r).values.TEMPERAMENT,c=copy(temper);if(!c)return '';
+    return `<div class="sheet-inner"><p class="micro">기본 성향 · 무료</p><h2 class="sh" id="sheet-title" tabindex="-1">${text(c.title)}</h2><p class="vsum">${text(c.summary)}</p>${additionalReading(temper,[c.summary])}<button type="button" class="linkbtn strong" data-action="sheet-open-expert">내 사주 글자와 오행 자세히 ›</button><button type="button" class="sbtn outi wide" data-action="sheet-close">닫기</button></div>`;
+  }
+  function openExpert(){state.expanded['natal-expert']=true;save();const d=$('details[data-detail="natal-expert"]');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});d.querySelector('summary')?.focus({preventScroll:true});}}
+  function natalSheet(r,kind,key){
+    const mbti=kind==='mbti',value=mbti?r.natalMbti?.[key]:natalLife(r).values[key];if(!value)return '';
+    const name=(mbti?blocks[key]:sections[key])||key,c=copy(value),T=r.type?escape(r.type):'',locked=mbti&&!state.natalUnlocked[r.type],k=mbti?natalLockedBlocks(r).length:0;
+    const title=c?.title||value.texts?.title;
+    const body=locked?`${teaser}${natalAdButton(r,k,key)}${natalAdCaption(r,k)}`:c?`<p class="vsum">${text(c.summary)}</p>${additionalReading(value,[c.summary])}`:manuscript(value);
+    return `<div class="sheet-inner"><p class="micro">${mbti?`사주 × ${T}${locked?' · 잠김':''}`:'사주로만 본 풀이 · 무료'}</p><h2 class="sh" id="sheet-title" tabindex="-1">${escape(name)}</h2>${title?`<h3 class="vh3">${text(title)}</h3>`:''}${body}<button type="button" class="sbtn outi wide" data-action="sheet-close">닫기</button></div>`;
   }
   function natalTab(r){
     const p=state.profile,T=r.type?escape(r.type):'',day=r.pillars.DAY,life=natalLife(r),temper=life.values.TEMPERAMENT,tc=copy(temper);
@@ -751,14 +753,14 @@
     const pillars=`<div class="pillars hero">${Object.keys(positionPlain).map(k=>`<div class="pillar"><span>${positionPlain[k]}</span><strong>${r.pillars[k]?escape(r.pillars[k].korean):k==='HOUR'&&unknownHour?'모름<span class="sr-only"> · 시간 모름</span>':'—<span class="sr-only">확인 보류</span>'}</strong></div>`).join('')}</div>`;
     const elems=`<p class="elems" aria-label="확정 글자의 오행 개수">${elementKeys.map((k,i)=>`<span class="elem">${elementHangul[i]} <b>${r.elements[k]||0}</b></span>`).join('')}</p>`;
     const hero=`<section class="card natalhero" aria-labelledby="natal-hero-title"><div class="vrow"><span class="chip plain">중심 글자 · ${day?`${stemHangul[day.stem]}(${stemHanja[day.stem]}, ${elementHangul[Math.floor(day.stem/2)]})`:'확인 보류'}</span><span class="chip">기본 성향</span></div>
-      ${tc?`<h2 class="nh2" id="natal-hero-title">${text(tc.title)}</h2><p class="nbody">${text(tc.summary)}</p>${moreReading('natal-TEMPERAMENT','자세히',temper,[tc.summary],'기본 성향')}`:`<h2 class="nh2" id="natal-hero-title">${day?escape(copy(r.dayStemIntro)?.title||'나의 기본 성향'):'나의 기본 성향'}</h2>${copy(r.dayStemIntro)?`<p class="nbody">${text(copy(r.dayStemIntro).summary)}</p>`:''}`}
+      ${tc?`<h2 class="nh2" id="natal-hero-title">${text(tc.title)}</h2><p class="nbody">${text(tc.summary)}</p>`:`<h2 class="nh2" id="natal-hero-title">${day?escape(copy(r.dayStemIntro)?.title||'나의 기본 성향'):'나의 기본 성향'}</h2>${copy(r.dayStemIntro)?`<p class="nbody">${text(copy(r.dayStemIntro).summary)}</p>`:''}`}
       ${pillars}${elems}${statusNotice(r)}
-      <button type="button" class="linkbtn" data-action="open-expert">내 사주 글자와 오행 자세히 ›</button></section>`;
+      <button type="button" class="linkbtn strong" data-action="${tc?'natal-temper':'open-expert'}">${tc?'기본 성향 더 읽기':'내 사주 글자와 오행 자세히'} ›</button></section>`;
     const freeHeading=`<h2 class="sech">사주로만 본 <span class="nw">생활 풀이</span>${life.held?'':` · 무료 ${Object.keys(life.values).filter(key=>key!=='TEMPERAMENT'&&(!romanceHidden(r)||key!=='ROMANCE')).length}장`}</h2>`;
     const free=freeHeading+natalFreeList(r,life);
     let gate;
     if(natalMbtiMissing(r))gate='';
-    else if(r.type){const k=natalLockedBlocks(r).length+1;gate=`<h2 class="sech" id="natal-gate-title" tabindex="-1" aria-label="사주와 ${T}로 본 생활 풀이 ${k}장">사주 × <span class="nw">${T}로 본</span> <span class="nw">생활 풀이 ${k}장</span></h2>${natalGate(r)}`;}
+    else if(r.type){const k=natalLockedBlocks(r).length+1;gate=`<h2 class="sr-only" id="natal-gate-title" tabindex="-1" aria-label="사주와 ${T}로 본 생활 풀이 ${k}장">사주 × <span class="nw">${T}로 본</span> <span class="nw">생활 풀이 ${k}장</span></h2>${natalGate(r)}`;}
     else gate=chooseTypeCard(`유형을 고르면 내 사주와 이어진 생활 풀이 ${natalPaidCount(r)+1}장이 더해져요`,'별점과 사주 풀이는 그대로예요. 내 사주를 내 유형의 생활 장면으로 한 번 더 읽어요.','natal-choose-title');
     const expert=details('natal-expert','전문 용어로 자세히 보기 · 사주 글자·오행·십성',expertSaju(r));
     return `${head}${hero}${r.type?gate+free:free+gate}<div id="natal-expert-anchor">${expert}</div><p class="footer-note" data-reference-notice>${referenceNotice}</p>`;
@@ -894,19 +896,19 @@
     switch(action){
       case 'rating':if(r)openSheet(ratingSheet(r),'별점 기준');break;
       case 'scroll-domain':{const card=$('#domain-card-'+el.dataset.domain);if(card){card.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});$('#domain-name-'+el.dataset.domain)?.focus({preventScroll:true});}break;}
-      case 'unlock-today':case 'sheet-unlock-today':unlockToday();break;
-      case 'unlock-natal':case 'sheet-unlock-natal':unlockNatal();break;
-      case 'choice-today':if(r)openSheet(choiceSheet(r,'today'));break;
       case 'ad-today':openAd(el.dataset.domain||'');break;
+      case 'ad-natal':openNatalAd(el.dataset.key||'');break;
+      case 'natal-sheet':if(r)openSheet(natalSheet(r,el.dataset.kind,el.dataset.key));break;
       case 'domain-sheet':if(r)openSheet(domainSheet(r,el.dataset.domain));break;
       case 'sheet-go-mbti':closeSheet();rememberView();showResult('mbti',{focus:true});break;
       case 'todo-check':if(r){const id=el.dataset.domain,list=new Set(state.checks[r.date]||[]);list.has(id)?list.delete(id):list.add(id);state.checks[r.date]=[...list];save();rerenderKeep(`[data-action="todo-check"][data-domain="${id}"]`);}break;
-      case 'choice-natal':if(r)openSheet(choiceSheet(r,'natal'));break;
       case 'sheet-close':closeSheet();break;
       case 'go-domains':{const h=$('#domains-heading');if(h){h.scrollIntoView({block:'start',behavior:'smooth'});h.focus({preventScroll:true});}break;}
       case 'go-natal':rememberView();showResult('natal',{focus:true});break;
       case 'go-mbti':rememberView();showResult('mbti',{focus:true});break;
-      case 'open-expert':{state.expanded['natal-expert']=true;save();const d=$('details[data-detail="natal-expert"]');if(d){d.open=true;d.scrollIntoView({block:'start',behavior:'smooth'});d.querySelector('summary')?.focus({preventScroll:true});}break;}
+      case 'open-expert':openExpert();break;
+      case 'sheet-open-expert':closeSheet();openExpert();break;
+      case 'natal-temper':if(r)openSheet(temperSheet(r));break;
       case 'trait':openSheet(traitSheet(el.dataset.type,Number(el.dataset.index)));break;
       case 'type-preview':openSheet(typePreviewSheet(el.dataset.type));break;
       case 'share-type':shareType(el.dataset.type);break;

@@ -353,3 +353,11 @@ dialog.sheet::backdrop{background:rgba(46,37,61,.4)}
 @keyframes adfill{to{width:100%}}
 @media(prefers-reduced-motion:reduce){.adsim .adbar i{animation:none;width:100%}}
 .headcard .micro{margin-top:14px}
+/* 2026-11-09 내 사주 탭 혼합안(맛보기 → 광고 버튼 → 장별 칸과 시트) */
+.nnext{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.hook .dgrid{margin-top:14px}
+.ntile{min-height:104px}
+.ntile .ntt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:3px;font-size:14px;font-weight:700;line-height:1.4}
+.ntile .dn{font-size:13px;color:var(--purple)}
+.natalhero .linkbtn.strong{margin-top:2px}
+.natalhero .pillars.hero{margin:10px 0 8px}
