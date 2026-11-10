@@ -22,15 +22,15 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="사주MBTI 안내 캐릭터와 앱 이름">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="app.css?build=blue-20261110-1">
-  <script defer src="app.js?build=blue-20261110-1"></script>
+  <link rel="stylesheet" href="app.css?build=elegant-20261110-1">
+  <script defer src="app.js?build=elegant-20261110-1"></script>
 </head>
 <body>
   <header class="topbar"><a href="./" aria-label="사주MBTI 체험판 처음으로">사주MBTI</a><span class="test-badge">체험판 · 다듬는 중</span></header>
   <main id="app">
     <section id="input-screen" aria-labelledby="input-title">
-      <div class="intro"><p class="eyebrow">운명을 성향에 맞춰 해석하기</p><h1 id="input-title">생일과 MBTI로<br>내 이야기를 만나봐요</h1><p class="intro-text">사주는 태어난 때를 읽는 전통 해석, MBTI는 선택할 때 마음이 가는 방식이에요. 둘을 엮어 내 모습과 오늘의 선택을 돌아봐요.</p></div>
-      <div class="guide welcome"><span class="avatar"><img src="images/guide_b_smile.webp" width="720" height="900" alt=""></span><p>생일부터 차근차근 알려 주세요. 시간을 몰라도 읽을 수 있는 이야기부터 함께 볼게요.</p></div>
+      <div class="intro"><p class="eyebrow">운명을 성향에 맞춰 해석하기</p><h1 id="input-title">생일과 MBTI로<br>내 이야기를 만나 보시지요</h1><p class="intro-text">사주는 태어난 때를 읽는 전통 해석이고, MBTI는 선택할 때 마음이 가는 방식이지요. 둘을 엮어 내 모습과 오늘의 선택을 돌아본답니다.</p></div>
+      <div class="guide welcome"><span class="avatar"><img src="images/guide_b_smile.webp" width="720" height="900" alt=""></span><p>생일부터 차근차근 알려 주시어요. 시간을 몰라도 읽을 수 있는 이야기부터 함께 살펴보지요.</p></div>
       <p class="trust"><span class="nw">회원가입·구독 없음 ·</span> <span class="nw">기본 풀이는 늘 무료 ·</span> <span class="nw">입력은 이 탭 안에만</span></p>
       <form id="profile-form" novalidate>
         <fieldset><legend>태어난 날짜 <span class="req">(필수)</span></legend>
@@ -39,7 +39,7 @@
           <p id="birth-day-hint" class="hint" role="status" aria-live="polite">연도와 월을 먼저 골라 주세요.</p>
         </fieldset>
         <fieldset><legend>태어난 시간 <span class="opt">(선택)</span></legend><label class="check"><input id="time-unknown" name="unknown" type="checkbox" checked>시간을 몰라요</label><div id="time-fields" class="time-fields" hidden><label>시<select id="birth-hour" name="hour" disabled><option value="">선택</option></select></label><label>분<select id="birth-minute" name="minute" disabled><option value="">선택</option></select></label></div><p id="time-hint" class="hint" aria-live="polite">태어난 시간을 알면 체크를 풀고 시·분을 골라 주세요.</p></fieldset>
-        <fieldset><legend>내 MBTI <span class="opt">(선택)</span></legend><div id="mbti-buttons" class="type-grid"></div><p class="hint">MBTI를 고르면 맞춤 조언이 열려요. 별점과 기본 풀이는 사주로 읽어요. 아직 모르면 비워 두거나 ‘아직 몰라요’를 골라요.</p></fieldset>
+        <fieldset><legend>내 MBTI <span class="opt">(선택)</span></legend><div id="mbti-buttons" class="type-grid"></div><p class="hint">MBTI를 고르면 맞춤 조언이 열린답니다. 별점과 기본 풀이는 사주로 읽지요. 아직 모르면 비워 두거나 ‘아직 몰라요’를 고르시지요.</p></fieldset>
         <fieldset><legend>연애 운세 <span class="opt">(선택)</span></legend><label class="check"><input id="romance-hidden" name="romanceHidden" type="checkbox">관심 없어요 · 연애 항목 숨기기</label></fieldset>
         <p id="form-error" class="error" role="alert" hidden></p>
         <div id="load-state" class="load-state" role="status" aria-live="polite" hidden></div>
@@ -54,9 +54,9 @@
   </main>
   <dialog id="loading-dialog" aria-labelledby="loading-title" aria-describedby="loading-message">
     <img class="mascot" src="images/mascot.webp" width="256" height="256" alt=""><div class="loading-spinner" aria-hidden="true"></div>
-    <h2 id="loading-title">내 사주를 준비하고 있어요</h2>
-    <p id="loading-message" role="status" aria-live="polite">입력한 생일로 사주를 계산하고 있어요.</p>
-    <p id="loading-note" class="hint">처음에는 자료를 받느라 10초쯤 걸릴 수 있어요. 와이파이에서 열면 좋아요.</p>
+    <h2 id="loading-title">내 사주를 준비하고 있답니다</h2>
+    <p id="loading-message" role="status" aria-live="polite">입력한 생일로 사주를 계산하고 있답니다.</p>
+    <p id="loading-note" class="hint">처음에는 자료를 받느라 10초쯤 걸릴 수 있답니다. 와이파이에서 열면 좋지요.</p>
     <button id="cancel-calculation" class="secondary" type="button">취소하고 입력으로 돌아가기</button>
   </dialog>
   <dialog id="sheet" class="sheet" aria-labelledby="sheet-title"><div id="sheet-body"></div></dialog>

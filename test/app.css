@@ -427,3 +427,14 @@ body{line-height:1.65}
 .guide.welcome .avatar{background:var(--night) url(images/sky_night.webp) center/cover}
 .mascot{display:block;width:64px;height:64px;margin:0 auto 6px}
 .tabs button[aria-current=page]{box-shadow:inset 0 -3px 0 var(--gold)}
+
+/* 2026-11-10 푸른 동양풍 탭 머리 그림(마크업은 그대로 두고 있는 요소만 꾸민다)
+   내 사주: 제목 줄(.ttl)에 호숫가 정자, MBTI: 제목(h1 바로 뒤가 .subtitle 인 화면)에 등불이 뜬 구름바다.
+   글자는 왼쪽의 어두운 덮개 위에 미색으로 놓는다. :has() 를 모르는 브라우저는 예전처럼 그림 없이 보인다. */
+.ttl{position:relative;align-items:flex-end;min-height:clamp(150px,24dvh,200px);margin:0 -6px 12px;padding:16px 16px 12px;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#0b123000 30%,#0b1230b8 100%),linear-gradient(90deg,#0b1230b3 0%,#0b123066 48%,#0b123000 78%),var(--night) url(images/bg_pavilion.webp) 88% 62%/cover no-repeat;box-shadow:inset 0 0 0 1px #e3b86180}
+.ttl h1{margin:0 0 2px;color:#F8F4E6;text-shadow:0 1px 10px #0b1230cc}
+.ttl .subtitle{margin:0;color:#E6ECFB;text-shadow:0 1px 6px #0b1230e6}
+.ttl .editbtn{position:absolute;top:10px;right:10px;margin:0;padding:0 14px;border:1px solid #e3b86199;border-radius:999px;background:#0b1230a6;color:#F8F4E6;text-decoration:none}
+.ttl .editbtn:focus-visible{outline-color:var(--gold)}
+h1#page-title:has(+.subtitle+[data-type-introduction]),h1#page-title:has(+.subtitle+.sech){display:flex;align-items:flex-end;min-height:clamp(150px,24dvh,200px);margin:0 -6px 12px;padding:16px 16px 14px;border-radius:22px;color:#F8F4E6;text-shadow:0 1px 10px #0b1230cc;background:linear-gradient(180deg,#0b123000 35%,#0b1230a6 100%),linear-gradient(90deg,#0b1230a6 0%,#0b12304d 50%,#0b123000 80%),var(--night) url(images/bg_clouds.webp) 80% 45%/cover no-repeat;box-shadow:inset 0 0 0 1px #e3b86180}
+@media(forced-colors:active){.ttl,h1#page-title{background:none;box-shadow:none}.ttl h1,.ttl .subtitle,.ttl .editbtn,h1#page-title{color:inherit;text-shadow:none}}
