@@ -32,8 +32,8 @@
   "content/preview.json": {
     "path": "data/content/preview.json.gz",
     "gzip": true,
-    "sha256": "f21f4bd7c13afdd1dd735443d8978def544f4fe9f45652c654893dbbd665d8a9",
-    "bytes": 10604644
+    "sha256": "3ca2222d179e9eac8a67d7f6fc5bc71c81f2506d3e4819634fe6718fce131329",
+    "bytes": 10634284
   },
   "content/content_record.schema.json": {
     "path": "data/content/content_record.schema.json",
@@ -62,7 +62,7 @@
   "review/web_reading_copy.json": {
     "path": "data/review/web_reading_copy.json.gz",
     "gzip": true,
-    "sha256": "2fb5e83217f2077189ea920bd0b465594c6b16b8d8e1db2aa3a17c5ce6a29096",
-    "bytes": 6395427
+    "sha256": "808154d6035e5953cc04f63a4bfff6c1b1f6c5d43f3526f7916d34ea66e9a16c",
+    "bytes": 6811823
   }
 }
