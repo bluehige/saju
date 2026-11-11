@@ -25,6 +25,7 @@
     for(const key of ['expanded','scroll','cache','checks'])if(!state[key]||typeof state[key]!=='object')state[key]={};
   }}catch{}
   function save(){try{if(!state.profile&&!state.result)sessionStorage.removeItem(storageKey);else sessionStorage.setItem(storageKey,JSON.stringify(state));}catch{ /* Current page still works when private-mode storage is disabled. */ }}
+  const engineProfile=p=>{const {gender,...rest}=p||{};return rest;};
   const koreaToday=()=>new Date(Date.now()+9*3600000).toISOString().slice(0,10);
   const addDays=(iso,days)=>{const d=new Date(iso+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);};
   const isoParts=iso=>String(iso||'').split('-').map(Number);
@@ -87,7 +88,7 @@
   options($('#birth-month'),Array.from({length:12},(_,i)=>i+1),'선택','월');
   options($('#birth-hour'),Array.from({length:24},(_,i)=>String(i).padStart(2,'0')),'선택','시');
   options($('#birth-minute'),Array.from({length:60},(_,i)=>String(i).padStart(2,'0')),'선택','분');formTypes();
-  function fillForm(profile){if(!profile)return;$('#birth-calendar').value=profile.calendar;birthYears();$('#birth-year').value=profile.year;$('#birth-month').value=profile.month;$('#birth-leap').checked=!!profile.leap;$('#time-unknown').checked=!profile.time;const parts=(profile.time||':').split(':');$('#birth-hour').value=parts[0];$('#birth-minute').value=parts[1];setFormType(profile.mbti||'');$('#romance-hidden').checked=!!profile.romanceHidden;syncForm(profile.day);}
+  function fillForm(profile){if(!profile)return;$('#birth-calendar').value=profile.calendar;birthYears();$('#birth-year').value=profile.year;$('#birth-month').value=profile.month;$('#birth-leap').checked=!!profile.leap;$('#time-unknown').checked=!profile.time;const parts=(profile.time||':').split(':');$('#birth-hour').value=parts[0];$('#birth-minute').value=parts[1];setFormType(profile.mbti||'');$('#romance-hidden').checked=!!profile.romanceHidden;document.querySelectorAll('input[name="gender"]').forEach(el=>{el.checked=el.value===(profile.gender||'');});syncForm(profile.day);}
   function error(message){$('#form-error').textContent=message;$('#form-error').hidden=false;$('#form-error').scrollIntoView({block:'center',behavior:'smooth'});}
   function clearFieldErrors(){
     $$('#profile-form [aria-invalid]').forEach(el=>{el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
@@ -167,7 +168,7 @@
     queuedCalculation=null;pending=request;updateSubmit();
     setLoadingMessage('별점을 계산하고 있답니다.');$('#loading-note').hidden=true;
     clearTimeout(calculationTimer);calculationTimer=setTimeout(()=>startupFailed('계산 시간이 길어졌어요. 입력은 그대로 두었으니 다시 시도해 주세요.'),30000);
-    worker.postMessage({kind:'calculate',id:request.id,profile:request.profile,target:request.target,today:koreaToday()});
+    worker.postMessage({kind:'calculate',id:request.id,profile:engineProfile(request.profile),target:request.target,today:koreaToday()});
   }
   // 진행 메시지가 올 때마다 기다리는 시간을 늘린다. 아무 소식이 없을 때만 실패로 본다.
   function armStartup(){
@@ -211,7 +212,7 @@
   }
   function flushAux(){
     if(!ready||!worker||busy())return;
-    while(auxQueue.length){const job=auxQueue.shift(),id='aux-'+(++auxSeq);aux.set(id,job);worker.postMessage({kind:'calculate',id,profile:job.profile,target:job.target,today:koreaToday()});}
+    while(auxQueue.length){const job=auxQueue.shift(),id='aux-'+(++auxSeq);aux.set(id,job);worker.postMessage({kind:'calculate',id,profile:engineProfile(job.profile),target:job.target,today:koreaToday()});}
   }
   function finishAux(data){
     const job=aux.get(data.id);aux.delete(data.id);auxKeys.delete(job.key);
@@ -256,7 +257,7 @@
     if(!unknown&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){const empty=['birth-hour','birth-minute'].filter(id=>!$('#'+id).value);fieldError(empty.length?empty:['birth-hour','birth-minute'],'time-hint','태어난 시와 분을 모두 골라 주세요. 모르면 ‘시간을 몰라요’를 선택해 주세요.');return;}
     const mbti=formType();
     if(!types.includes(mbti)&&mbti!==''){error('목록에서 MBTI를 고르거나 ‘아직 몰라요’를 골라 주세요.');return;}
-    calculate({year,month,day,calendar,leap,time,mbti,romanceHidden:$('#romance-hidden').checked},koreaToday(),'today',true,'today');
+    calculate({year,month,day,calendar,leap,time,mbti,gender:document.querySelector('input[name="gender"]:checked')?.value||'',romanceHidden:$('#romance-hidden').checked},koreaToday(),'today',true,'today');
   });
   function showInput(preserveForm=false,fromHistory=false){
     rememberView();if(busy())cancelCalculation();closeSheet();
@@ -582,6 +583,36 @@
   const roleGroups={SELF:'비겁(비견·겁재)',OUTPUT:'식상(식신·상관)',WEALTH:'재성(편재·정재)',RULE:'관성(편관·정관)',LEARN:'인성(편인·정인)'};
   const roleGroupShort={SELF:'비겁',OUTPUT:'식상',WEALTH:'재성',RULE:'관성',LEARN:'인성'};
   // 전문 설명은 사용자가 고른 기준(1A)에 맞춰 차분한 합니다체로 쓴다.
+  // 일간 10개의 익숙한 자연물 비유(전통 명리에서 널리 쓰는 물상)와 쉬운 성격 풀이. [비유, 풀이]
+  const stemImages=[
+    ['곧게 뻗는 큰 나무','위를 향해 곧게 자라는 큰 나무 같은 분이지요. 앞장서서 시작하는 힘이 있고 뜻을 쉽게 굽히지 않는답니다. 그만큼 굽혀야 할 때 굽히기가 어려워 부러지듯 지칠 때가 있지요.'],
+    ['부드럽게 뻗는 풀과 덩굴','바람에 눕다가도 다시 일어나는 풀과 덩굴 같은 분이지요. 사람과 상황에 맞추어 길을 찾는 유연함과 끈기가 있답니다. 다만 기댈 곳을 살피다 보니 제 뜻을 뒤로 미룰 때가 있지요.'],
+    ['세상을 비추는 태양','환하게 비추는 태양 같은 분이지요. 밝고 솔직하며 어디서든 눈에 띄는 기운이 있답니다. 다만 속마음이 금세 드러나고, 뜨겁게 시작한 일이 빨리 식을 때가 있지요.'],
+    ['곁을 밝히는 촛불','어두운 곳을 밝히는 촛불 같은 분이지요. 따뜻하고 세심하여 가까운 사람을 잘 챙긴답니다. 다만 작은 바람에도 마음이 흔들려 속을 태울 때가 있지요.'],
+    ['듬직한 큰 산','제자리를 지키는 큰 산 같은 분이지요. 묵직하고 믿음직하여 사람들이 기대어 온답니다. 다만 한번 정한 뜻을 바꾸기 어려워 고집스럽다는 말을 듣기도 하지요.'],
+    ['무엇이든 길러 내는 논밭','씨앗을 품어 길러 내는 논밭 같은 분이지요. 꼼꼼하고 살뜰하여 사람과 일을 잘 돌본답니다. 다만 이것저것 품다 보니 걱정이 많아질 때가 있지요.'],
+    ['단단한 바위와 쇠','단단한 바위와 쇠 같은 분이지요. 결단이 빠르고 의리가 있어 옳다고 여긴 일은 밀고 나간답니다. 다만 말과 태도가 굳세어 차갑게 보일 때가 있지요.'],
+    ['잘 다듬어진 보석','잘 다듬어진 보석 같은 분이지요. 섬세하고 예리한 눈을 지녔고, 깔끔하고 정확한 것을 좋아한답니다. 그만큼 작은 흠에도 마음이 쓰여 스스로를 몰아세울 때가 있지요.'],
+    ['널리 흐르는 큰 바다','널리 흐르는 큰 바다 같은 분이지요. 생각이 깊고 품이 넓어 여러 사람과 일을 아우른답니다. 다만 속을 잘 드러내지 않고, 생각이 많아 한곳에 머물기 어려울 때가 있지요.'],
+    ['조용히 스미는 비와 이슬','조용히 스며드는 비와 이슬 같은 분이지요. 눈치가 빠르고 헤아림이 깊어 남의 마음을 잘 읽는답니다. 다만 남의 기분에 쉽게 젖어 혼자 지칠 때가 있지요.']];
+  // 오행의 쉬운 뜻. many=3개 이상으로 가장 많을 때, none=0개일 때(부족하다고 그대로 말한다).
+  const elementPlainCopy={
+    WOOD:{word:'나무(木)',topic:'나무는 성장과 시작을 뜻하지요.',many:'새 일을 벌이고 뻗어 나가려는 힘이 크답니다. 다만 벌인 일을 다 거두지 못할 때가 있지요.',none:'새로 시작하고 밀고 나가는 힘이 부족한 편이랍니다. 첫걸음을 떼는 데 시간이 걸릴 수 있지요.'},
+    FIRE:{word:'불(火)',topic:'불은 표현과 열정을 뜻하지요.',many:'마음을 드러내고 사람을 끄는 힘이 크답니다. 다만 성급해지거나 쉽게 달아오를 때가 있지요.',none:'마음을 겉으로 드러내는 힘이 부족한 편이랍니다. 속뜻을 알리는 데 시간이 걸릴 수 있지요.'},
+    EARTH:{word:'흙(土)',topic:'흙은 안정과 믿음을 뜻하지요.',many:'무게 있게 버티고 받아들이는 힘이 크답니다. 다만 움직임이 더디고 생각이 굳을 때가 있지요.',none:'한자리에 뿌리내리고 버티는 힘이 부족한 편이랍니다. 마음 둘 곳을 정하기까지 흔들릴 수 있지요.'},
+    METAL:{word:'쇠(金)',topic:'쇠는 판단과 마무리를 뜻하지요.',many:'옳고 그름을 가르고 끝맺는 힘이 크답니다. 다만 날이 서서 말이 매서워질 때가 있지요.',none:'끊고 맺는 힘이 부족한 편이랍니다. 결정을 미루거나 마무리가 흐려질 수 있지요.'},
+    WATER:{word:'물(水)',topic:'물은 생각과 지혜를 뜻하지요.',many:'헤아림이 깊고 상황에 맞추어 움직이는 힘이 크답니다. 다만 생각이 많아 걱정으로 흐를 때가 있지요.',none:'한발 물러나 헤아리는 힘이 부족한 편이랍니다. 생각보다 몸이 먼저 나갈 수 있지요.'}};
+  function elementPlain(r,cls){
+    const keys=Object.keys(elementPlainCopy),total=keys.reduce((n,k)=>n+(r.elements[k]||0),0);if(!total)return '';
+    const max=Math.max(...keys.map(k=>r.elements[k]||0)),many=max>=3?keys.filter(k=>r.elements[k]===max):[],none=keys.filter(k=>!(r.elements[k]||0));
+    const line=(label,k,body)=>`<p class="${cls}"><b>${label} · ${elementPlainCopy[k].word}</b><br>${elementPlainCopy[k].topic} ${body}</p>`;
+    const parts=[...many.map(k=>line('많은 기운',k,elementPlainCopy[k].many)),...none.map(k=>line('없는 기운',k,elementPlainCopy[k].none))];
+    if(!parts.length)parts.push(`<p class="${cls}">다섯 기운이 어느 한쪽으로 크게 기울지 않은 사주랍니다.</p>`);
+    if(!r.pillars.HOUR)parts.push('<p class="hint">태어난 시간을 알면 글자 둘이 더해져 달라질 수 있답니다.</p>');
+    return `<div data-element-plain>${parts.join('')}</div>`;
+  }
+  // 십성의 쉬운 이름과 익숙한 풀이. [별명, 풀이]
+  const tenGodEasy={BI_GYEON:['나와 어깨를 나란히 하는 별','나와 같은 기운이라 벗이나 동료로 읽지요. 제 힘으로 서려는 뜻과 자존심이 강하답니다.'],GEOP_JAE:['겨루며 나아가는 별','벗이면서 맞수이기도 한 기운이지요. 승부욕이 강하고, 예부터 재물이 나뉘기 쉬운 자리로 읽어 왔답니다.'],SIK_SIN:['재주와 표현의 별','내가 가진 것을 꺼내 만들어 내는 힘이지요. 예부터 먹을 복과 꾸준한 솜씨로 읽어 왔답니다.'],SANG_GWAN:['말솜씨와 재치의 별','틀을 깨고 새롭게 드러내는 힘이지요. 재주가 빛나지만 윗사람이나 규칙과 부딪치기 쉽다고 읽어 왔답니다.'],PYEON_JAE:['크게 굴리는 재물의 별','기회를 보고 움직이는 재물이지요. 수완과 넓은 발로 읽지만 들고 남이 크답니다.'],JEONG_JAE:['차곡차곡 모으는 재물의 별','땀 흘려 얻는 꾸준한 재물이지요. 알뜰하고 성실하다고 읽지만 큰 모험은 꺼리는 편이랍니다.'],PYEON_GWAN:['나를 단련하는 별','나를 강하게 누르는 기운이지요. 책임감과 밀어붙이는 힘으로 읽지만 부담과 압박도 크답니다.'],JEONG_GWAN:['명예와 규범의 별','나를 바르게 이끄는 기운이지요. 직장과 명예, 반듯함으로 읽지만 틀에 매이기 쉽답니다.'],PYEON_IN:['남다른 눈과 재주의 별','한쪽으로 깊이 파고드는 배움이지요. 직관과 특별한 재주로 읽지만 생각이 한곳에 쏠리기 쉽답니다.'],JEONG_IN:['배움과 보살핌의 별','나를 낳아 길러 주는 기운이지요. 학문과 어른의 도움으로 읽지만 받는 데 익숙해 실행이 더딜 수 있답니다.']};
   const tenGods={BI_GYEON:['비견(比肩)','비견(比肩)은 일간과 오행·음양이 같은 관계를 말합니다. 일간은 사주에서 ‘나’를 나타내는 기준 글자입니다.','자기 판단과 동등한 참여를 주제로 풀이합니다.'],GEOP_JAE:['겁재(劫財)','겁재(劫財)는 일간과 오행은 같고 음양이 다른 글자입니다.','목표를 향한 움직임과 자신의 몫을 함께 읽습니다.'],SIK_SIN:['식신(食神)','식신(食神)은 일간이 생하는(낳는) 오행 가운데 음양이 같은 글자입니다.','직접 만들어 내는 결과와 꾸준한 표현을 주제로 읽습니다.'],SANG_GWAN:['상관(傷官)','상관(傷官)은 일간이 생하는 오행 가운데 음양이 다른 글자입니다.','생각을 표현하고 기존 방법을 바꾸는 장면을 주제로 읽습니다.'],PYEON_JAE:['편재(偏財)','편재(偏財)는 일간이 극하는(다스리는) 오행 가운데 음양이 같은 글자입니다.','눈앞의 기회와 실제로 쓸 결과를 함께 읽습니다.'],JEONG_JAE:['정재(正財)','정재(正財)는 일간이 극하는 오행 가운데 음양이 다른 글자입니다.','필요한 몫과 꾸준히 감당할 비용을 주제로 읽습니다.'],PYEON_GWAN:['편관(偏官)','편관(偏官)은 일간을 극하는 오행 가운데 음양이 같은 글자입니다.','맡은 책임과 감당할 부담을 함께 읽습니다.'],JEONG_GWAN:['정관(正官)','정관(正官)은 일간을 극하는 오행 가운데 음양이 다른 글자입니다.','약속한 기준과 자신의 역할을 주제로 읽습니다.'],PYEON_IN:['편인(偏印)','편인(偏印)은 일간을 생하는 오행 가운데 음양이 같은 글자입니다.','새로운 관점과 필요한 이해를 주제로 읽습니다.'],JEONG_IN:['정인(正印)','정인(正印)은 일간을 생하는 오행 가운데 음양이 다른 글자입니다.','배운 내용과 익숙한 도움을 주제로 읽습니다.']};
   // RelationExtractor와 같은 규칙: 천간 오합, 지지 육합, 지지 육충. 시간을 모르면 시주는 빼고 본다.
   function natalRelations(r){
@@ -607,10 +638,10 @@
   }
   function signatureSection(r,selected){
     const e=selected.evidence,god=tenGods[r.signature];
-    const intro='<p class="card-body">십성은 다른 글자가 나(일간)와 어떤 관계인지 열 가지로 나눈 이름입니다.</p>';
+    const intro='<p class="card-body">십성은 사주의 다른 글자가 나와 어떤 사이인지 붙인 이름이랍니다. 크게 다섯 갈래이지요.</p><ul class="weights"><li>비견·겁재 · 나와 동료</li><li>식신·상관 · 표현과 재주</li><li>편재·정재 · 재물</li><li>편관·정관 · 직장과 책임</li><li>편인·정인 · 배움과 도움</li></ul>';
     if(god){
       const places=e.available?[...new Set(e.occurrences.filter(o=>o.tenGod===r.signature).map(o=>o.source==='STEM'?`${stemSlot[o.position]} ${stemFull(o.stem)}`:`${branchSlot[o.position]} ${branchFull(o.branch)} 속 ${stemFull(o.stem)}`))]:[];
-      return `<h3>${god[0]} 중심의 해석</h3>${intro}<p class="card-body">${escape(god[1])} ${escape(god[2])}</p>${places.length?`<p class="card-body">이 명식에서 ${god[0].slice(0,2)}${josa(god[0].slice(0,2),'이','가')} 놓인 자리는 ${escape(places.join(', '))}입니다.</p>`:''}`;
+      const easy=tenGodEasy[r.signature];return `<h3>내 사주에서 가장 두드러진 별 · ${god[0]}</h3>${intro}<p class="card-body"><b>${god[0]} · ${escape(easy[0])}</b><br>${escape(easy[1])}</p><p class="hint">${escape(god[1])}</p>${places.length?`<p class="card-body">이 명식에서 ${god[0].slice(0,2)}${josa(god[0].slice(0,2),'이','가')} 놓인 자리는 ${escape(places.join(', '))}입니다.</p>`:''}`;
     }
     if(r.signature==='MIXED'){
       const roles=selected.roleSet?.roles||[];
@@ -631,7 +662,7 @@
     if(selected.rows.length)parts.push(`<p class="card-body">이 글에서는 ${selected.roleSet.roles.map(role=>`‘${roleNames[role]}(${roleGroupShort[role]})’`).join(', ')}${josa(roleNames[selected.roleSet.roles.at(-1)],'을','를')} 함께 읽는답니다.</p>`);
     if(e.available){
       const zero=Object.values(e.totals).some(v=>v===0);
-      parts.push(`<h4 class="reading-label">가중치</h4><p class="hint">아래 숫자는 십성을 나누려고 이 앱이 정한 가중치랍니다. 오행의 힘을 잰 점수나 성격의 비율은 아니지요.</p><ul class="weights">${Object.entries(e.totals).map(([k,v])=>`<li>${escape(roleNames[k])} · ${escape(roleGroups[k])} <b>${v}</b></li>`).join('')}</ul>${zero?'<p class="hint">0은 이 사주 글자에 드러나지 않았다는 뜻이지, 부족하다는 뜻은 아니랍니다.</p>':''}`);
+      parts.push(`<h4 class="reading-label">가중치</h4><p class="hint">아래 숫자는 십성을 나누려고 이 앱이 정한 가중치랍니다. 오행의 힘을 잰 점수나 성격의 비율은 아니지요.</p><ul class="weights">${Object.entries(e.totals).map(([k,v])=>`<li>${escape(roleNames[k])} · ${escape(roleGroups[k])} <b>${v}</b></li>`).join('')}</ul>${zero?'<p class="hint">0은 이 사주 글자에 그 기운이 드러나지 않았다는 뜻이랍니다.</p>':''}`);
     }
     if(selected.rows.length)parts.push(details('natal-role-rule','이 글을 고르는 방법',`<p class="card-body">가중치가 큰 두 역할을 먼저 고르고, 두 번째 값보다 ${selected.roleSet.closeGap} 이내로 작은 역할도 함께 읽는답니다. 같은 값에는 같은 기준을 적용하지요.${state.profile?.time?'':' 태어난 시간을 모르면 확인된 글자만 사용한답니다.'}</p>`));
     // 연애 항목을 숨겼다면 연애 풀이에 붙은 근거도 보이지 않게 한다.
@@ -656,8 +687,8 @@
     const selected=mixedNatalSelection(r);
     return `<section data-professional-saju>
       <article class="card" data-natal-chart><h2>명식과 오행</h2><h3 class="card-title">${title}</h3><p class="card-body">${polarity}</p>${pillars}
-        <h3>오행 분포 · ${range}</h3><p class="card-body" data-element-summary>${distribution}</p>${elements}
-        ${zero?'<p class="hint">0개인 오행은 확정된 글자에 나타나지 않았다는 뜻이며, 부족하거나 결함이 있다는 뜻은 아닙니다.</p>':''}
+        <h3>오행 분포 · ${range}</h3><p class="card-body" data-element-summary>${distribution}</p>${elements}${elementPlain(r,'card-body')}
+        
         <p class="hint">확정된 천간과 지지의 본오행을 각각 1개로 셉니다. 월령·지장간·합화에 따른 세력은 따지지 않습니다.</p></article>
       <article class="card" data-traditional-saju><h2>십성과 합·충</h2>${signatureSection(r,selected)}${relationSection(r)}</article>
       <article class="card" data-life-basis>${lifeBasis(r,selected)}</article>
@@ -669,7 +700,7 @@
     if(transitions||transitionsLoading)return;transitionsLoading=true;
     fetch('data/calendar/v2/seoul_transitions.csv',{cache:'force-cache'}).then(res=>res.ok?res.text():'').then(csv=>{
       transitions=csv.trim().split(/\r?\n/).slice(1).map(line=>{const [utc,wall,std]=line.split(',');return {at:Date.parse(utc),wall:Number(wall),std:Number(std)};}).filter(row=>Number.isFinite(row.at)).sort((a,b)=>a.at-b.at);
-      if(state.tab==='natal'&&state.result){const slot=$('#dst-slot');if(slot)slot.innerHTML=dstNote(state.result);}
+      if(state.tab==='natal'&&state.result){const slot=$('#dst-slot');if(slot)slot.innerHTML=dstNote(state.result);const luck=$('#luck-slot');if(luck)luck.innerHTML=luckSection(state.result);}
     }).catch(()=>{transitions=[];}).finally(()=>{transitionsLoading=false;});
   }
   function dstNote(r){
@@ -733,16 +764,109 @@
     const body=c?`<p class="vsum">${text(c.summary)}</p>${additionalReading(value,[c.summary])}`:manuscript(value);
     return `<div class="sheet-inner"><p class="micro">${mbti?`사주 × ${T}`:'사주로만 본 풀이 · 무료'}</p><h2 class="sh" id="sheet-title" tabindex="-1">${escape(name)}</h2>${title?`<h3 class="vh3">${text(title)}</h3>`:''}${body}<button type="button" class="sbtn outi wide" data-action="sheet-close">닫기</button></div>`;
   }
+  // ---------- 올해의 운(세운)·10년의 흐름(대운)·어울리는 일 ----------
+  // 표시 전용. 별점·기본 풀이 계산과 무관하다. 대운 방향에만 성별을 쓴다.
+  const stemJobs=[
+    '앞에서 이끌고 새로 세우는 일과 잘 맞는다고 읽어 왔답니다. 기획·교육·창업처럼 방향을 잡는 일이지요. 남의 뜻만 따라야 하는 자리에서는 답답해하기 쉽답니다.',
+    '사람 사이를 잇고 맞추어 가는 일과 잘 맞는다고 읽어 왔답니다. 상담·디자인·홍보처럼 부드럽게 풀어 가는 일이지요. 혼자 힘으로 밀어붙여야 하는 자리에서는 지치기 쉽답니다.',
+    '사람들 앞에 서서 드러내는 일과 잘 맞는다고 읽어 왔답니다. 방송·영업·강연처럼 밝은 기운을 쓰는 일이지요. 오래 숨어서 기다려야 하는 일에서는 힘이 빠지기 쉽답니다.',
+    '한 사람 한 사람을 살피고 정성을 들이는 일과 잘 맞는다고 읽어 왔답니다. 교육·돌봄·글과 예술처럼 따뜻함을 쓰는 일이지요. 거칠게 겨루는 자리에서는 마음이 쉽게 닳는답니다.',
+    '여럿을 품고 중심을 잡는 일과 잘 맞는다고 읽어 왔답니다. 관리·중개·부동산처럼 믿음으로 버티는 일이지요. 빠르게 바꾸고 옮겨 다녀야 하는 일에서는 더디다는 말을 듣기 쉽답니다.',
+    '꼼꼼히 챙기고 길러 내는 일과 잘 맞는다고 읽어 왔답니다. 사무·교육·농사와 먹거리처럼 살뜰함을 쓰는 일이지요. 크게 걸고 나서야 하는 자리에서는 망설이기 쉽답니다.',
+    '결단하고 밀고 나가는 일과 잘 맞는다고 읽어 왔답니다. 기술·제조·군경·운동처럼 힘과 원칙을 쓰는 일이지요. 눈치 보며 맞추어야 하는 자리에서는 부딪치기 쉽답니다.',
+    '정확함과 섬세함이 빛나는 일과 잘 맞는다고 읽어 왔답니다. 디자인·공예, 회계·금융, 분석·검수처럼 꼼꼼히 다듬는 일이지요. 거칠게 밀어붙이거나 기준 없이 흘러가는 일터에서는 쉽게 지친답니다.',
+    '넓게 보고 흐름을 읽는 일과 잘 맞는다고 읽어 왔답니다. 무역·유통·연구·전략처럼 큰 판을 다루는 일이지요. 좁은 틀에서 같은 일을 되풀이하는 자리에서는 싫증 내기 쉽답니다.',
+    '조용히 헤아리고 스며드는 일과 잘 맞는다고 읽어 왔답니다. 상담·연구·글쓰기·기획 지원처럼 깊이 살피는 일이지요. 앞에 나서서 목소리를 높여야 하는 자리에서는 기운이 쉽게 빠진답니다.'];
+  const tenGodOrder=['BI_GYEON','GEOP_JAE','SIK_SIN','SANG_GWAN','PYEON_JAE','JEONG_JAE','PYEON_GWAN','JEONG_GWAN','PYEON_IN','JEONG_IN'];
+  // 일간(day)에서 본 다른 천간(other)의 십성.
+  const tenGodOf=(day,other)=>tenGodOrder[((Math.floor(other/2)-Math.floor(day/2)+5)%5)*2+(day%2===other%2?0:1)];
+  const godGroup=g=>['SELF','SELF','OUTPUT','OUTPUT','WEALTH','WEALTH','RULE','RULE','LEARN','LEARN'][tenGodOrder.indexOf(g)];
+  const yearLuckCopy={
+    BI_GYEON:['나를 세우는 해','나와 같은 기운이 들어오는 해랍니다. 제 뜻대로 서 보려는 힘이 커지고 벗과 동료가 늘지요. 다만 고집이 세져 함께하는 이와 부딪칠 수 있답니다.'],
+    GEOP_JAE:['겨루며 나아가는 해','맞수 같은 기운이 들어오는 해랍니다. 승부를 걸 힘이 생기지만, 예부터 돈과 사람이 나뉘기 쉬운 때로 읽어 왔지요. 보증과 무리한 지출은 한 번 더 살피시지요.'],
+    SIK_SIN:['재주를 펼치는 해','가진 것을 꺼내 만들어 내는 기운이 들어오는 해랍니다. 꾸준히 해 온 일이 솜씨로 드러나지요. 다만 편안함에 머물러 느슨해질 수 있답니다.'],
+    SANG_GWAN:['틀을 깨는 해','새롭게 드러내고 바꾸려는 기운이 들어오는 해랍니다. 말과 재치가 빛나지요. 다만 윗사람이나 규칙과 부딪치기 쉬우니 말끝을 다듬으시지요.'],
+    PYEON_JAE:['기회를 좇는 해','크게 움직이는 재물의 기운이 들어오는 해랍니다. 새 일과 사람을 만날 기회가 늘지요. 다만 들어오는 만큼 나가기도 쉬운 때랍니다.'],
+    JEONG_JAE:['차곡차곡 쌓는 해','꾸준한 재물의 기운이 들어오는 해랍니다. 성실히 한 만큼 결실이 모이지요. 다만 큰 변화를 바라기에는 걸음이 더딘 때랍니다.'],
+    PYEON_GWAN:['단련하는 해','나를 강하게 누르는 기운이 들어오는 해랍니다. 무거운 책임을 맡아 크게 자랄 수 있지요. 다만 압박이 커서 몸과 마음이 지치기 쉬운 때랍니다.'],
+    JEONG_GWAN:['직장과 책임의 해','나를 바르게 이끄는 기운이 들어오는 해랍니다. 맡은 자리와 책임이 커지고 이름이 알려지기 좋지요. 다만 그만큼 매이는 일이 많아 쉬어 갈 틈을 스스로 챙겨야 한답니다.'],
+    PYEON_IN:['깊이 파고드는 해','남다른 배움의 기운이 들어오는 해랍니다. 새 분야를 익히고 생각을 바꾸기 좋지요. 다만 생각만 많아져 손이 더뎌질 수 있답니다.'],
+    JEONG_IN:['배우고 도움받는 해','나를 길러 주는 기운이 들어오는 해랍니다. 공부와 자격, 어른의 도움이 따르지요. 다만 받는 데 익숙해져 스스로 나서기를 미룰 수 있답니다.']};
+  const decadeLuckCopy={
+    SELF:['나를 세우는 10년','제 힘으로 서려는 뜻이 커지는 계절이지요. 독립하고 겨루며 자리를 잡지만, 혼자 다 지려다 사람과 재물이 흩어질 수 있답니다.'],
+    OUTPUT:['표현과 재주의 10년','가진 것을 꺼내 보이는 계절이지요. 만들고 알리는 일에 힘이 실리지만, 벌여 놓은 일을 거두는 데는 서툴 수 있답니다.'],
+    WEALTH:['재물과 결실의 10년','일한 것이 재물과 결과로 이어지는 계절이지요. 기회가 많은 만큼 욕심이 앞서면 몸과 마음이 먼저 지칠 수 있답니다.'],
+    RULE:['직장과 책임의 10년','자리와 이름을 얻는 계절이지요. 책임이 커지고 인정받지만, 그만큼 매이고 눌리는 일도 많답니다.'],
+    LEARN:['배움과 준비의 10년','익히고 도움받으며 힘을 기르는 계절이지요. 공부와 자격에 좋지만, 생각이 길어져 실행이 늦어질 수 있답니다.']};
+  let solarTerms=null,solarTermsLoading=false;
+  function loadSolarTerms(){
+    if(solarTerms||solarTermsLoading)return;solarTermsLoading=true;
+    fetch('data/calendar/solar_terms.csv',{cache:'force-cache'}).then(res=>res.ok?res.text():'').then(csv=>{
+      solarTerms=csv.trim().split(/\r?\n/).slice(1).map(line=>{const c=line.split(',');return {at:Date.parse(c[0]),year:Number(c[2]),month:Number(c[3])};}).filter(row=>Number.isFinite(row.at)).sort((a,b)=>a.at-b.at);
+      if(state.tab==='natal'&&state.result){const slot=$('#luck-slot');if(slot)slot.innerHTML=luckSection(state.result);}
+    }).catch(()=>{solarTerms=[];}).finally(()=>{solarTermsLoading=false;});
+  }
+  const pillarName=(stem,branch)=>`${stemHangul[stem]}${branchHangul[branch]}(${stemHanja[stem]}${branchHanja[branch]})`;
+  // 해의 경계는 입춘. 절기 자료가 있으면 그 시각으로, 없으면 2월 4일로 어림한다.
+  function luckYear(iso){
+    const [Y,M,D]=isoParts(iso),at=Date.UTC(Y,M-1,D,12)-9*3600000;
+    if(solarTerms?.length){const before=solarTerms.filter(row=>row.at<=at);if(before.length)return before[before.length-1].year;}
+    return M<2||(M===2&&D<4)?Y-1:Y;
+  }
+  // 한국 벽시계 시각을 실제 순간(UTC)으로 바꾼다. 1954~61년 +8:30, 서머타임 +10:00 등 그때의 시간 기준을 엔진과 같은 자료로 따른다.
+  function koreaInstant(local){
+    for(let i=0;i<(transitions?.length||0);i++){
+      const row=transitions[i],until=transitions[i+1]?.at??Infinity,instant=local-row.wall*1000;
+      if(instant>=row.at&&instant<until)return instant;
+    }
+    return local-9*3600000;
+  }
+  function decadeLuck(r,target){
+    const p=state.profile,day=r.pillars.DAY,year=r.pillars.YEAR,month=r.pillars.MONTH;
+    if(!p?.gender||!day||!year||!month||!r.birthSolarDate||!solarTerms?.length||!transitions)return null;
+    const [Y,M,D]=isoParts(r.birthSolarDate),[hh,mi]=(p.time||'12:00').split(':').map(Number),birth=koreaInstant(Date.UTC(Y,M-1,D,hh,mi));
+    const forward=(year.stem%2===0)===(p.gender==='M');
+    const term=forward?solarTerms.find(row=>row.at>birth):[...solarTerms].reverse().find(row=>row.at<=birth);
+    if(!term)return null;
+    const yearMs=365.2425*86400000,startAge=Math.abs(term.at-birth)/86400000/3,[tY,tM,tD]=isoParts(target),now=Date.UTC(tY,tM-1,tD,12)-9*3600000;
+    const rows=[];
+    for(let k=1;k<=9;k++){
+      const from=birth+(startAge+(k-1)*10)*yearMs,stem=((month.stem+(forward?k:-k))%10+10)%10,branch=((month.branch+(forward?k:-k))%12+12)%12;
+      rows.push({from,to:from+10*yearMs,age:Math.floor(startAge)+(k-1)*10,fromYear:new Date(from+9*3600000).getUTCFullYear(),stem,branch,group:godGroup(tenGodOf(day.stem,stem))});
+    }
+    return {rows,current:rows.find(row=>now>=row.from&&now<row.to)||null,before:now<rows[0].from};
+  }
+  function luckSection(r){
+    const day=r.pillars.DAY;if(!day)return '';
+    if(!solarTerms)loadSolarTerms();
+    if(!transitions)loadTransitions();
+    const target=state.target||koreaToday(),y=luckYear(target),ys=((y-4)%10+10)%10,yb=((y-4)%12+12)%12,yc=yearLuckCopy[tenGodOf(day.stem,ys)];
+    const yearCard=`<section class="card" data-year-luck><div class="vrow"><span class="chip plain">올해의 운 · ${y}년 ${pillarName(ys,yb)}년</span></div><h2 class="nh2">${escape(yc[0])}</h2><p class="nbody">${escape(yc[1])}</p><p class="hint">한 해의 운은 입춘(2월 4일 무렵)에 바뀐답니다. 올해의 윗글자가 나와 어떤 사이인지로 읽었지요.</p></section>`;
+    let decade;
+    if(!state.profile?.gender)decade=`<section class="card" data-decade-luck="need-gender"><div class="vrow"><span class="chip plain">10년의 큰 흐름 · 대운</span></div><p class="nbody">대운은 10년마다 바뀌는 인생의 계절이랍니다. 성별에 따라 흐르는 방향이 달라, 성별을 알려 주시면 읽어 드리지요.</p><button type="button" class="linkbtn strong" data-action="edit-profile">성별 입력하기 ›</button></section>`;
+    else{
+      const d=decadeLuck(r,target);
+      if(!d)decade=solarTerms?.length===0||(!r.pillars.MONTH||!r.pillars.YEAR)?'<section class="card" data-decade-luck="held"><div class="vrow"><span class="chip plain">10년의 큰 흐름 · 대운</span></div><p class="nbody">태어난 해와 달의 글자가 확인되면 대운을 읽어 드리지요.</p></section>':'';
+      else{
+        const c=d.current,cc=c?decadeLuckCopy[c.group]:null;
+        const head=c?`<h2 class="nh2">${escape(cc[0])}</h2><p class="nbody">지금은 ${pillarName(c.stem,c.branch)} 대운이랍니다(만 ${c.age}세부터, ${c.fromYear}년~). ${escape(cc[1])}</p>`:`<h2 class="nh2">첫 대운을 기다리는 때</h2><p class="nbody">아직 첫 대운이 시작되기 전이랍니다. 태어난 달의 기운이 이어지는 때이지요.</p>`;
+        const list=`<ul class="weights">${d.rows.slice(0,8).map(row=>`<li${row===c?' aria-current="true"':''}>만 ${row.age}세~ · ${row.fromYear}년~ · ${pillarName(row.stem,row.branch)} · <b>${escape(decadeLuckCopy[row.group][0])}${row===c?' (지금)':''}</b></li>`).join('')}</ul>`;
+        decade=`<section class="card" data-decade-luck><div class="vrow"><span class="chip plain">10년의 큰 흐름 · 대운</span></div>${head}${details('natal-decade-list','대운 전체 보기',list+`<p class="hint">대운은 태어난 달의 글자에서 차례로 이어지고, 시작 나이는 태어난 때와 가까운 절기 사이의 날수로 셈한답니다.${state.profile.time?'':' 태어난 시간을 몰라 낮 12시로 어림했지요.'}</p>`)}</section>`;
+      }
+    }
+    const job=`<section class="card" data-stem-job><div class="vrow"><span class="chip plain">어울리는 일</span></div><p class="nbody">${escape(stemJobs[day.stem])}</p></section>`;
+    return yearCard+decade+job;
+  }
   function natalTab(r){
-    const p=state.profile,T=r.type?escape(r.type):'',day=r.pillars.DAY,life=natalLife(r),temper=life.values.TEMPERAMENT,tc=copy(temper);
+    const p=state.profile,T=r.type?escape(r.type):'',day=r.pillars.DAY,life=natalLife(r),temper=life.values.TEMPERAMENT,tc=copy(temper),si=day?stemImages[day.stem]:null;
     const head=`<div class="ttl"><div><h1 id="page-title" tabindex="-1">내 사주</h1><p class="subtitle">${escape(birthText(p,r))} · ${escape(timeText(p))} · ${T||'MBTI 미선택'}</p></div><button type="button" class="editbtn" data-action="edit-profile">수정</button></div><div id="dst-slot">${dstNote(r)}</div>`;
     const unknownHour=!r.pillars.HOUR&&!p.time;
     const pillars=`<div class="pillars hero">${Object.keys(positionPlain).map(k=>`<div class="pillar"><span>${positionPlain[k]}</span><strong>${r.pillars[k]?escape(r.pillars[k].korean):k==='HOUR'&&unknownHour?'모름<span class="sr-only"> · 시간 모름</span>':'—<span class="sr-only">확인 보류</span>'}</strong></div>`).join('')}</div>`;
     const elems=`<p class="elems" aria-label="확정 글자의 오행 개수">${elementKeys.map((k,i)=>`<span class="elem">${elementHangul[i]} <b>${r.elements[k]||0}</b></span>`).join('')}</p>`;
-    const hero=`<section class="card natalhero" aria-labelledby="natal-hero-title"><div class="vrow"><span class="chip plain">중심 글자 · ${day?`${stemHangul[day.stem]}(${stemHanja[day.stem]}, ${elementHangul[Math.floor(day.stem/2)]})`:'확인 보류'}</span><span class="chip">기본 성향</span></div>
-      ${tc?`<h2 class="nh2" id="natal-hero-title">${text(tc.title)}</h2><p class="nbody">${text(tc.summary)}</p>`:`<h2 class="nh2" id="natal-hero-title">${day?escape(copy(r.dayStemIntro)?.title||'나의 기본 성향'):'나의 기본 성향'}</h2>${copy(r.dayStemIntro)?`<p class="nbody">${text(copy(r.dayStemIntro).summary)}</p>`:''}`}
-      ${pillars}${elems}${statusNotice(r)}
-      <button type="button" class="linkbtn strong" data-action="${tc?'natal-temper':'open-expert'}">${tc?'기본 성향 더 읽기':'내 사주 글자와 오행 자세히'} ›</button></section>`;
+    const hero=`<section class="card natalhero" aria-labelledby="natal-hero-title"><div class="vrow"><span class="chip plain">나를 나타내는 글자 · ${day?stemFull(day.stem):'확인 보류'}</span></div>
+      ${si?`<h2 class="nh2" id="natal-hero-title">${escape(si[0])}</h2><p class="nbody">${escape(si[1])}</p>`:tc?`<h2 class="nh2" id="natal-hero-title">${text(tc.title)}</h2><p class="nbody">${text(tc.summary)}</p>`:`<h2 class="nh2" id="natal-hero-title">${day?escape(copy(r.dayStemIntro)?.title||'나의 기본 성향'):'나의 기본 성향'}</h2>${copy(r.dayStemIntro)?`<p class="nbody">${text(copy(r.dayStemIntro).summary)}</p>`:''}`}
+      <p class="hint">사주는 태어난 해·달·날·시를 네 기둥, 여덟 글자로 적은 것이랍니다. 그중 태어난 날의 윗글자가 바로 ‘나’이지요.</p>${pillars}${elems}${elementPlain(r,'nbody')}${statusNotice(r)}
+      <button type="button" class="linkbtn strong" data-action="${tc?'natal-temper':'open-expert'}">${tc?'생활 속 기본 성향 더 읽기':'내 사주 글자와 오행 자세히'} ›</button></section>`;
     const freeHeading=`<h2 class="sech">사주로만 본 <span class="nw">생활 풀이</span>${life.held?'':` · 무료 ${Object.keys(life.values).filter(key=>key!=='TEMPERAMENT'&&(!romanceHidden(r)||key!=='ROMANCE')).length}장`}</h2>`;
     const free=freeHeading+natalFreeList(r,life);
     let gate;
@@ -750,7 +874,7 @@
     else if(r.type){const k=natalLockedBlocks(r).length+1;gate=`<h2 class="sr-only" id="natal-gate-title" tabindex="-1" aria-label="사주와 ${T}로 본 생활 풀이 ${k}장">사주 × <span class="nw">${T}로 본</span> <span class="nw">생활 풀이 ${k}장</span></h2>${natalGate(r)}`;}
     else gate=chooseTypeCard(`유형을 고르면 내 사주와 이어진 생활 풀이 ${natalPaidCount(r)+1}장이 더해진답니다`,'별점과 사주 풀이는 그대로이지요. 내 사주를 내 유형의 생활 장면으로 한 번 더 읽어 드린답니다.','natal-choose-title');
     const expert=details('natal-expert','전문 용어로 자세히 보기 · 사주 글자·오행·십성',expertSaju(r));
-    return `${head}${hero}${r.type?gate+free:free+gate}<div id="natal-expert-anchor">${expert}</div><p class="footer-note" data-reference-notice>${referenceNotice}</p>`;
+    return `${head}${hero}<div id="luck-slot">${luckSection(r)}</div>${r.type?gate+free:free+gate}<div id="natal-expert-anchor">${expert}</div><p class="footer-note" data-reference-notice>${referenceNotice}</p>`;
   }
 
   /* ---------- MBTI ---------- */

@@ -23,7 +23,7 @@
   <meta property="og:image:alt" content="사주MBTI 안내 캐릭터와 앱 이름">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="app.css?build=elegant-20261111-2">
-  <script defer src="app.js?build=elegant-20261111-2"></script>
+  <script defer src="app.js?build=elegant-20261111-3"></script>
 </head>
 <body>
   <header class="topbar"><a href="./" aria-label="사주MBTI 체험판 처음으로">사주MBTI</a><span class="test-badge">체험판 · 다듬는 중</span></header>
@@ -39,6 +39,7 @@
           <p id="birth-day-hint" class="hint" role="status" aria-live="polite">연도와 월을 먼저 골라 주세요.</p>
         </fieldset>
         <fieldset><legend>태어난 시간 <span class="opt">(선택)</span></legend><label class="check"><input id="time-unknown" name="unknown" type="checkbox" checked>시간을 몰라요</label><div id="time-fields" class="time-fields" hidden><label>시<select id="birth-hour" name="hour" disabled><option value="">선택</option></select></label><label>분<select id="birth-minute" name="minute" disabled><option value="">선택</option></select></label></div><p id="time-hint" class="hint" aria-live="polite">태어난 시간을 알면 체크를 풀고 시·분을 골라 주세요.</p></fieldset>
+        <fieldset><legend>성별 <span class="opt">(선택)</span></legend><div class="calendar-fields"><label class="check"><input type="radio" name="gender" value="M">남성</label><label class="check"><input type="radio" name="gender" value="F">여성</label><label class="check"><input type="radio" name="gender" value="" checked>고르지 않음</label></div><p class="hint">10년마다 바뀌는 큰 흐름(대운)을 읽을 때만 쓴답니다. 별점과 다른 풀이는 달라지지 않지요.</p></fieldset>
         <fieldset><legend>내 MBTI <span class="opt">(선택)</span></legend><div id="mbti-buttons" class="type-grid"></div><p class="hint">MBTI를 고르면 맞춤 조언이 열린답니다. 별점과 기본 풀이는 사주로 읽지요. 아직 모르면 비워 두거나 ‘아직 몰라요’를 고르시지요.</p></fieldset>
         <fieldset><legend>연애 운세 <span class="opt">(선택)</span></legend><label class="check"><input id="romance-hidden" name="romanceHidden" type="checkbox">관심 없어요 · 연애 항목 숨기기</label></fieldset>
         <p id="form-error" class="error" role="alert" hidden></p>
