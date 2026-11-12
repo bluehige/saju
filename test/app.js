@@ -348,6 +348,7 @@
     return line;
   }
   const typeIntroductions={"ISTJ":"‘예전에 해봤을 땐 어땠지?’ 하고 검증된 경험에서 기준을 찾으며, 한번 맡은 일은 끝까지 빈틈없이 챙기는 편이지요. 계획표의 마지막 줄까지 손수 매듭지어야 비로소 두 다리 뻗고 쉬는 든든한 성향이랍니다.","ISFJ":"지나온 기억과 함께했던 사람들의 사소한 말 한마디까지 따뜻하게 마음에 담아 두는 편이지요. 티 내지 않고 조용히 필요한 것을 챙겨 두어, 곁사람에게서 ‘언제 이런 것까지 신경 썼어?’라는 감탄을 자주 듣곤 한답니다.","INFJ":"스쳐 가는 말이나 표정 너머에 담긴 진짜 마음과 의미를 조용히 헤아려 보는 편이지요. 무언가를 선택할 때도 겉으로 보이는 조건보다 내 마음속 깊은 가치와 결이 맞는지부터 차분히 살핀답니다.","INTJ":"먼 앞날의 큰 그림을 머릿속에 먼저 그려 본 뒤, 거기까지 닿을 가장 명쾌한 길을 스스로 설계하고 싶어 하지요. 뚜렷한 목표가 서는 순간 ‘그럼 가장 효율적인 첫걸음은 무엇이지?’ 하고 차분히 실행의 수를 놓기 시작한답니다.","ISTP":"복잡한 말로 길게 설명을 듣기보다 눈앞의 대상을 직접 만져 보고 ‘이렇게 해보면 어떨까?’ 하며 몸소 부딪쳐 볼 때 감이 확 트이는 편이지요. 군더더기 없이 핵심만 짚어 문제를 척척 풀어내는 담백한 실용가랍니다.","ISFP":"지금 눈앞의 풍경과 공기, 그 순간 내 마음에 번지는 온도를 무엇보다 소중히 여기는 편이지요. 남을 억지로 바꾸려 하지 않듯 나 또한 내 호흡대로 조용히 나만의 취향과 다정함을 가꾸어 갈 때 가장 편안하답니다.","INFP":"세상의 시선보다 ‘이 일이 내 진심에 비추어 정말 소중한가?’를 깊이 돌아보는 편이지요. 조건이 아무리 그럴듯해도 내 마음이 진심으로 고개를 끄덕이는 이유가 있어야 비로소 따뜻한 열정이 피어난답니다.","INTP":"호기심이 동하는 주제를 만나면 당연해 보이는 상식에도 ‘왜 꼭 그래야 하지?’ 하고 질문을 던지며 원리를 끝까지 파고드는 편이지요. 머릿속에서 이리저리 조각을 맞추어 명쾌한 이치를 찾아낼 때 남모르는 희열을 느낀답니다.","ESTP":"돌아가는 상황의 맥을 단숨에 읽고, 책상 앞 고민보다 현장에서 몸으로 부딪치며 해법을 찾아내는 편이지요. ‘일단 해보면 답이 나오겠지!’ 하는 시원시원한 배짱과 순발력이 주변의 막힌 흐름까지 뚫어 준답니다.","ESFP":"지금 함께 자리한 사람들의 표정과 공기를 금세 읽고, 그 순간을 가장 유쾌하고 따뜻하게 데우는 재주가 있답니다. 맛있는 것이나 재미있는 장면을 보면 ‘이거 같이 보자!’ 하고 곁사람부터 부르는 정겹고 솔직한 영혼이지요.","ENFP":"사람들과 이야기를 나누다 반짝이는 가능성이 보이면 눈빛부터 환해지는 편이지요. ‘그거 정말 재미있겠다!’ 하고 가슴이 뛰면 주저 없이 발을 내디디며, 평범한 일상에도 설레는 새 바람을 불어넣곤 한답니다.","ENTP":"익숙한 통념 앞에서도 ‘잠깐, 아예 반대로 해보면 어때?’ 하고 경쾌하게 판을 뒤집어 보는 편이지요. 대화를 주고받으며 생각을 넓혀 가는 과정을 즐기고, 막힌 곳에서 기발한 우회로를 찾아내는 재치가 돋보인답니다.","ESTJ":"흐릿한 이야기를 분명한 기준과 순서로 정돈하여 실제로 일이 굴러가게 만드는 힘이 탁월하답니다. ‘좋은 생각이네’ 하고 공감한 뒤에는 곧바로 ‘그럼 누가 언제까지 맡을까?’ 하고 든든하게 매듭을 지어 주지요.","ESFJ":"모인 사람들의 기분과 필요한 것을 세심하게 살피며 모두가 소외되지 않고 어우러지게 챙기는 편이지요. 약속 시간과 준비물이 반듯하게 정해져 있을 때 마음이 놓이고, 가까운 이들의 일상을 다정하게 돌볼 때 큰 기쁨을 느낀답니다.","ENFJ":"사람의 말에 진심으로 귀 기울이며 그 안에 숨은 가능성과 함께 나아갈 방향을 찾아내는 따뜻한 이끌림이 있답니다. ‘네 생각은 어때?’ 하고 다정하게 건네는 한마디가 주변 사람들의 마음을 여는 마중물이 되곤 하지요.","ENTJ":"이루고 싶은 목표를 시원하고 큼직하게 세운 뒤, 거기까지 가장 힘차게 나아갈 체계와 역할을 단숨에 조직해 내는 편이지요. 머릿속 구상을 현실의 뚜렷한 성과로 바꾸어 놓을 때 가장 살아 있음을 느낀답니다."};
+  const adPreview=new URLSearchParams(location.search).get('ads')==='preview';
   const romanceHidden=r=>!!(r?.romanceHidden??state.profile?.romanceHidden);
   const visibleDomains=r=>r.domains.filter(domain=>domain.id!=='OVERALL'&&(!romanceHidden(r)||domain.id!=='ROMANCE'));
   const isTodayResult=r=>r.date===koreaToday();
@@ -390,20 +391,45 @@
     let hook;
     if(!T)hook=`<p class="hlab">내 유형 맞춤</p><h3 class="hmt" id="gate-title" tabindex="-1">유형을 고르면 ${today?'오늘':'이날'} 해볼 행동이 더해진답니다</h3><button type="button" class="cta" data-action="go-mbti">내 MBTI 고르기</button>`;
     else if(!hasTypeReading(r))hook=`<p class="hlab">${T} 맞춤 풀이</p>${manuscript(overall?.mbti)}`;
-    else hook=`<p class="hlab">${T}라면 ${today?'오늘은':'이날은'}</p><h3 class="hmt" id="gate-title" tabindex="-1">${mc?text(mc.title):`${T}에게 맞춘 분야별 풀이가 있답니다`}</h3>${teaser}<button type="button" class="cta" data-action="reading-open">${T} 맞춤 풀이 보기</button>`;
+    else hook=`<p class="hlab">${T}라면 ${today?'오늘은':'이날은'}</p><h3 class="hmt" id="gate-title" tabindex="-1">${mc?text(mc.title):`${T}에게 맞춘 분야별 풀이가 있답니다`}</h3>${teaser}<button type="button" class="cta" data-action="reading-open">${adPreview?`<span class="adplay" aria-hidden="true">▶</span> 광고 보고 ${T} 맞춤 풀이 열기`:`${T} 맞춤 풀이 보기`}</button>`;
     const grade=overall?.grade?`<span class="vstars" aria-hidden="true">${starText(overall.grade)}</span><span class="hgl">${escape(gradeLabel(overall))}</span>`:'<span class="vstars held">별점 보류</span>';
-    return `<div class="home" data-home>
+    // 2026-11-12 첫 화면 보강(시안 v2): 총운 요약 + 분야별 운세 카드를 무료로 바로 보여 주고, 맞춤 풀이는 따로 한 장.
+    const fields=visibleDomains(r).map(d=>{
+      const c=copy(d.base),name=domains[d.id]||'';
+      return `<li><button type="button" class="hfrow" data-action="free-domain" data-domain="${escape(d.id)}" aria-label="${escape(name)} ${d.grade?`5점 중 ${d.grade}점`:'별점 보류'}${c?', '+escape(c.title):''}, 기본 풀이 보기"><span class="hfname">${escape(name)}</span>${d.grade?`<span class="hfstars" aria-hidden="true">${starText(d.grade)}</span>`:'<span class="hfstars held" aria-hidden="true">보류</span>'}<span class="hftitle">${c?text(c.title):''}</span><span class="hfchev" aria-hidden="true">›</span></button></li>`;
+    }).join('');
+    return `<div class="home${adPreview?' adprev':''}" data-home>
       <div class="htop"><p class="hdate"><b>${escape(dateMD(r.date))}</b><span>${weekdayFull(r.date)}</span></p><img class="hguide" src="${guideImage(overall?.grade)}" width="720" height="900" alt=""></div>
       <section class="card hcard" aria-labelledby="verdict-keyword" data-verdict>
         <div class="hfree">
           <h2 class="hkw" id="verdict-keyword">${escape(keyword||(today?'오늘의 흐름':'그날의 흐름'))}</h2>
           <button type="button" class="hgrade" data-action="rating" aria-label="총운 ${overall?.grade?`5점 중 ${overall.grade}점, ${escape(gradeLabel(overall))}`:'별점 보류'}, 별점 기준 보기">${grade}</button>
-          ${bc?`<p class="hone">${text(bc.title)}</p>`:manuscript(overall?.base)}
+          ${bc?`<p class="hone">${text(bc.title)}</p><p class="hsum">${text(bc.summary)}</p>`:manuscript(overall?.base)}
         </div>
-        <div class="hhook" data-gate="open">${hook}</div>
       </section>
-      <button type="button" class="hmore" data-action="free-sheet">분야별 별점 · 기본 풀이 <span aria-hidden="true">›</span></button>
+      ${fields?`<section class="card hfields" aria-labelledby="hfields-title"><h2 class="hfh" id="hfields-title">분야별 운세</h2><ul class="hflist">${fields}</ul></section>`:''}
+      ${adSlot('native')}
+      <section class="card hcard hookcard" aria-labelledby="gate-title"><div class="hhook" data-gate="open">${hook}</div></section>
+      ${adSlot('banner')}
     </div>`;
+  }
+  // 광고 자리 미리보기: 체험판에는 광고가 없다. 주소에 ?ads=preview를 붙였을 때만 회색 자리 상자를 보여 준다(실광고 아님).
+  function adSlot(kind){
+    if(!adPreview)return '';
+    return kind==='banner'
+      ?`<div class="adslot adbanner" aria-hidden="true"><span class="adtag">광고</span><i></i></div>`
+      :`<div class="adslot adnative" aria-hidden="true"><span class="adtag">광고</span><div class="adbody"><b></b><div><i></i><i class="s"></i></div></div></div>`;
+  }
+  // 분야별 운세 한 줄을 누르면 그 분야의 기본 풀이만 시트로 연다.
+  function freeDomainSheet(r,id){
+    const d=visibleDomains(r).find(x=>x.id===id);if(!d)return freeSheet(r);
+    const c=copy(d.base),name=domains[d.id],more=c?additionalReading(d.base,[c.summary]):'';
+    return `<div class="sheet-inner"><h2 class="sh" id="sheet-title" tabindex="-1">${escape(name)} · 기본 풀이</h2>
+      <div class="frow"><div class="fhead"><h3 class="fname">${escape(name)}</h3>${starsEl(d,'dstars')}</div>${d.grade?`<p class="dgl">${escape(gradeLabel(d))}</p>`:''}
+      ${c?`<p class="ftitle">${text(c.title)}</p><p class="fsum">${text(c.summary)}</p>${more}`:manuscript(d.base)}</div>
+      <button type="button" class="linkbtn" data-action="free-sheet">모든 분야 보기</button>
+      <button type="button" class="linkbtn" data-action="rating">별점 기준 보기</button>
+      <button type="button" class="sbtn outi wide" data-action="sheet-close">닫기</button></div>`;
   }
   // 첫 화면에서 뺀 사주 기본 풀이(총운과 분야별)는 이 시트에서 읽는다.
   function freeSheet(r){
@@ -963,6 +989,7 @@
       case 'reading-close':closeReading();break;
       case 'reading-tab':if(r){state.todayDomain=el.dataset.domain;save();render();$('.rchip[aria-pressed="true"]')?.scrollIntoView({block:'nearest',inline:'center'});window.scrollTo(0,0);($('#reading-title')||$('#todo-title'))?.focus({preventScroll:true});}break;
       case 'free-sheet':if(r)openSheet(freeSheet(r));break;
+      case 'free-domain':if(r)openSheet(freeDomainSheet(r,el.dataset.domain));break;
       case 'natal-sheet':if(r)openSheet(natalSheet(r,el.dataset.kind,el.dataset.key));break;
       case 'sheet-go-mbti':closeSheet();rememberView();showResult('mbti',{focus:true});break;
       case 'todo-check':if(r){const id=el.dataset.domain,list=new Set(state.checks[r.date]||[]);list.has(id)?list.delete(id):list.add(id);state.checks[r.date]=[...list];save();rerenderKeep(`[data-action="todo-check"][data-domain="${id}"]`);}break;
