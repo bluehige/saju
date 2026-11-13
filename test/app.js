@@ -264,7 +264,7 @@
     if(!preserveForm)fillForm(state.profile);
     $('#input-screen').hidden=false;$('#result-screen').hidden=true;$('#cancel-edit').hidden=!state.result;
     document.body.classList.toggle('editing',!!state.result);
-    document.title=`${state.result?'생일·시간·MBTI 바꾸기':'생일과 MBTI 입력'} · 사주MBTI`;
+    document.title=`${state.result?'생일·시간·MBTI 바꾸기':'생일과 MBTI 입력'} · 사주&MBTI`;
     window.scrollTo(0,0);
     if(!fromHistory&&location.hash!=='#input'){if(state.result)history.pushState({tab:'input',fromResult:true},'','#input');else history.replaceState({tab:'input'},'','#input');}
   }
@@ -272,7 +272,7 @@
 
   /* ---------- 공통 조각 ---------- */
   const referenceNotice='운세는 생활 참고용이에요. 건강·법률·투자 등 중요한 결정은 전문가와 상의해 주세요.';
-  const mbtiNotice='MBTI(Myers-Briggs Type Indicator)는 The Myers & Briggs Foundation의 상표예요. 사주MBTI는 해당 재단·관련 기관과 제휴하거나 승인받은 서비스가 아니며, 공식 MBTI 검사를 제공하지 않아요.';
+  const mbtiNotice='MBTI(Myers-Briggs Type Indicator)는 The Myers & Briggs Foundation의 상표예요. 사주&MBTI는 해당 재단·관련 기관과 제휴하거나 승인받은 서비스가 아니며, 공식 MBTI 검사를 제공하지 않아요.';
   // 오늘의 키워드 이름표(엔진 meaning 8종).
   const keywordLabels={EXPRESS:'말로 꺼내는 날',MANAGE:'내 몫을 정하는 날',STRUCTURE:'순서를 세우는 날',LEARN_RESTORE:'돌아보고 쉬어 가는 날',COORDINATE:'함께 맞춰 가는 날',CONNECT:'이야기를 잇는 날',MIXED:'하나만 골라 보는 날',RECHECK:'한 번 더 살피는 날'};
   const gradeNames=['확인과 여유가 필요한 흐름','속도를 조금 줄여볼 흐름','균형을 잡아갈 흐름','가볍게 시도해볼 흐름','기회를 활용해볼 흐름'];
@@ -926,7 +926,7 @@
     else html=settingsTab(r);
     $('#result-content').innerHTML=(queuedCalculation?'<div class="notice" role="status" data-calculation-pending>자료를 준비하면 방금 고른 이야기를 펼쳐 드리지요.</div>':'')+dateChangeBanner()+html;
     $$('.tabs button').forEach(button=>{if(button.dataset.tab===state.tab)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-    document.title=`${state.tab==='today'&&!isTodayResult(r)?`${dateMD(r.date)}의 운세`:pageTitles[state.tab]} · 사주MBTI`;
+    document.title=`${state.tab==='today'&&!isTodayResult(r)?`${dateMD(r.date)}의 운세`:pageTitles[state.tab]} · 사주&MBTI`;
     armTaps();
     if(state.tab==='today')requestTomorrow();
   }

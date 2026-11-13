@@ -1,4 +1,4 @@
-사주MBTI 웹 체험판에 포함된 외부 라이브러리 표기
+사주&MBTI 웹 체험판에 포함된 외부 라이브러리 표기
 TeaVM 0.16.0 — Copyright Alexey Andreev and contributors — Apache License 2.0
 Kotlin standard library 2.4.20 — Copyright JetBrains s.r.o. and contributors — Apache License 2.0
 kotlinx.serialization 1.11.0 — Copyright JetBrains s.r.o. and contributors — Apache License 2.0
